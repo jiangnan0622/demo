@@ -1,0 +1,2216 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+}
+
+:root {
+  --radius: 0.625rem;
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.86 0.16 89);
+  --primary-foreground: oklch(0.145 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.86 0.16 89);
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.86 0.16 89);
+  --sidebar-primary-foreground: oklch(0.145 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.86 0.16 89);
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.86 0.16 89);
+  --primary-foreground: oklch(0.145 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.86 0.16 89);
+  --chart-1: oklch(0.488 0.243 264.376);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.86 0.16 89);
+  --sidebar-primary-foreground: oklch(0.145 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+@layer components {
+  .real-page-wrap {
+    width: min(100%, 1560px);
+  }
+
+  .official-shell {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  .official-wrap {
+    width: min(100%, 1560px);
+  }
+
+  .official-home {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    background:
+      radial-gradient(circle at 62% 22%, rgba(80, 56, 194, 0.08), transparent 22%),
+      radial-gradient(circle at 68% 28%, rgba(240, 196, 86, 0.04), transparent 20%),
+      #030405;
+  }
+
+  .official-home-wrap {
+    width: min(100%, 1680px);
+  }
+
+  .official-home-nav-item {
+    letter-spacing: 0.01em;
+  }
+
+  .official-home-hero {
+    position: relative;
+    background:
+      radial-gradient(circle at 68% 36%, rgba(95, 67, 214, 0.09), transparent 18%),
+      radial-gradient(circle at 75% 44%, rgba(240, 196, 86, 0.04), transparent 20%),
+      #050607;
+  }
+
+  .official-hero-grid {
+    position: relative;
+  }
+
+  .official-hero-gridlines {
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.022) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.022) 1px, transparent 1px),
+      linear-gradient(145deg, transparent 0, transparent 48.5%, rgba(255, 255, 255, 0.018) 49%, transparent 49.5%),
+      linear-gradient(35deg, transparent 0, transparent 48.5%, rgba(255, 255, 255, 0.016) 49%, transparent 49.5%);
+    background-size: 100% 108px, 108px 100%, 220px 220px, 220px 220px;
+    opacity: 0.52;
+    mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.85), transparent 100%);
+  }
+
+  .official-hero-gem {
+    filter: drop-shadow(0 20px 42px rgba(14, 18, 50, 0.28));
+  }
+
+  .official-hero-copy {
+    position: relative;
+    z-index: 1;
+  }
+
+  .official-hero-title,
+  .official-hero-eyebrow {
+    letter-spacing: -0.05em;
+  }
+
+  .official-section {
+    position: relative;
+  }
+
+  .real-brand-lockup {
+    letter-spacing: -0.01em;
+  }
+
+  .real-brand-mark {
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  }
+
+  .invitation-shell {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  .rebate-admin-shell {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+
+
+  .invitation-display {
+    letter-spacing: -0.035em;
+  }
+
+  .invitation-title {
+    letter-spacing: -0.02em;
+    line-height: 1.12;
+  }
+
+  .invitation-copy {
+    letter-spacing: -0.01em;
+    line-height: 1.72;
+  }
+
+  .invitation-mono {
+    font-variant-numeric: tabular-nums lining-nums;
+    font-feature-settings: "tnum" 1, "lnum" 1;
+  }
+
+  .invitation-poster-title {
+    letter-spacing: -0.065em;
+  }
+
+  .invitation-poster-copy {
+    letter-spacing: -0.015em;
+  }
+
+  .real-topnav-item {
+    letter-spacing: 0.01em;
+  }
+
+  .real-topnav-cta {
+    flex-shrink: 0;
+  }
+
+  .market-main-card {
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    border-radius: 1rem;
+    background-color: rgba(255, 255, 255, 0.03);
+  }
+
+  .market-symbol,
+  .market-apr,
+  .market-price {
+    letter-spacing: -0.02em;
+  }
+
+  .detail-back-btn {
+    letter-spacing: -0.01em;
+    color: #f4f4f5;
+  }
+
+  .detail-back-btn:hover {
+    color: #ffffff;
+  }
+
+  .detail-metric-card {
+    border-color: rgba(255, 255, 255, 0.11);
+    background:
+      linear-gradient(145deg,
+        rgba(255, 255, 255, 0.035) 0%,
+        rgba(250, 204, 21, 0.07) 52%,
+        rgba(255, 255, 255, 0.02) 100%),
+      #17181b;
+  }
+
+  .real-card {
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 1rem;
+    background-color: rgba(255, 255, 255, 0.02);
+    transition: all 0.2s ease;
+  }
+
+  .real-card:hover {
+    border-color: rgba(255, 255, 255, 0.12);
+    background-color: rgba(255, 255, 255, 0.04);
+  }
+
+  .real-panel {
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 1rem;
+    background-color: rgba(255, 255, 255, 0.02);
+    transition: all 0.2s ease;
+  }
+
+  .real-panel:hover {
+    border-color: rgba(255, 255, 255, 0.12);
+  }
+
+  .real-gold-btn {
+    background: linear-gradient(180deg, #f6cf59 0%, #e3b940 100%);
+    color: #101010;
+    font-weight: 600;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 10px rgba(246, 207, 89, 0.15);
+  }
+
+  .real-gold-btn:hover {
+    filter: brightness(1.05);
+    box-shadow: 0 4px 20px rgba(246, 207, 89, 0.4);
+    transform: translateY(-1px);
+  }
+
+  .real-outline-btn {
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    background: rgba(0, 0, 0, 0.18);
+    color: #f2f2f2;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .real-outline-btn:hover {
+    border-color: rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 0 16px rgba(255, 255, 255, 0.05);
+    transform: translateY(-1px);
+  }
+
+  .real-input {
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    background: rgba(255, 255, 255, 0.02);
+  }
+
+  .real-modal-surface {
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 1rem;
+    background-color: #141414;
+  }
+
+  .real-modal-block {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.875rem;
+    background: #17181b;
+  }
+
+  .real-modal-title {
+    letter-spacing: 0.01em;
+    color: #f5f5f5;
+    font-weight: 600;
+  }
+
+  .invitation-step-card {
+    transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.28s ease, box-shadow 0.28s ease;
+  }
+
+  .invitation-step-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(244, 201, 74, 0.2);
+    box-shadow: 0 16px 42px rgba(244, 201, 74, 0.08);
+  }
+}
+
+@media (min-width: 1280px) {
+  .mac-deposit-dialog {
+    max-width: 520px;
+    padding: 1.25rem;
+  }
+
+  .mac-deposit-actions {
+    width: 100%;
+    align-items: center;
+  }
+}
+
+@media (min-width: 1024px) and (max-width: 1512px),
+(min-width: 1024px) and (max-height: 920px) {
+  .official-shell .official-topnav .official-wrap {
+    height: 3.45rem;
+  }
+
+  .official-shell .official-topnav .text-3xl {
+    font-size: 1.55rem !important;
+  }
+
+  .official-shell .official-hero .official-wrap {
+    padding-top: 2.7rem !important;
+    padding-bottom: 2.8rem !important;
+    gap: 1.6rem !important;
+  }
+
+  .official-shell .official-hero h1 {
+    font-size: 3rem !important;
+    line-height: 1.05 !important;
+  }
+
+  .official-shell .official-hero p {
+    font-size: 1.12rem !important;
+    line-height: 1.55 !important;
+  }
+
+  .official-shell .official-hero .lg\:h-\[340px\] {
+    height: 290px !important;
+  }
+
+  .official-shell .official-wrap .md\:text-5xl {
+    font-size: 2.55rem !important;
+  }
+
+  .official-shell .official-wrap .text-4xl {
+    font-size: 2.15rem !important;
+  }
+
+  .official-shell .official-wrap .text-2xl {
+    font-size: 1.4rem !important;
+  }
+
+  .official-shell .official-wrap .text-lg {
+    font-size: 0.98rem !important;
+  }
+
+  .official-shell .official-wrap .p-6 {
+    padding: 1.1rem !important;
+  }
+
+  .official-shell .official-wrap .py-16 {
+    padding-top: 2.8rem !important;
+    padding-bottom: 2.8rem !important;
+  }
+
+  .official-shell footer .official-wrap {
+    padding-top: 2.8rem !important;
+    padding-bottom: 2.8rem !important;
+    gap: 1.7rem !important;
+  }
+
+  .official-shell footer .text-4xl {
+    font-size: 2.05rem !important;
+  }
+
+  .realrwa-shell .text-6xl {
+    font-size: 3rem;
+    line-height: 1.1;
+  }
+
+  .realrwa-shell .text-5xl {
+    font-size: 2.4rem;
+    line-height: 1.12;
+  }
+
+  .realrwa-shell .text-4xl {
+    font-size: 2rem;
+    line-height: 1.15;
+  }
+
+  .realrwa-shell .text-3xl {
+    font-size: 1.65rem;
+    line-height: 1.2;
+  }
+
+  .realrwa-shell .text-2xl {
+    font-size: 1.3rem;
+    line-height: 1.25;
+  }
+
+  .realrwa-shell .text-xl {
+    font-size: 1.1rem;
+    line-height: 1.35;
+  }
+
+  .realrwa-shell .text-lg {
+    font-size: 1rem;
+    line-height: 1.45;
+  }
+
+  .realrwa-shell .h-14 {
+    height: 3rem;
+  }
+
+  .realrwa-shell .h-12 {
+    height: 2.75rem;
+  }
+
+  .realrwa-shell .h-11 {
+    height: 2.5rem;
+  }
+
+  .realrwa-shell .p-6 {
+    padding: 1.1rem;
+  }
+
+  .realrwa-shell .px-6 {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .realrwa-shell .py-20 {
+    padding-top: 3.5rem;
+    padding-bottom: 3.5rem;
+  }
+
+  .realrwa-shell .mt-16 {
+    margin-top: 2.5rem;
+  }
+
+  .realrwa-shell .real-modal-surface {
+    max-height: 90vh;
+  }
+
+  .realrwa-shell .mac-modal-panel {
+    max-height: 92vh;
+    padding: 1.5rem;
+  }
+
+  .realrwa-shell .mac-modal-panel-xl {
+    max-width: min(92vw, 880px) !important;
+  }
+
+  .realrwa-shell .mac-modal-panel-lg {
+    max-width: min(90vw, 740px) !important;
+  }
+
+  .realrwa-shell .mac-modal-panel-md {
+    max-width: min(88vw, 680px) !important;
+  }
+
+  .realrwa-shell .mac-modal-title {
+    font-size: 1.75rem !important;
+    margin-bottom: 1.1rem !important;
+  }
+
+  .realrwa-shell .mac-modal-success-title {
+    font-size: 2.15rem !important;
+    line-height: 1.12 !important;
+    margin-bottom: 1.15rem !important;
+  }
+
+  .realrwa-shell .mac-modal-card {
+    font-size: 1rem !important;
+  }
+
+  .realrwa-shell .mac-modal-field {
+    height: 4rem !important;
+  }
+
+  .realrwa-shell .mac-modal-action {
+    height: 3.9rem !important;
+    border-radius: 0.9rem !important;
+    font-size: 1.05rem !important;
+  }
+
+  .realrwa-shell .mac-modal-max {
+    font-size: 1rem !important;
+  }
+
+  .realrwa-shell .mac-deposit-qr-wrap {
+    padding: 0.85rem !important;
+  }
+
+  .realrwa-shell .mac-deposit-qr {
+    width: 260px !important;
+    height: 260px !important;
+  }
+
+  .realrwa-shell .real-topnav-item {
+    padding-left: 0.9rem;
+    padding-right: 0.9rem;
+    font-size: 0.82rem;
+  }
+
+  .real-topnav-shell .real-topnav-wrap {
+    height: 3.5rem !important;
+  }
+
+  .real-topnav-shell .real-topnav-brand {
+    font-size: 1.55rem !important;
+  }
+
+  .real-topnav-shell .real-topnav-logo {
+    width: 2rem !important;
+    height: 2rem !important;
+  }
+
+  .real-topnav-shell .real-topnav-wallet-trigger {
+    max-width: 17.5rem;
+  }
+
+  .real-topnav-shell .real-topnav-nav {
+    gap: 0.15rem !important;
+  }
+
+  .real-topnav-shell .real-topnav-right {
+    gap: 0.45rem !important;
+  }
+
+  .real-topnav-shell .real-topnav-wallet-label {
+    font-size: 0.84rem;
+  }
+
+  .real-topnav-shell .real-topnav-balance {
+    font-size: 0.76rem !important;
+  }
+
+  .real-topnav-shell .real-topnav-dropdown {
+    width: 15.2rem !important;
+  }
+
+  .realrwa-shell .invitation-summary-panel {
+    border-radius: 1.2rem;
+  }
+
+  .realrwa-shell .invitation-hero-title {
+    font-size: 2.35rem !important;
+    line-height: 1.02 !important;
+  }
+
+  .realrwa-shell .invitation-center-title {
+    font-size: 3rem !important;
+    line-height: 1.02 !important;
+  }
+
+  .realrwa-shell .invitation-section-title {
+    font-size: 2.35rem !important;
+    line-height: 1.08 !important;
+  }
+
+  .realrwa-shell .invitation-card-title {
+    font-size: 1.65rem !important;
+    line-height: 1.12 !important;
+  }
+
+  .realrwa-shell .invitation-summary-title {
+    font-size: 1.55rem !important;
+    line-height: 1.14 !important;
+  }
+
+  .realrwa-shell .invitation-modal-title {
+    font-size: 1.08rem !important;
+    line-height: 1.25 !important;
+  }
+
+  .realrwa-shell .invitation-metric-value {
+    font-size: 1.7rem !important;
+    line-height: 1.1 !important;
+  }
+
+  .realrwa-shell .invitation-copy {
+    font-size: 0.95rem;
+    line-height: 1.78;
+  }
+
+  .realrwa-shell .invitation-poster-title {
+    font-size: 4rem !important;
+    line-height: 1.04 !important;
+  }
+
+  .realrwa-shell .invitation-poster-copy {
+    font-size: 1.08rem !important;
+    line-height: 1.55 !important;
+  }
+
+  .realrwa-shell .invitation-poster-code {
+    font-size: 2rem !important;
+  }
+
+  .realrwa-shell .invitation-detail-value {
+    font-size: 1rem !important;
+    line-height: 1.35 !important;
+  }
+
+  .realrwa-shell .core-home-card {
+    min-height: 700px;
+  }
+
+  .realrwa-shell .home-market-wrap {
+    max-width: 1320px !important;
+  }
+
+  .realrwa-shell .market-main-card {
+    min-height: 610px !important;
+    padding: 1.25rem !important;
+  }
+
+  .realrwa-shell .market-icon-wrap {
+    width: 62px !important;
+    height: 62px !important;
+  }
+
+  .realrwa-shell .market-symbol {
+    font-size: 2.05rem !important;
+  }
+
+  .realrwa-shell .market-issuer {
+    font-size: 0.92rem !important;
+  }
+
+  .realrwa-shell .market-tag {
+    font-size: 0.78rem !important;
+    padding: 0.3rem 0.55rem !important;
+  }
+
+  .realrwa-shell .market-apr,
+  .realrwa-shell .market-price {
+    font-size: 2rem !important;
+  }
+
+  .realrwa-shell .market-apr-unit {
+    font-size: 1.15rem !important;
+  }
+
+  .realrwa-shell .market-approx {
+    font-size: 1.05rem !important;
+  }
+
+  .realrwa-shell .market-desc {
+    font-size: 0.88rem !important;
+    line-height: 1.55 !important;
+  }
+
+  .realrwa-shell .market-trend-wrap {
+    margin-top: 1rem !important;
+    padding: 0.75rem 0.85rem !important;
+  }
+
+  .realrwa-shell .market-trend {
+    height: 74px !important;
+  }
+
+  .realrwa-shell .market-meta {
+    font-size: 0.84rem !important;
+  }
+
+  .realrwa-shell .feature-hero-title {
+    font-size: 2.3rem !important;
+    line-height: 1.08 !important;
+  }
+
+  .realrwa-shell .feature-hero-sub {
+    font-size: 1rem !important;
+    line-height: 1.55 !important;
+  }
+
+  .realrwa-shell .feature-metric-card {
+    padding: 1rem !important;
+    border-radius: 0.9rem !important;
+  }
+
+  .realrwa-shell .feature-metric-label {
+    font-size: 0.75rem !important;
+  }
+
+  .realrwa-shell .feature-metric-value {
+    font-size: 1.45rem !important;
+  }
+
+  .realrwa-shell .feature-table-title {
+    font-size: 1rem !important;
+  }
+
+  .realrwa-shell .feature-search {
+    width: 210px !important;
+    height: 2.25rem !important;
+  }
+
+  .realrwa-shell .feature-date {
+    height: 2.25rem !important;
+    font-size: 0.78rem !important;
+  }
+
+  .realrwa-shell .feature-grid {
+    font-size: 0.78rem !important;
+  }
+
+  .realrwa-shell .feature-action {
+    height: 1.9rem !important;
+    font-size: 0.72rem !important;
+  }
+
+  .realrwa-shell .portfolio-page-title {
+    font-size: 1.5rem !important;
+    line-height: 1.2 !important;
+  }
+
+  .realrwa-shell .portfolio-table-wrap {
+    border-radius: 0.95rem !important;
+    padding: 0.85rem !important;
+  }
+
+  .realrwa-shell .portfolio-table-head {
+    font-size: 0.78rem !important;
+  }
+
+  .realrwa-shell .portfolio-table-row {
+    font-size: 0.9rem !important;
+  }
+
+  .realrwa-shell .portfolio-balance-value {
+    font-size: 1.7rem !important;
+  }
+
+  .realrwa-shell .core-detail-stat {
+    min-height: 180px;
+  }
+
+  .realrwa-shell .core-staked-stat {
+    min-height: 270px;
+  }
+
+  .realrwa-shell .staked-hero-title {
+    font-size: 3rem !important;
+    line-height: 1.06 !important;
+  }
+
+  .realrwa-shell .staked-hero-sub {
+    font-size: 1.5rem !important;
+    line-height: 1.35 !important;
+  }
+
+  .realrwa-shell .staked-stat-value {
+    font-size: 2.55rem !important;
+  }
+
+  .realrwa-shell .staked-apr-ring {
+    width: 8.75rem !important;
+    height: 8.75rem !important;
+    border-width: 12px !important;
+    font-size: 2rem !important;
+  }
+
+  .realrwa-shell .core-detail-chart {
+    height: 400px !important;
+  }
+
+  .realrwa-shell .core-side-actions {
+    gap: 0.45rem !important;
+  }
+
+  .realrwa-shell .core-detail-side {
+    min-height: 760px;
+  }
+
+  .realrwa-shell .detail-header-title {
+    font-size: 2.85rem !important;
+  }
+
+  .realrwa-shell .detail-header-sub {
+    font-size: 1.1rem !important;
+  }
+
+  .realrwa-shell .detail-metric-value {
+    font-size: 2.35rem !important;
+    line-height: 1.05 !important;
+  }
+
+  .realrwa-shell .detail-metric-sub {
+    font-size: 1rem !important;
+  }
+
+  .realrwa-shell .detail-side-title {
+    font-size: 1.5rem !important;
+  }
+
+  .realrwa-shell .detail-side-value {
+    font-size: 2.2rem !important;
+  }
+
+  .realrwa-shell .detail-side-subvalue {
+    font-size: 1.75rem !important;
+  }
+
+  .realrwa-shell .detail-side-money {
+    font-size: 1rem !important;
+  }
+
+  .realrwa-shell .detail-side-actions .h-11 {
+    height: 2.7rem !important;
+    font-size: 0.9rem !important;
+  }
+
+  .realrwa-shell .detail-side-panel {
+    padding: 1rem !important;
+  }
+
+  .realrwa-shell .detail-side-status-grid {
+    gap: 0.5rem !important;
+  }
+
+  .realrwa-shell .detail-side-balance-card {
+    padding: 0.9rem !important;
+  }
+
+  .realrwa-shell .detail-side-meta-card,
+  .realrwa-shell .detail-side-next-card {
+    padding: 0.78rem !important;
+  }
+
+  .realrwa-shell .detail-chart-panel {
+    padding: 1.1rem !important;
+  }
+
+  .realrwa-shell .detail-chart {
+    border-radius: 1rem !important;
+    padding: 0.95rem !important;
+  }
+
+  .realrwa-shell .detail-chart-axis {
+    flex-basis: 28% !important;
+    font-size: 0.72rem !important;
+  }
+
+  .realrwa-shell .detail-chart-bars {
+    flex-basis: 72% !important;
+    gap: 0.45rem !important;
+  }
+
+  .realrwa-shell .detail-chart-apr-line {
+    left: 30% !important;
+    width: 50% !important;
+  }
+
+  .realrwa-shell .detail-chart-ticks {
+    font-size: 0.63rem !important;
+  }
+
+  .realrwa-shell .staked-list-section {
+    margin-top: 2.5rem !important;
+  }
+
+  .realrwa-shell .staked-table-head {
+    font-size: 0.78rem !important;
+  }
+
+  .realrwa-shell .staked-table-title {
+    font-size: 1.2rem !important;
+  }
+
+  .realrwa-shell .staked-table-row {
+    font-size: 0.88rem !important;
+    padding-top: 0.75rem !important;
+    padding-bottom: 0.75rem !important;
+  }
+
+  .realrwa-shell .staked-table-action {
+    font-size: 0.74rem !important;
+    padding: 0.28rem 0.55rem !important;
+  }
+
+  .realrwa-shell .core-staked-table .grid {
+    align-items: center;
+  }
+
+  /* 存款弹窗 Mac laptop 适配 */
+  .mac-modal-panel-md {
+    max-width: min(88vw, 460px) !important;
+    padding: 1.25rem !important;
+  }
+
+  .mac-deposit-qr {
+    width: 180px !important;
+    height: 180px !important;
+  }
+
+  .mac-deposit-qr-wrap {
+    padding: 0.6rem !important;
+  }
+
+}
+
+@media (min-width: 1024px) and (max-width: 1512px) {
+  .official-shell .official-wrap {
+    max-width: 1240px !important;
+  }
+
+  .official-shell .official-topnav .official-wrap {
+    height: 3.2rem !important;
+    padding-left: 0.9rem !important;
+    padding-right: 0.9rem !important;
+  }
+
+  .official-shell .official-topnav nav button {
+    font-size: 0.75rem !important;
+    padding: 0.45rem 0.7rem !important;
+  }
+
+  .official-shell .official-topnav .text-3xl {
+    font-size: 1.35rem !important;
+  }
+
+  .official-shell .official-topnav .size-9 {
+    width: 1.85rem !important;
+    height: 1.85rem !important;
+  }
+
+  .official-shell .official-hero .official-wrap {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+    padding-top: 2.35rem !important;
+    padding-bottom: 2.35rem !important;
+  }
+
+  .official-shell .official-hero h1 {
+    font-size: 2.65rem !important;
+  }
+
+  .official-shell .official-hero p {
+    font-size: 0.96rem !important;
+  }
+
+  .official-shell .official-hero .lg\:h-\[340px\] {
+    height: 255px !important;
+  }
+
+  .official-shell .official-wrap .md\:text-5xl {
+    font-size: 2.2rem !important;
+  }
+
+  .official-shell .official-wrap .text-4xl {
+    font-size: 1.85rem !important;
+  }
+
+  .official-shell .official-wrap .text-2xl {
+    font-size: 1.18rem !important;
+  }
+
+  .official-shell .official-wrap .text-lg {
+    font-size: 0.9rem !important;
+  }
+
+  .official-shell .official-wrap .text-base {
+    font-size: 0.86rem !important;
+  }
+
+  .official-shell .official-wrap .p-6 {
+    padding: 0.95rem !important;
+  }
+
+  .official-shell .official-wrap .py-16 {
+    padding-top: 2.1rem !important;
+    padding-bottom: 2.2rem !important;
+  }
+
+  .official-shell .official-wrap .mb-14 {
+    margin-bottom: 2rem !important;
+  }
+
+  .official-shell footer .official-wrap {
+    padding-top: 2.2rem !important;
+    padding-bottom: 2.2rem !important;
+    gap: 1.3rem !important;
+  }
+
+  .official-shell footer ul {
+    margin-top: 0.7rem !important;
+    gap: 0.3rem !important;
+  }
+
+  .realrwa-shell .core-home-card {
+    min-height: 640px;
+  }
+
+  .realrwa-shell .home-market-wrap {
+    max-width: 1240px !important;
+  }
+
+  .realrwa-shell .market-main-card {
+    min-height: 560px !important;
+    padding: 1rem !important;
+  }
+
+  .realrwa-shell .market-icon-wrap {
+    width: 56px !important;
+    height: 56px !important;
+  }
+
+  .realrwa-shell .market-symbol {
+    font-size: 1.82rem !important;
+  }
+
+  .realrwa-shell .market-apr,
+  .realrwa-shell .market-price {
+    font-size: 1.72rem !important;
+  }
+
+  .realrwa-shell .market-apr-unit {
+    font-size: 1rem !important;
+  }
+
+  .realrwa-shell .market-approx {
+    font-size: 0.94rem !important;
+  }
+
+  .realrwa-shell .market-trend {
+    height: 66px !important;
+  }
+
+  .realrwa-shell .market-meta {
+    font-size: 0.78rem !important;
+  }
+
+  .real-topnav-shell .real-topnav-wrap {
+    height: 3.25rem !important;
+  }
+
+  .real-topnav-shell .real-topnav-brand {
+    font-size: 1.35rem !important;
+  }
+
+  .real-topnav-shell .real-topnav-logo {
+    width: 1.85rem !important;
+    height: 1.85rem !important;
+  }
+
+  .real-topnav-shell .real-topnav-item {
+    font-size: 0.76rem !important;
+    padding-left: 0.62rem !important;
+    padding-right: 0.62rem !important;
+  }
+
+  .real-topnav-shell .real-topnav-cta {
+    height: 2.1rem !important;
+    font-size: 0.76rem !important;
+    padding-left: 0.7rem !important;
+    padding-right: 0.7rem !important;
+  }
+
+  .real-topnav-shell .real-topnav-wallet-trigger {
+    max-width: 14.2rem;
+  }
+
+  .real-topnav-shell .real-topnav-nav {
+    gap: 0.1rem !important;
+  }
+
+  .real-topnav-shell .real-topnav-right {
+    gap: 0.35rem !important;
+  }
+
+  .real-topnav-shell .real-topnav-wallet-label {
+    max-width: 8.2rem !important;
+    font-size: 0.72rem;
+  }
+
+  .real-topnav-shell .real-topnav-dropdown {
+    width: 13.8rem !important;
+  }
+
+  .realrwa-shell .feature-hero-title {
+    font-size: 1.95rem !important;
+    line-height: 1.1 !important;
+  }
+
+  .realrwa-shell .feature-hero-sub {
+    font-size: 0.9rem !important;
+    line-height: 1.5 !important;
+  }
+
+  .realrwa-shell .feature-metric-card {
+    padding: 0.85rem !important;
+  }
+
+  .realrwa-shell .feature-metric-value {
+    font-size: 1.25rem !important;
+  }
+
+  .realrwa-shell .feature-table-title {
+    font-size: 0.92rem !important;
+  }
+
+  .realrwa-shell .feature-search {
+    width: 180px !important;
+    height: 2.1rem !important;
+  }
+
+  .realrwa-shell .feature-date {
+    height: 2.1rem !important;
+    font-size: 0.72rem !important;
+  }
+
+  .realrwa-shell .feature-grid {
+    font-size: 0.72rem !important;
+  }
+
+  .realrwa-shell .portfolio-page-title {
+    font-size: 1.25rem !important;
+  }
+
+  .realrwa-shell .portfolio-table-wrap {
+    border-radius: 0.8rem !important;
+    padding: 0.7rem !important;
+  }
+
+  .realrwa-shell .portfolio-table-head {
+    font-size: 0.7rem !important;
+  }
+
+  .realrwa-shell .portfolio-table-row {
+    font-size: 0.78rem !important;
+    padding-top: 0.65rem !important;
+    padding-bottom: 0.65rem !important;
+  }
+
+  .realrwa-shell .portfolio-balance-value {
+    font-size: 1.42rem !important;
+  }
+
+  .realrwa-shell .core-detail-stat {
+    min-height: 156px;
+  }
+
+  .realrwa-shell .core-staked-stat {
+    min-height: 236px;
+  }
+
+  .realrwa-shell .staked-hero-title {
+    font-size: 2.3rem !important;
+    line-height: 1.08 !important;
+  }
+
+  .realrwa-shell .staked-hero-sub {
+    font-size: 1.22rem !important;
+    line-height: 1.38 !important;
+  }
+
+  .realrwa-shell .staked-stat-value {
+    font-size: 2rem !important;
+  }
+
+  .realrwa-shell .staked-apr-ring {
+    width: 7.2rem !important;
+    height: 7.2rem !important;
+    border-width: 9px !important;
+    font-size: 1.5rem !important;
+  }
+
+  .realrwa-shell .core-detail-chart {
+    height: 360px !important;
+  }
+
+  .realrwa-shell .core-side-actions .h-11 {
+    height: 2.75rem !important;
+  }
+
+  .realrwa-shell .core-detail-side {
+    min-height: 700px;
+  }
+
+  .realrwa-shell .detail-header-title {
+    font-size: 2.2rem !important;
+  }
+
+  .realrwa-shell .detail-header-sub {
+    font-size: 0.96rem !important;
+  }
+
+  .realrwa-shell .detail-metric-value {
+    font-size: 1.95rem !important;
+  }
+
+  .realrwa-shell .detail-metric-sub {
+    font-size: 0.9rem !important;
+  }
+
+  .realrwa-shell .detail-side-title {
+    font-size: 1.25rem !important;
+  }
+
+  .realrwa-shell .detail-side-value {
+    font-size: 1.78rem !important;
+  }
+
+  .realrwa-shell .detail-side-subvalue {
+    font-size: 1.36rem !important;
+  }
+
+  .realrwa-shell .detail-side-money {
+    font-size: 0.88rem !important;
+  }
+
+  .realrwa-shell .detail-side-panel {
+    padding: 0.78rem !important;
+  }
+
+  .realrwa-shell .detail-side-status-grid {
+    gap: 0.35rem !important;
+  }
+
+  .realrwa-shell .detail-side-balance-card {
+    padding: 0.72rem !important;
+  }
+
+  .realrwa-shell .detail-side-meta-card,
+  .realrwa-shell .detail-side-next-card {
+    padding: 0.62rem !important;
+  }
+
+  .realrwa-shell .detail-chart-panel {
+    padding: 0.85rem !important;
+  }
+
+  .realrwa-shell .detail-chart {
+    border-radius: 0.85rem !important;
+    padding: 0.75rem !important;
+  }
+
+  .realrwa-shell .detail-chart-axis {
+    flex-basis: 26% !important;
+    font-size: 0.62rem !important;
+  }
+
+  .realrwa-shell .detail-chart-bars {
+    flex-basis: 74% !important;
+    gap: 0.32rem !important;
+  }
+
+  .realrwa-shell .detail-chart-apr-line {
+    left: 27% !important;
+    width: 52% !important;
+  }
+
+  .realrwa-shell .detail-chart-ticks {
+    font-size: 0.56rem !important;
+  }
+
+  .realrwa-shell .staked-list-section {
+    margin-top: 1.8rem !important;
+  }
+
+  .realrwa-shell .staked-table-head {
+    font-size: 0.68rem !important;
+  }
+
+  .realrwa-shell .staked-table-title {
+    font-size: 1.02rem !important;
+  }
+
+  .realrwa-shell .staked-table-row {
+    font-size: 0.76rem !important;
+    padding-top: 0.62rem !important;
+    padding-bottom: 0.62rem !important;
+  }
+
+  .realrwa-shell .staked-table-action {
+    font-size: 0.66rem !important;
+    padding: 0.2rem 0.5rem !important;
+  }
+}
+
+@media (min-width: 1513px) and (max-width: 1919px) {
+  .real-page-wrap,
+  .official-wrap,
+  .official-home-wrap {
+    max-width: 1560px !important;
+  }
+
+  .official-home-header .official-home-wrap {
+    height: 4rem !important;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+
+  .official-home-nav {
+    gap: 1.35rem !important;
+  }
+
+  .official-home-nav-item {
+    font-size: 0.92rem !important;
+  }
+
+  .official-home-hero .official-home-wrap {
+    min-height: 35rem !important;
+    gap: 2rem !important;
+    padding-top: 2.5rem !important;
+    padding-bottom: 2.5rem !important;
+  }
+
+  .official-hero-visual {
+    min-height: 24rem !important;
+  }
+
+  .official-hero-eyebrow {
+    font-size: 4rem !important;
+  }
+
+  .official-hero-title {
+    margin-top: 2rem !important;
+    font-size: 6.4rem !important;
+  }
+
+  .official-hero-copy p {
+    font-size: 1.15rem !important;
+  }
+
+  .official-home .official-section {
+    margin-top: 4rem !important;
+  }
+
+  .official-home footer .official-home-wrap {
+    gap: 1.75rem !important;
+    padding-top: 2.4rem !important;
+    padding-bottom: 2.4rem !important;
+  }
+
+  .real-topnav-shell .real-topnav-wrap,
+  .official-shell .official-topnav .official-wrap {
+    height: 3.75rem !important;
+    padding-left: 0.95rem !important;
+    padding-right: 0.95rem !important;
+  }
+
+  .real-topnav-shell .real-topnav-brand,
+  .official-shell .official-topnav .official-topnav-brand {
+    font-size: 1.5rem !important;
+  }
+
+  .real-topnav-shell .real-topnav-logo,
+  .official-shell .official-topnav .real-brand-mark {
+    width: 2rem !important;
+    height: 2rem !important;
+  }
+
+  .real-topnav-shell .real-topnav-item {
+    font-size: 0.84rem !important;
+    padding-left: 0.86rem !important;
+    padding-right: 0.86rem !important;
+  }
+
+  .real-topnav-shell .real-topnav-cta {
+    height: 2.25rem !important;
+    font-size: 0.8rem !important;
+    padding-left: 0.82rem !important;
+    padding-right: 0.82rem !important;
+  }
+
+  .real-topnav-shell .real-topnav-wallet-trigger {
+    max-width: 15.8rem !important;
+  }
+
+  .real-topnav-shell .real-topnav-wallet-label {
+    max-width: 9.8rem !important;
+    font-size: 0.8rem !important;
+  }
+
+  .real-topnav-shell .real-topnav-right {
+    gap: 0.42rem !important;
+  }
+
+  .real-topnav-shell .real-topnav-nav {
+    gap: 0.15rem !important;
+  }
+
+  .official-shell .official-hero .official-wrap {
+    padding-top: 2.7rem !important;
+    padding-bottom: 2.7rem !important;
+    gap: 1.75rem !important;
+  }
+
+  .official-shell .official-hero h1 {
+    font-size: 3rem !important;
+    line-height: 1.05 !important;
+  }
+
+  .official-shell .official-hero p {
+    font-size: 1.08rem !important;
+  }
+
+  .official-shell .official-wrap .text-4xl {
+    font-size: 2.2rem !important;
+  }
+
+  .official-shell .official-wrap .text-2xl {
+    font-size: 1.3rem !important;
+  }
+
+  .official-shell .official-wrap .text-lg {
+    font-size: 0.97rem !important;
+  }
+
+  .official-shell .official-wrap .text-base,
+  .official-shell .official-wrap .text-sm {
+    font-size: 0.86rem !important;
+  }
+
+  .official-shell .official-wrap .p-6 {
+    padding: 1.05rem !important;
+  }
+
+  .official-shell .official-wrap .py-14,
+  .official-shell .official-wrap .py-12,
+  .official-shell .official-wrap .py-10,
+  .official-shell .official-wrap .py-8 {
+    padding-top: 2.3rem !important;
+    padding-bottom: 2.3rem !important;
+  }
+
+  .official-shell footer .official-wrap {
+    gap: 1.65rem !important;
+    padding-top: 2.4rem !important;
+    padding-bottom: 2.4rem !important;
+  }
+
+  .realrwa-shell .core-home-card {
+    min-height: 610px;
+  }
+
+  .realrwa-shell .home-market-wrap {
+    max-width: 1560px !important;
+  }
+
+  .realrwa-shell .market-main-card {
+    min-height: 560px !important;
+    padding: 1rem !important;
+  }
+
+  .realrwa-shell .market-icon-wrap {
+    width: 58px !important;
+    height: 58px !important;
+  }
+
+  .realrwa-shell .market-symbol {
+    font-size: 1.9rem !important;
+  }
+
+  .realrwa-shell .market-issuer {
+    font-size: 0.9rem !important;
+  }
+
+  .realrwa-shell .market-tag {
+    font-size: 0.76rem !important;
+    padding: 0.28rem 0.54rem !important;
+  }
+
+  .realrwa-shell .market-apr,
+  .realrwa-shell .market-price {
+    font-size: 1.84rem !important;
+  }
+
+  .realrwa-shell .market-apr-unit {
+    font-size: 1.03rem !important;
+  }
+
+  .realrwa-shell .market-approx {
+    font-size: 0.96rem !important;
+  }
+
+  .realrwa-shell .market-desc {
+    font-size: 0.84rem !important;
+    line-height: 1.5 !important;
+  }
+
+  .realrwa-shell .market-trend-wrap {
+    margin-top: 0.85rem !important;
+    padding: 0.7rem 0.78rem !important;
+  }
+
+  .realrwa-shell .market-trend {
+    height: 60px !important;
+  }
+
+  .realrwa-shell .market-meta {
+    font-size: 0.78rem !important;
+  }
+
+  .realrwa-shell .market-main-card .real-outline-btn,
+  .realrwa-shell .market-main-card .real-gold-btn {
+    height: 2.5rem !important;
+    font-size: 1rem !important;
+  }
+
+  .realrwa-shell .feature-hero-title {
+    font-size: 2.15rem !important;
+  }
+
+  .realrwa-shell .feature-hero-sub {
+    font-size: 0.92rem !important;
+  }
+
+  .realrwa-shell .feature-metric-card {
+    padding: 0.88rem !important;
+  }
+
+  .realrwa-shell .feature-metric-value {
+    font-size: 1.35rem !important;
+  }
+
+  .realrwa-shell .feature-table-title {
+    font-size: 1rem !important;
+  }
+
+  .realrwa-shell .feature-search {
+    width: 220px !important;
+    height: 2.2rem !important;
+  }
+
+  .realrwa-shell .feature-date {
+    height: 2.2rem !important;
+    font-size: 0.76rem !important;
+  }
+
+  .realrwa-shell .feature-grid {
+    font-size: 0.76rem !important;
+  }
+
+  .realrwa-shell .feature-page .rounded-2xl {
+    border-radius: 0.85rem !important;
+  }
+
+  .realrwa-shell .portfolio-page-title {
+    font-size: 1.35rem !important;
+  }
+
+  .realrwa-shell .portfolio-table-wrap {
+    padding: 0.78rem !important;
+  }
+
+  .realrwa-shell .portfolio-table-head {
+    font-size: 0.78rem !important;
+  }
+
+  .realrwa-shell .portfolio-table-row {
+    font-size: 0.86rem !important;
+  }
+
+  .realrwa-shell .staked-hero-title {
+    font-size: 2.45rem !important;
+  }
+
+  .realrwa-shell .staked-hero-sub {
+    font-size: 1.25rem !important;
+  }
+
+  .realrwa-shell .staked-stat-value {
+    font-size: 2.12rem !important;
+  }
+
+  .realrwa-shell .core-staked-stat {
+    min-height: 232px !important;
+  }
+
+  .realrwa-shell .staked-apr-ring {
+    width: 7.25rem !important;
+    height: 7.25rem !important;
+    border-width: 9px !important;
+    font-size: 1.52rem !important;
+  }
+
+  .realrwa-shell .staked-table-title {
+    font-size: 1.08rem !important;
+  }
+
+  .realrwa-shell .staked-table-head {
+    font-size: 0.71rem !important;
+    padding-top: 0.6rem !important;
+    padding-bottom: 0.6rem !important;
+  }
+
+  .realrwa-shell .staked-table-row {
+    font-size: 0.79rem !important;
+    padding-top: 0.62rem !important;
+    padding-bottom: 0.62rem !important;
+  }
+
+  .realrwa-shell .staked-table-action {
+    font-size: 0.67rem !important;
+    padding: 0.2rem 0.5rem !important;
+  }
+
+  .realrwa-shell .core-detail-chart {
+    height: 370px !important;
+  }
+
+  .realrwa-shell .detail-chart-panel {
+    padding: 0.9rem !important;
+  }
+
+  .realrwa-shell .detail-chart {
+    padding: 0.8rem !important;
+  }
+
+  .realrwa-shell .detail-chart-axis {
+    font-size: 0.62rem !important;
+  }
+
+  .realrwa-shell .detail-chart-bars {
+    gap: 0.3rem !important;
+  }
+
+  .realrwa-shell .detail-chart-ticks {
+    font-size: 0.56rem !important;
+  }
+
+  .realrwa-shell .detail-header-title {
+    font-size: 2.35rem !important;
+  }
+
+  .realrwa-shell .detail-metric-value {
+    font-size: 2.02rem !important;
+  }
+
+  .realrwa-shell .core-detail-stat {
+    min-height: 164px !important;
+  }
+
+  .realrwa-shell .detail-metric-card {
+    padding: 0.95rem !important;
+  }
+
+  .realrwa-shell .detail-back-btn {
+    margin-bottom: 0.9rem !important;
+    font-size: 1.05rem !important;
+  }
+
+  .realrwa-shell .detail-side-value {
+    font-size: 1.82rem !important;
+  }
+
+  .realrwa-shell .detail-side-subvalue {
+    font-size: 1.38rem !important;
+  }
+
+  .realrwa-shell .core-detail-side {
+    min-height: 660px !important;
+  }
+
+  .realrwa-shell .detail-side-panel {
+    padding: 0.9rem !important;
+  }
+
+  .realrwa-shell .detail-side-status-grid {
+    gap: 0.4rem !important;
+  }
+
+  .realrwa-shell .detail-side-actions {
+    gap: 0.38rem !important;
+  }
+
+  .realrwa-shell .detail-side-actions .h-11 {
+    height: 2.45rem !important;
+    font-size: 0.82rem !important;
+    border-radius: 0.55rem !important;
+  }
+
+  .realrwa-shell .mac-modal-panel-xl {
+    max-width: min(86vw, 860px) !important;
+  }
+
+  .realrwa-shell .mac-modal-panel-lg {
+    max-width: min(84vw, 700px) !important;
+  }
+
+  .realrwa-shell .mac-modal-panel-md {
+    max-width: min(76vw, 560px) !important;
+  }
+
+  .realrwa-shell .mac-modal-title {
+    font-size: 1.32rem !important;
+  }
+
+  .realrwa-shell .mac-modal-success-title {
+    font-size: 1.86rem !important;
+  }
+
+  .realrwa-shell .mac-modal-field {
+    height: 3.2rem !important;
+  }
+
+  .realrwa-shell .mac-modal-action {
+    height: 3rem !important;
+    font-size: 0.96rem !important;
+  }
+
+  .realrwa-shell .mac-deposit-qr {
+    width: 220px !important;
+    height: 220px !important;
+  }
+}
+
+:root {
+  --editorial-bg: #0d0b0a;
+  --editorial-fg: #f4ede3;
+  --editorial-muted: #ada395;
+  --editorial-panel-solid: rgba(18, 15, 14, 0.82);
+  --editorial-panel-soft: rgba(22, 18, 17, 0.54);
+  --editorial-border: rgba(244, 237, 227, 0.1);
+  --editorial-border-strong: rgba(244, 237, 227, 0.18);
+  --editorial-accent-strong: #cbb2a5;
+  --editorial-gilt: rgba(203, 178, 165, 0.24);
+  --editorial-ink: #110f0e;
+  --editorial-shadow-soft: 0 28px 84px rgba(0, 0, 0, 0.34);
+  --editorial-shadow-press: 0 18px 46px rgba(0, 0, 0, 0.24);
+}
+
+.light {
+  --editorial-bg: #f4eee5;
+  --editorial-fg: #171311;
+  --editorial-muted: #6d655f;
+  --editorial-panel-solid: rgba(247, 241, 233, 0.9);
+  --editorial-panel-soft: rgba(247, 241, 233, 0.62);
+  --editorial-border: rgba(23, 19, 17, 0.1);
+  --editorial-border-strong: rgba(23, 19, 17, 0.18);
+  --editorial-accent-strong: #6a403b;
+  --editorial-gilt: rgba(106, 64, 59, 0.18);
+  --editorial-ink: #171311;
+  --editorial-shadow-soft: 0 24px 70px rgba(54, 40, 31, 0.1);
+  --editorial-shadow-press: 0 14px 34px rgba(54, 40, 31, 0.1);
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    min-height: 100vh;
+    background: var(--background);
+    color: var(--foreground);
+  }
+
+  ::selection {
+    background: rgba(109, 61, 57, 0.32);
+    color: var(--editorial-fg);
+  }
+}
+
+@layer components {
+  .vanta-shell {
+    font-family:
+      "Avenir Next", "Segoe UI", "PingFang SC", "Hiragino Sans GB",
+      "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+    background:
+      radial-gradient(circle at 16% 0%, rgba(109, 61, 57, 0.18), transparent 26%),
+      radial-gradient(circle at 84% 14%, rgba(255, 255, 255, 0.08), transparent 24%),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.025), transparent 22%),
+      var(--editorial-bg);
+    color: var(--editorial-fg);
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  .vanta-shell::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.035), transparent 16%, transparent 78%, rgba(0, 0, 0, 0.18)),
+      radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.04), transparent 38%);
+    z-index: -1;
+  }
+
+  .vanta-shell::after {
+    content: "";
+    position: fixed;
+    inset: 12px;
+    border: 1px solid rgba(244, 237, 227, 0.035);
+    border-radius: 24px;
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  .light .vanta-shell {
+    background:
+      radial-gradient(circle at 18% 0%, rgba(109, 61, 57, 0.1), transparent 26%),
+      radial-gradient(circle at 84% 16%, rgba(23, 19, 17, 0.05), transparent 22%),
+      linear-gradient(180deg, rgba(23, 19, 17, 0.03), transparent 24%),
+      var(--editorial-bg);
+  }
+
+  .light .vanta-shell::before {
+    background:
+      linear-gradient(180deg, rgba(23, 19, 17, 0.03), transparent 16%, transparent 78%, rgba(23, 19, 17, 0.06)),
+      radial-gradient(circle at 50% 0%, rgba(23, 19, 17, 0.03), transparent 38%);
+  }
+
+  .light .vanta-shell::after {
+    border-color: rgba(23, 19, 17, 0.05);
+  }
+
+  .vanta-display {
+    font-family:
+      "SF Pro Display", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
+      "Noto Sans CJK SC", sans-serif;
+    font-weight: 600;
+    letter-spacing: -0.04em;
+    line-height: 1.12;
+  }
+
+  .vanta-shell {
+    font-family:
+      "SF Pro Text", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
+      "Noto Sans CJK SC", sans-serif;
+  }
+
+  .vanta-shell :where(h1, h2, h3, h4) {
+    font-family:
+      "SF Pro Display", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
+      "Noto Sans CJK SC", sans-serif;
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    line-height: 1.18;
+    text-wrap: balance;
+  }
+
+  .vanta-shell :where(p, li, label) {
+    font-family:
+      "SF Pro Text", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
+      "Noto Sans CJK SC", sans-serif;
+    letter-spacing: -0.004em;
+    line-height: 1.82;
+    text-wrap: pretty;
+  }
+
+  .vanta-shell :where(button, input, textarea, a) {
+    font-family:
+      "SF Pro Text", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
+      "Noto Sans CJK SC", sans-serif;
+    letter-spacing: 0.01em;
+  }
+
+  .vanta-shell :where([class*="uppercase"]) {
+    text-transform: none !important;
+    letter-spacing: 0.04em !important;
+  }
+
+  .vanta-shell :where([class*="text-[0.64rem]"], [class*="text-[0.68rem]"], [class*="text-[0.72rem]"]) {
+    font-size: 0.78rem !important;
+  }
+
+  .vanta-grid {
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 100% 112px, 112px 100%;
+    mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.65), transparent 88%);
+  }
+
+  .light .vanta-grid {
+    background-image:
+      linear-gradient(rgba(23, 19, 17, 0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(23, 19, 17, 0.06) 1px, transparent 1px);
+  }
+
+  .vanta-noise {
+    background-image:
+      repeating-linear-gradient(
+        0deg,
+        rgba(255, 255, 255, 0.02) 0px,
+        rgba(255, 255, 255, 0.02) 1px,
+        transparent 1px,
+        transparent 3px
+      ),
+      repeating-linear-gradient(
+        90deg,
+        rgba(0, 0, 0, 0.012) 0px,
+        rgba(0, 0, 0, 0.012) 1px,
+        transparent 1px,
+        transparent 4px
+      );
+    mix-blend-mode: soft-light;
+  }
+
+  .light .vanta-noise {
+    opacity: 0.34 !important;
+    mix-blend-mode: multiply;
+  }
+
+  .vanta-overline {
+    font-family:
+      "SF Pro Text", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
+      "Noto Sans CJK SC", sans-serif;
+    font-weight: 500;
+    letter-spacing: 0.032em;
+    line-height: 1.46;
+    text-transform: none;
+    color: var(--editorial-muted);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    font-feature-settings: "kern" 1, "liga" 1;
+  }
+
+  .vanta-hero-title {
+    font-family:
+      "SF Pro Display", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
+      "Noto Sans CJK SC", sans-serif;
+    font-weight: 600;
+    letter-spacing: -0.048em;
+    line-height: 1.08;
+    text-wrap: balance;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    font-feature-settings: "kern" 1, "liga" 1;
+  }
+
+  .vanta-hero-copy {
+    font-family:
+      "SF Pro Text", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
+      "Noto Sans CJK SC", sans-serif;
+    letter-spacing: -0.004em;
+    line-height: 1.82;
+    text-wrap: pretty;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    font-feature-settings: "kern" 1, "liga" 1;
+  }
+
+  .vanta-hero-label {
+    font-family:
+      "SF Pro Text", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
+      "Noto Sans CJK SC", sans-serif;
+    font-weight: 500;
+    letter-spacing: 0.032em;
+    line-height: 1.45;
+    text-transform: none;
+    color: var(--editorial-muted);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    font-feature-settings: "kern" 1, "liga" 1;
+  }
+
+  .vanta-hero-panel-title {
+    font-family:
+      "SF Pro Display", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
+      "Noto Sans CJK SC", sans-serif;
+    letter-spacing: -0.032em;
+    line-height: 1.14;
+    text-wrap: balance;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    font-feature-settings: "kern" 1, "liga" 1;
+  }
+
+  .vanta-section-title {
+    font-family:
+      "SF Pro Display", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
+      "Noto Sans CJK SC", sans-serif;
+    font-weight: 600;
+    letter-spacing: -0.032em;
+    line-height: 1.18;
+    text-wrap: balance;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    font-feature-settings: "kern" 1, "liga" 1;
+  }
+
+  .vanta-section-copy {
+    font-family:
+      "SF Pro Text", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
+      "Noto Sans CJK SC", sans-serif;
+    letter-spacing: -0.003em;
+    line-height: 1.82;
+    text-wrap: pretty;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    font-feature-settings: "kern" 1, "liga" 1;
+  }
+
+  .vanta-plaque {
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03)),
+      var(--editorial-panel-soft);
+    border: 1px solid var(--editorial-border);
+    box-shadow: var(--editorial-shadow-press);
+    backdrop-filter: blur(18px);
+  }
+}
+
+@media (max-width: 460px) {
+  .vanta-shell {
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  }
+
+  .vanta-shell::after {
+    inset: 8px;
+    border-radius: 20px;
+  }
+
+  .vanta-grid {
+    background-size: 100% 84px, 84px 100%;
+  }
+
+  .vanta-shell :where(h1, h2, h3, h4) {
+    line-height: 1.14;
+  }
+
+  .vanta-shell :where(p, li, label) {
+    line-height: 1.74;
+  }
+
+  .vanta-shell :where(button, input, textarea, a) {
+    letter-spacing: 0.008em;
+  }
+
+  .vanta-shell :where(input, textarea, select) {
+    font-size: 16px !important;
+  }
+
+  .vanta-overline,
+  .vanta-hero-label {
+    letter-spacing: 0.03em;
+  }
+
+  .vanta-hero-title {
+    font-size: clamp(3.15rem, 11vw, 4.25rem) !important;
+    line-height: 1.08;
+    letter-spacing: -0.05em;
+  }
+
+  .vanta-hero-panel-title {
+    font-size: clamp(1.55rem, 6.6vw, 2.15rem) !important;
+    line-height: 1.14;
+  }
+
+  .vanta-section-title {
+    font-size: clamp(1.7rem, 7vw, 2.55rem) !important;
+    line-height: 1.16;
+  }
+
+  .vanta-hero-copy,
+  .vanta-section-copy {
+    font-size: 0.98rem !important;
+    line-height: 1.8;
+  }
+}
+
+@media (min-width: 1024px) {
+  .real-topnav-shell .real-topnav-wrap {
+    height: 4rem !important;
+    padding-left: 1.2rem !important;
+    padding-right: 1.2rem !important;
+  }
+
+  .real-topnav-shell .real-topnav-brand {
+    font-size: 1.58rem !important;
+  }
+
+  .real-topnav-shell .real-topnav-item {
+    min-width: 4.9rem;
+    font-size: 0.97rem !important;
+    padding-left: 1.12rem !important;
+    padding-right: 1.12rem !important;
+  }
+
+  .real-topnav-shell .real-topnav-nav {
+    gap: 0.32rem !important;
+  }
+
+  .real-topnav-shell .real-topnav-cta {
+    height: 2.45rem !important;
+    font-size: 0.88rem !important;
+    padding-left: 0.92rem !important;
+    padding-right: 0.92rem !important;
+  }
+
+  .real-topnav-shell .real-topnav-wallet-label {
+    max-width: 10.4rem !important;
+    font-size: 0.86rem !important;
+  }
+}
+
+@layer components {
+  .realrwa-shell {
+    background: #000;
+  }
+
+  .real-topnav-shell .real-topnav-wrap {
+    height: 72px !important;
+    padding-left: 1.5rem !important;
+    padding-right: 1.5rem !important;
+  }
+
+  .real-topnav-shell .real-topnav-brand {
+    font-size: 1.625rem !important;
+  }
+
+  .real-topnav-shell .real-topnav-logo {
+    width: 3rem !important;
+    height: 3rem !important;
+    border: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  .real-topnav-shell .real-topnav-nav {
+    gap: 0.5rem !important;
+  }
+
+  .real-topnav-shell .real-topnav-item {
+    min-width: unset !important;
+    padding: 0.75rem 1.75rem !important;
+    font-size: 0.95rem !important;
+    border-radius: 0.875rem !important;
+  }
+
+  .real-topnav-shell .real-topnav-cta {
+    height: 2.5rem !important;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+    font-size: 0.95rem !important;
+  }
+
+  .real-topnav-shell .real-topnav-dropdown {
+    background: #2e2b26 !important;
+    border-radius: 1rem !important;
+  }
+}

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <path
+    d="M32 6L53.5 16.8V39.2L32 50L10.5 39.2V16.8L32 6Z"
+    stroke="#E9C15B"
+    stroke-width="3.2"
+    stroke-linejoin="round"
+  />
+  <path
+    d="M32 15L43.8 20.9V32.8L32 38.7L20.2 32.8V20.9L32 15Z"
+    stroke="#E9C15B"
+    stroke-width="2.6"
+    stroke-linejoin="round"
+    opacity="0.9"
+  />
+</svg>
