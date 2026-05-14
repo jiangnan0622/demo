@@ -30,6 +30,14 @@ type ProductRow = {
   marketMakers: MarketMakerEntry[];
   description?: string;
   descriptionImages?: string[];
+  productLogoImage?: string;
+  chainNetwork?: string;
+  issuedAmount?: string;
+  bondAnnualYield?: string;
+  baseAnnualRate?: string;
+  pointAnnualRate?: string;
+  commissionAnnualRate?: string;
+  zhContent?: ProductLocaleContent;
   englishContent?: ProductLocaleContent;
   takerFeeRate?: string;
   makerFeeRate?: string;
@@ -689,16 +697,51 @@ function getEnglishContentFromForm(form: ProductFormState): ProductLocaleContent
   };
 }
 
+function getChineseContentFromForm(form: ProductFormState): ProductLocaleContent {
+  return {
+    productTypeName: form.productTypeName,
+    bondName: form.bondName,
+    displayMerchant: form.displayMerchant,
+    underlyingScale: form.underlyingScale,
+    minimumOrder: form.minimumOrder,
+    tradingRule: form.tradingRule,
+    tags: form.tags,
+    tagTwo: form.tagTwo,
+    tagThree: form.tagThree,
+    description: form.description,
+    detailDescription: form.detailDescription,
+  };
+}
+
+function getFallbackChineseContent(row: ProductRow): ProductLocaleContent {
+  const isMoneyMarket = row.productType === "MONEY_MARKET";
+  const marketMakerName = row.marketMakers[0]?.name ?? defaultMarketMaker.name;
+
+  return {
+    productTypeName: productTypeLabels[row.productType],
+    bondName: row.symbol === "rFUIDL" ? "梅隆银行货币基金" : row.symbol,
+    displayMerchant: marketMakerName,
+    underlyingScale: isMoneyMarket ? "美元流动性货币基金" : "城投债底层资产",
+    minimumOrder: `1 ${row.symbol}`,
+    tradingRule: row.symbol === "rFUIDL" ? "工作日买卖 11:00 前当日结算" : "二级市场开放交易",
+    tags: productTypeLabels[row.productType],
+    tagTwo: isMoneyMarket ? "每日流动性" : "固定收益资产",
+    tagThree: "iREAL奖励",
+    description: row.description ?? `${row.symbol} ${productTypeLabels[row.productType]}产品`,
+    detailDescription: row.description ?? `${row.symbol} ${productTypeLabels[row.productType]}产品详情，支持 Markdown 内容编辑。`,
+  };
+}
+
+function normalizeRateValue(value?: string) {
+  return value?.replace("%", "").trim() ?? "";
+}
+
 function inferProductTypeFromName(value: string): ProductRow["productType"] {
   const normalized = value.trim().toLowerCase();
   if (normalized.includes("企业") || normalized.includes("债券") || normalized.includes("corporate") || normalized.includes("bond")) {
     return "CORPORATE_BOND";
   }
   return "MONEY_MARKET";
-}
-
-function hasAnyPrice(prices: StablecoinPrices) {
-  return stablecoinTokens.some((token) => prices[token].trim() !== "");
 }
 
 function hasPositiveCompletePrices(prices: StablecoinPrices) {
@@ -792,9 +835,9 @@ const localeFormCopy = {
     baseAnnualRateLabel: "基础年化(按月分红)",
     pointAnnualRateLabel: "积分年化(iREAL)",
     commissionAnnualRateLabel: "佣金年化",
-    takerFeeLabel: "Taker 手续费（用户购买时收稳定币，用户卖出时收 r 代币）",
+    takerFeeLabel: "Taker 手续费（做市方将收取费率，币种是稳定币）",
     takerFeeHint: "用户购买手续费=稳定币实际购买额度*手续费率；用户实际获得代币=(稳定币购买额-手续费)/代币单价。",
-    makerFeeLabel: "Maker 手续费（用户卖出时平台侧反向收取）",
+    makerFeeLabel: "Maker 手续费（做市方将收取费率，币种是 rToken）",
     makerFeeHint: "用户卖出手续费=卖出代币数量*手续费率；用户实际获得稳定币=代币数量*(1-手续费率)*代币单价。",
     remarkTitle: "产品备注",
     remarkPlaceholder:
@@ -838,10 +881,10 @@ const localeFormCopy = {
     baseAnnualRateLabel: "Monthly Distribution APY",
     pointAnnualRateLabel: "iREAL Points APY",
     commissionAnnualRateLabel: "Commission APY",
-    takerFeeLabel: "Taker Fee (stablecoin for user buys, r-token for user sells)",
+    takerFeeLabel: "Taker Fee (market maker charges this rate in stablecoin)",
     takerFeeHint:
       "User buy fee = stablecoin purchase amount * fee rate; token received = (stablecoin purchase amount - fee) / token price.",
-    makerFeeLabel: "Maker Fee (platform side uses the opposite collection direction)",
+    makerFeeLabel: "Maker Fee (market maker charges this rate in rToken)",
     makerFeeHint:
       "User sell fee = token amount * fee rate; stablecoin received = token amount * (1 - fee rate) * token price.",
     remarkTitle: "Product Notes",
@@ -860,6 +903,7 @@ function FieldWithAction({
   actionLabel,
   required,
   requiredMark,
+  disabled,
 }: {
   label?: string;
   placeholder: string;
@@ -868,8 +912,13 @@ function FieldWithAction({
   actionLabel: string;
   required?: boolean;
   requiredMark?: boolean;
+  disabled?: boolean;
 }) {
   const isRequired = required || requiredMark;
+  const inputClassName = disabled
+    ? "bg-[#f5f7fa] text-[#909399] cursor-not-allowed"
+    : "bg-white text-[#303133]";
+  const actionClassName = disabled ? "bg-[#c0c4cc] text-white" : "bg-[#2f86f6] text-white";
 
   return (
     <label className="block">
@@ -882,12 +931,13 @@ function FieldWithAction({
       <div className={`${label ? "mt-2 " : ""}flex items-center`}>
         <div className="flex min-w-0 flex-1">
           <input
-            className="h-10 min-w-0 flex-1 rounded-l-[4px] border border-r-0 border-[#dcdfe6] bg-white px-3 text-[13px] outline-none placeholder:text-[#a8b3c1] focus:border-[#1f5bd8]"
+            className={`h-10 min-w-0 flex-1 rounded-l-[4px] border border-r-0 border-[#dcdfe6] px-3 text-[13px] outline-none placeholder:text-[#a8b3c1] focus:border-[#1f5bd8] ${inputClassName}`}
             placeholder={placeholder}
             value={value}
+            disabled={disabled}
             onChange={(event) => onChange(event.target.value)}
           />
-          <span className="grid h-10 w-[92px] place-items-center rounded-r-[4px] bg-[#2f86f6] text-[13px] font-medium text-white">
+          <span className={`grid h-10 w-[92px] place-items-center rounded-r-[4px] text-[13px] font-medium ${actionClassName}`}>
             {actionLabel}
           </span>
         </div>
@@ -988,8 +1038,6 @@ function ProductFormDialog({
   onChange,
   onCancel,
   onConfirm,
-  showTradingTimeButton,
-  onOpenTradingTime,
 }: {
   open: boolean;
   title: string;
@@ -998,17 +1046,14 @@ function ProductFormDialog({
   onChange: (next: ProductFormState) => void;
   onCancel: () => void;
   onConfirm: () => void;
-  showTradingTimeButton: boolean;
-  onOpenTradingTime: () => void;
 }) {
   const [activeLocale, setActiveLocale] = useState<ProductFormLocale>("zh");
 
   if (!open) return null;
   const isCreate = mode === "create";
+  const lockIdentityFields = mode === "edit";
   const localeKeys = localeFieldKeys[activeLocale];
   const localeCopy = localeFormCopy[activeLocale];
-  const sellPriceGroup = activeLocale === "zh" ? "sellPrices" : "enSellPrices";
-  const buyPriceGroup = activeLocale === "zh" ? "repurchasePrices" : "enRepurchasePrices";
   const updateText = (key: ProductFormTextKey, value: string) => onChange({ ...form, [key]: value });
   const updateLocaleText = (key: keyof typeof localeKeys, value: string) => updateText(localeKeys[key], value);
   const updateDescriptionImage = (index: number, image: string) => {
@@ -1017,7 +1062,7 @@ function ProductFormDialog({
     onChange({ ...form, descriptionImages: next });
   };
   const updatePrice = (
-    group: "sellPrices" | "repurchasePrices" | "enSellPrices" | "enRepurchasePrices",
+    group: "sellPrices" | "repurchasePrices",
     token: keyof StablecoinPrices,
     value: string
   ) => {
@@ -1047,70 +1092,39 @@ function ProductFormDialog({
         </header>
 
         <div className="shrink-0 border-b border-[#ebeef5] px-8 pt-6">
-          <div className="flex items-end justify-between">
-            {isCreate ? (
-              <div className="flex gap-3 pb-3">
-                <button
-                  type="button"
-                  className={`h-8 w-[104px] rounded-[3px] text-[13px] font-medium ${
-                    activeLocale === "zh"
-                      ? "bg-[#2f86f6] text-white"
-                      : "border border-[#dcdfe6] bg-white text-[#606266]"
-                  }`}
-                  onClick={() => setActiveLocale("zh")}
-                >
-                  中文
-                </button>
-                <button
-                  type="button"
-                  className={`h-8 w-[104px] rounded-[3px] text-[13px] font-medium ${
-                    activeLocale === "en"
-                      ? "bg-[#2f86f6] text-white"
-                      : "border border-[#dcdfe6] bg-white text-[#606266]"
-                  }`}
-                  onClick={() => setActiveLocale("en")}
-                >
-                  英文
-                </button>
-              </div>
-            ) : (
-              <div className="flex items-center gap-10">
-                <button
-                  type="button"
-                  className={`border-b-[3px] pb-3 text-[16px] font-semibold ${
-                    activeLocale === "zh" ? "border-[#1f5bd8] text-[#1f5bd8]" : "border-transparent text-[#303133]"
-                  }`}
-                  onClick={() => setActiveLocale("zh")}
-                >
-                  二次上架产品
-                </button>
-                <button
-                  type="button"
-                  className={`border-b-[3px] pb-3 text-[16px] font-semibold ${
-                    activeLocale === "en" ? "border-[#1f5bd8] text-[#1f5bd8]" : "border-transparent text-[#303133]"
-                  }`}
-                  onClick={() => setActiveLocale("en")}
-                >
-                  英文
-                </button>
-              </div>
-            )}
-            {showTradingTimeButton ? (
-              <button
-                type="button"
-                className="mb-3 h-9 rounded-[6px] border border-[#1f5bd8] bg-white px-4 text-[13px] font-medium text-[#1f5bd8] hover:bg-[#eef3ff]"
-                onClick={onOpenTradingTime}
-              >
-                交易时段
-              </button>
-            ) : (
-              <div className="mb-3 h-9 w-[104px]" />
-            )}
+          <div className="flex gap-3 pb-3">
+            <button
+              type="button"
+              className={`h-8 w-[104px] rounded-[3px] text-[13px] font-medium ${
+                activeLocale === "zh"
+                  ? "bg-[#2f86f6] text-white"
+                  : "border border-[#dcdfe6] bg-white text-[#606266]"
+              }`}
+              onClick={() => setActiveLocale("zh")}
+            >
+              中文
+            </button>
+            <button
+              type="button"
+              className={`h-8 w-[104px] rounded-[3px] text-[13px] font-medium ${
+                activeLocale === "en"
+                  ? "bg-[#2f86f6] text-white"
+                  : "border border-[#dcdfe6] bg-white text-[#606266]"
+              }`}
+              onClick={() => setActiveLocale("en")}
+            >
+              英文
+            </button>
           </div>
         </div>
 
         <div className="min-h-0 flex-1 overflow-y-auto px-8 py-6">
-          {isCreate ? (
+          <div className="space-y-7">
+            {!isCreate ? (
+              <p className="rounded-[4px] bg-[#f5f7fa] px-3 py-2 text-[12px] leading-5 text-[#909399]">
+                编辑产品时，债券全称和交易符号不可修改，其他字段可继续配置。
+              </p>
+            ) : null}
             <div className="space-y-7">
               <FieldWithAction
                 placeholder={localeCopy.productTypePlaceholder}
@@ -1140,6 +1154,7 @@ function ProductFormDialog({
                     onChange={(value) => updateLocaleText("bondName", value)}
                     actionLabel={localeCopy.bondNameAction}
                     requiredMark
+                    disabled={lockIdentityFields}
                   />
                   <FieldWithAction
                     placeholder={localeCopy.symbolPlaceholder}
@@ -1147,6 +1162,7 @@ function ProductFormDialog({
                     onChange={(value) => updateText("symbol", value)}
                     actionLabel={localeCopy.symbolAction}
                     requiredMark
+                    disabled={lockIdentityFields}
                   />
                   <FieldWithAction
                     placeholder={localeCopy.displayMerchantPlaceholder}
@@ -1255,20 +1271,20 @@ function ProductFormDialog({
               </section>
 
               <section className="grid grid-cols-2 gap-6 rounded-[4px] bg-[#f5f5f5] p-5">
-                  <PriceInputRows
-                    title={localeCopy.sellPriceTitle}
-                    prices={form[sellPriceGroup]}
-                    onChange={(token, value) => updatePrice(sellPriceGroup, token, value)}
-                    confirmLabel={localeCopy.confirmAction}
-                    required={activeLocale === "zh"}
-                  />
-                  <PriceInputRows
-                    title={localeCopy.buyPriceTitle}
-                    prices={form[buyPriceGroup]}
-                    onChange={(token, value) => updatePrice(buyPriceGroup, token, value)}
-                    confirmLabel={localeCopy.confirmAction}
-                    required={activeLocale === "zh"}
-                  />
+                <PriceInputRows
+                  title={localeCopy.sellPriceTitle}
+                  prices={form.sellPrices}
+                  onChange={(token, value) => updatePrice("sellPrices", token, value)}
+                  confirmLabel={localeCopy.confirmAction}
+                  required
+                />
+                <PriceInputRows
+                  title={localeCopy.buyPriceTitle}
+                  prices={form.repurchasePrices}
+                  onChange={(token, value) => updatePrice("repurchasePrices", token, value)}
+                  confirmLabel={localeCopy.confirmAction}
+                  required
+                />
               </section>
 
               <section className="space-y-4">
@@ -1321,58 +1337,7 @@ function ProductFormDialog({
                 />
               </section>
             </div>
-          ) : (
-            <div className="space-y-7">
-              <section className="space-y-5">
-                <select
-                  className="h-10 w-full rounded-[4px] border border-[#dcdfe6] bg-[#f8fafc] px-3 text-[13px] text-slate-600 outline-none"
-                  value={form.symbol}
-                  disabled
-                  onChange={(event) => updateText("symbol", event.target.value)}
-                >
-                  {[form.symbol].map((symbol) => (
-                    <option key={symbol} value={symbol}>
-                      {symbol || "请选择上架的产品名称"}
-                    </option>
-                  ))}
-                </select>
-                <div className="grid size-[112px] place-items-center rounded-[4px] border border-[#dcdfe6] bg-white p-4">
-                  {/* eslint-disable-next-line @next/next/no-img-element -- 后台配置页直接复用已有 token 远程素材。 */}
-                  <img
-                    src={getProductLogoUrl(form.symbol)}
-                    alt={`${form.symbol} logo`}
-                    className="size-16 rounded-full object-cover"
-                  />
-                </div>
-              </section>
-
-              <section className="space-y-5 rounded-[4px] bg-[#f5f5f5] p-5">
-                <div className="text-[14px] font-semibold text-[#303133]">产品定价</div>
-                <div className="grid grid-cols-2 gap-5">
-                  <PriceInputRows
-                    title={activeLocale === "zh" ? "卖出计价" : "Sell Price"}
-                    prices={form[sellPriceGroup]}
-                    onChange={(token, value) => updatePrice(sellPriceGroup, token, value)}
-                  />
-                  <PriceInputRows
-                    title={activeLocale === "zh" ? "回购计价" : "Buy Price"}
-                    prices={form[buyPriceGroup]}
-                    onChange={(token, value) => updatePrice(buyPriceGroup, token, value)}
-                  />
-                </div>
-              </section>
-
-              <section className="space-y-3">
-                <div className="text-[14px] font-semibold text-[#303133]">{localeCopy.remarkTitle}</div>
-                <textarea
-                  className="h-[104px] w-full resize-none rounded-[4px] border border-[#dcdfe6] bg-white px-3 py-3 text-[13px] leading-5 outline-none placeholder:text-[#a8b3c1] focus:border-[#1f5bd8]"
-                  placeholder={localeCopy.remarkPlaceholder}
-                  value={form.changeNotes}
-                  onChange={(event) => updateText("changeNotes", event.target.value)}
-                />
-              </section>
-            </div>
-          )}
+          </div>
         </div>
 
         <footer className="flex h-[72px] shrink-0 items-center justify-center gap-5 border-t border-[#ebeef5] bg-white px-8">
@@ -1477,27 +1442,44 @@ export function ProductListPage() {
   };
   const openEdit = (index: number) => {
     const row = products[index];
+    const zh = row.zhContent ?? getFallbackChineseContent(row);
     const english = row.englishContent;
+    const isMoneyMarket = row.productType === "MONEY_MARKET";
     setProductForm({
       ...emptyProductForm,
       symbol: row.symbol,
       contract: row.contract,
       productType: row.productType,
-      productTypeName: productTypeLabels[row.productType],
+      productTypeName: zh.productTypeName,
       rwaAsset: row.rwaAsset,
       sellPrices: row.sellPrices,
       repurchasePrices: row.repurchasePrices,
-      enSellPrices: row.enSellPrices,
-      enRepurchasePrices: row.enRepurchasePrices,
+      enSellPrices: row.sellPrices,
+      enRepurchasePrices: row.repurchasePrices,
       totalAmount: row.totalAmount,
+      issuedAmount: row.issuedAmount ?? row.totalAmount,
       pointCommissionRate: row.pointCommissionRate,
       commissionRate: row.commissionRate,
       totalCommission: row.totalCommission,
       headCommission: row.headCommission,
-      bondName: row.symbol === "rFUIDL" ? "梅隆银行货币基金" : row.symbol,
-      description: row.description ?? "",
+      chainNetwork: row.chainNetwork ?? emptyProductForm.chainNetwork,
+      bondName: zh.bondName,
+      productLogoImage: row.productLogoImage ?? getProductLogoUrl(row.symbol),
+      displayMerchant: zh.displayMerchant,
+      underlyingScale: zh.underlyingScale,
+      minimumOrder: zh.minimumOrder,
+      tradingRule: zh.tradingRule,
+      tags: zh.tags,
+      tagTwo: zh.tagTwo,
+      tagThree: zh.tagThree,
+      description: zh.description,
+      detailDescription: zh.detailDescription,
       descriptionImages: row.descriptionImages ?? [],
       marketMakers: row.marketMakers.length > 0 ? row.marketMakers : [defaultMarketMaker],
+      bondAnnualYield: row.bondAnnualYield ?? (isMoneyMarket ? "3.90" : normalizeRateValue(row.commissionRate)),
+      baseAnnualRate: row.baseAnnualRate ?? (isMoneyMarket ? "3.80" : normalizeRateValue(row.commissionRate)),
+      pointAnnualRate: row.pointAnnualRate ?? normalizeRateValue(row.pointCommissionRate),
+      commissionAnnualRate: row.commissionAnnualRate ?? normalizeRateValue(row.commissionRate),
       takerFeeRate: row.takerFeeRate ?? "",
       makerFeeRate: row.makerFeeRate ?? "",
       changeNotes: row.changeNotes ?? "",
@@ -1547,15 +1529,6 @@ export function ProductListPage() {
       return false;
     }
 
-    const hasEnglishPrice = hasAnyPrice(productForm.enSellPrices) || hasAnyPrice(productForm.enRepurchasePrices);
-    if (
-      hasEnglishPrice &&
-      (!hasPositiveCompletePrices(productForm.enSellPrices) || !hasPositiveCompletePrices(productForm.enRepurchasePrices))
-    ) {
-      showErrorToast("请输入完整有效的英文买入/卖出价格");
-      return false;
-    }
-
     return true;
   };
 
@@ -1575,8 +1548,8 @@ export function ProductListPage() {
           rwaAsset: productForm.rwaAsset,
           sellPrices: productForm.sellPrices,
           repurchasePrices: productForm.repurchasePrices,
-          enSellPrices: productForm.enSellPrices,
-          enRepurchasePrices: productForm.enRepurchasePrices,
+          enSellPrices: productForm.sellPrices,
+          enRepurchasePrices: productForm.repurchasePrices,
           totalAmount: productForm.totalAmount || "0",
           pointCommissionRate: productForm.pointCommissionRate || "0%",
           commissionRate: productForm.commissionRate || "0%",
@@ -1585,8 +1558,16 @@ export function ProductListPage() {
           createdAt: new Date().toISOString().slice(0, 19).replace("T", " "),
           emergencyClosed: false,
           marketMakers: productForm.marketMakers,
+          productLogoImage: productForm.productLogoImage,
+          chainNetwork: productForm.chainNetwork,
+          issuedAmount: productForm.issuedAmount,
+          bondAnnualYield: productForm.bondAnnualYield,
+          baseAnnualRate: productForm.baseAnnualRate,
+          pointAnnualRate: productForm.pointAnnualRate,
+          commissionAnnualRate: productForm.commissionAnnualRate,
           description: productForm.description,
           descriptionImages: productForm.descriptionImages,
+          zhContent: getChineseContentFromForm(productForm),
           englishContent: getEnglishContentFromForm(productForm),
           takerFeeRate: productForm.takerFeeRate,
           makerFeeRate: productForm.makerFeeRate,
@@ -1605,16 +1586,24 @@ export function ProductListPage() {
                 rwaAsset: productForm.rwaAsset,
                 sellPrices: productForm.sellPrices,
                 repurchasePrices: productForm.repurchasePrices,
-                enSellPrices: productForm.enSellPrices,
-                enRepurchasePrices: productForm.enRepurchasePrices,
+                enSellPrices: productForm.sellPrices,
+                enRepurchasePrices: productForm.repurchasePrices,
                 totalAmount: productForm.totalAmount || row.totalAmount,
                 pointCommissionRate: productForm.pointCommissionRate || row.pointCommissionRate,
                 commissionRate: productForm.commissionRate || row.commissionRate,
                 totalCommission: productForm.totalCommission || row.totalCommission,
                 headCommission: productForm.headCommission || row.headCommission,
                 marketMakers: productForm.marketMakers,
+                productLogoImage: productForm.productLogoImage,
+                chainNetwork: productForm.chainNetwork,
+                issuedAmount: productForm.issuedAmount,
+                bondAnnualYield: productForm.bondAnnualYield,
+                baseAnnualRate: productForm.baseAnnualRate,
+                pointAnnualRate: productForm.pointAnnualRate,
+                commissionAnnualRate: productForm.commissionAnnualRate,
                 description: productForm.description,
                 descriptionImages: productForm.descriptionImages,
+                zhContent: getChineseContentFromForm(productForm),
                 englishContent: getEnglishContentFromForm(productForm),
                 takerFeeRate: productForm.takerFeeRate,
                 makerFeeRate: productForm.makerFeeRate,
@@ -1851,8 +1840,6 @@ export function ProductListPage() {
         onChange={setProductForm}
         onCancel={closeProductDialog}
         onConfirm={submitProductDialog}
-        showTradingTimeButton={productForm.symbol.trim().toUpperCase() === "RFUIDL"}
-        onOpenTradingTime={() => setTradingOpen(true)}
       />
     </div>
   );
