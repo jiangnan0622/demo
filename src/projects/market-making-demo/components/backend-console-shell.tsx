@@ -15,8 +15,9 @@ import {
   LogOut,
   Package2,
   Receipt,
-  TrendingUp,
+  Settings,
   UserRound,
+  UsersRound,
   WalletCards,
 } from "lucide-react";
 
@@ -29,8 +30,11 @@ type BackendGroupKey =
   | "asset"
   | "dashboard"
   | "merchant"
+  | "rebate-config"
+  | "rebate-audit"
+  | "rebate-record"
   | "market-making"
-  | "invite"
+  | "system"
   | null;
 
 type BackendItemKey =
@@ -43,9 +47,15 @@ type BackendItemKey =
   | "sales-data"
   | "merchant-holding"
   | "merchant-settlement"
+  | "rebate-config"
+  | "rebate-pending-review"
+  | "rebate-reviewed"
+  | "rebate-record"
   | "repurchase-listing"
-  | "commission-data"
-  | "distribution-settings"
+  | "recycle-listing"
+  | "member-management"
+  | "role-management"
+  | "personal-information"
   | null;
 
 type BackendConsoleShellProps = {
@@ -65,9 +75,9 @@ type NavItem = {
 type NavGroup = {
   key: Exclude<BackendGroupKey, null>;
   label: string;
-  icon: typeof LayoutGrid;
-  defaultOpen?: boolean;
-  items: NavItem[];
+  icon?: typeof LayoutGrid;
+  href?: string;
+  items?: NavItem[];
 };
 
 const NAV_GROUPS: NavGroup[] = [
@@ -75,55 +85,67 @@ const NAV_GROUPS: NavGroup[] = [
     key: "trade",
     label: "交易管理",
     icon: Receipt,
-    defaultOpen: true,
     items: [
-      { key: "trade-orders", label: "成交订单", href: "/backEnd/myOrder/tradeOrder" },
-      { key: "entrust-orders", label: "委托订单", href: "/backEnd/myOrder/entrustOrder" },
+      { key: "trade-orders", label: "成交订单", href: "/backEnd/tradeManagement/dealOrder" },
+      { key: "entrust-orders", label: "委托订单", href: "/backEnd/tradeManagement/entrustOrder" },
     ],
   },
   {
     key: "stake",
     label: "质押管理",
     icon: Layers,
-    defaultOpen: true,
     items: [
-      { key: "stake-overview", label: "质押情况", href: "/backEnd/myOrder/stakeOrder" },
-      { key: "stake-records", label: "质押记录", href: "/backEnd/myOrder/supplyOrder" },
+      { key: "stake-overview", label: "质押情况", href: "/backEnd/stakeManagement/stakeStatus" },
+      { key: "stake-records", label: "质押记录", href: "/backEnd/stakeManagement/stakeRecord" },
     ],
   },
   {
     key: "product",
     label: "产品配置",
     icon: Package2,
-    defaultOpen: true,
-    items: [{ key: "product-list", label: "产品列表", href: "/backEnd/product/list" }],
+    items: [{ key: "product-list", label: "产品列表", href: "/backEnd/productConfig/productList" }],
   },
   {
     key: "asset",
     label: "资产管理",
     icon: WalletCards,
-    items: [{ key: "address-list", label: "地址表", href: "/backEnd/token/Balance" }],
+    items: [{ key: "address-list", label: "地址表", href: "/backEnd/assetManagement/addressList" }],
   },
   {
     key: "dashboard",
     label: "数据看板",
     icon: BarChart3,
-    items: [{ key: "sales-data", label: "销售数据" }],
+    items: [{ key: "sales-data", label: "销售数据", href: "/backEnd/dataBoard/salesData" }],
   },
   {
     key: "merchant",
     label: "商户服务",
     icon: BriefcaseBusiness,
-    items: [{ key: "merchant-holding", label: "商户持仓" }],
+    items: [
+      { key: "merchant-holding", label: "商户持仓", href: "/backEnd/merchantService/merchantPosition" },
+      { key: "merchant-settlement", label: "商户结算", href: "/backEnd/merchantService/merchantSettlement" },
+    ],
   },
   {
-    key: "invite",
-    label: "邀请机制",
-    icon: TrendingUp,
+    key: "rebate-config",
+    label: "返佣配置",
+    icon: UsersRound,
+    href: "/backEnd/rebateConfig",
+  },
+  {
+    key: "rebate-audit",
+    label: "返佣审核",
+    icon: Receipt,
     items: [
-      { key: "commission-data", label: "佣金数据", href: "/rebate/commission-data" },
-      { key: "distribution-settings", label: "分销设置", href: "/rebate/config" },
+      { key: "rebate-pending-review", label: "待我审核", href: "/backEnd/rebateAudit/auditForMe" },
+      { key: "rebate-reviewed", label: "我已审核", href: "/backEnd/rebateAudit/auditDone" },
     ],
+  },
+  {
+    key: "rebate-record",
+    label: "返佣记录",
+    icon: Layers,
+    href: "/backEnd/rebateRecord",
   },
   {
     key: "market-making",
@@ -133,17 +155,32 @@ const NAV_GROUPS: NavGroup[] = [
       {
         key: "repurchase-listing",
         label: "回购上架",
-        href: "/backEnd/marketMaking/repurchase",
+        href: "/backEnd/marketListing/repurchaseListing",
       },
+      {
+        key: "recycle-listing",
+        label: "回收上架",
+        href: "/backEnd/marketListing/recycleListing",
+      },
+    ],
+  },
+  {
+    key: "system",
+    label: "系统管理",
+    icon: Settings,
+    items: [
+      { key: "member-management", label: "成员管理", href: "/backEnd/accountCenter/memberManagement" },
+      { key: "role-management", label: "角色管理", href: "/backEnd/accountCenter/roleManagement" },
+      { key: "personal-information", label: "个人中心", href: "/backEnd/accountCenter/personalInformation" },
     ],
   },
 ];
 
 function BrandLockup() {
   return (
-    <Link href="/backEnd/product/list" className="flex items-center gap-2.5">
-      <Image src="/logo-mark.svg" alt="REAL" width={28} height={28} className="size-7 object-contain" />
-      <span className="text-[18px] font-semibold tracking-tight text-white">REAL</span>
+    <Link href="/backEnd/product/list" className="flex items-center gap-[9px]">
+      <Image src="/logo-mark.svg" alt="REAL" width={24} height={24} className="size-6 object-contain" />
+      <span className="text-[18px] font-semibold tracking-[-0.02em] text-white">REAL</span>
     </Link>
   );
 }
@@ -156,58 +193,50 @@ export function BackendConsoleShell({
   breadcrumb,
 }: BackendConsoleShellProps) {
   const [userMenuOpen, setUserMenuOpen] = useState(initialUserMenuOpen);
-  const [openGroups, setOpenGroups] = useState<Record<string, boolean>>(() =>
-    Object.fromEntries(
-      NAV_GROUPS.map((group) => [group.key, group.defaultOpen ?? group.key === activeGroup])
-    )
-  );
 
   return (
-    <div className="min-h-screen bg-[#f5f7fb] text-slate-900 lg:grid lg:grid-cols-[228px_minmax(0,1fr)]">
-      <aside className="flex min-h-screen flex-col bg-[#1f2329] text-white">
-        <div className="flex h-14 items-center border-b border-white/8 px-5">
+    <div className="grid h-screen grid-cols-[208px_minmax(0,1fr)] overflow-hidden bg-[#f5f5f5] text-[#303133]">
+      <aside className="flex h-screen min-h-0 flex-col overflow-hidden bg-[#1f2329] text-white">
+        <div className="flex h-[52px] shrink-0 items-center justify-center border-b border-white/8">
           <BrandLockup />
         </div>
 
-        <nav className="flex-1 overflow-y-auto px-3 py-4">
+        <nav className="min-h-0 flex-1 overflow-y-auto px-2 pb-4 pt-[14px]">
           {NAV_GROUPS.map((group) => {
             const Icon = group.icon;
             const groupActive = activeGroup === group.key;
-            const expanded = openGroups[group.key] ?? false;
+            const items = group.items ?? [];
+            const groupClassName = cn(
+              "flex h-11 w-full items-center gap-[13px] rounded-[2px] text-[16px] font-semibold transition",
+              Icon ? "px-[18px]" : "pl-[52px] pr-[18px]",
+              groupActive ? "text-white" : "text-[#aeb4bf] hover:bg-white/[0.04] hover:text-white"
+            );
+            const groupContent = (
+              <>
+                {Icon ? <Icon className="size-[17px] text-current opacity-90" /> : null}
+                <span className="flex-1 text-left">{group.label}</span>
+              </>
+            );
 
             return (
               <div key={group.key} className="mb-1">
-                <button
-                  type="button"
-                  className={cn(
-                    "flex w-full items-center gap-2.5 rounded-[6px] px-3 py-2.5 text-[13px] font-medium transition",
-                    groupActive
-                      ? "text-white"
-                      : "text-slate-300 hover:bg-white/[0.05] hover:text-white"
-                  )}
-                  onClick={() =>
-                    setOpenGroups((prev) => ({ ...prev, [group.key]: !prev[group.key] }))
-                  }
-                >
-                  <Icon className="size-[15px] text-slate-400" />
-                  <span className="flex-1 text-left">{group.label}</span>
-                  <ChevronDown
-                    className={cn(
-                      "size-3.5 text-slate-400 transition",
-                      expanded ? "rotate-0" : "-rotate-90"
-                    )}
-                  />
-                </button>
+                {group.href ? (
+                  <Link href={group.href} className={groupClassName}>
+                    {groupContent}
+                  </Link>
+                ) : (
+                  <div className={groupClassName}>{groupContent}</div>
+                )}
 
-                {expanded ? (
+                {items.length > 0 ? (
                   <div className="mt-1 space-y-0.5">
-                    {group.items.map((item) => {
+                    {items.map((item) => {
                       const isActive = activeItem === item.key;
                       const className = cn(
-                        "block rounded-[6px] py-2 pl-9 pr-3 text-[12.5px] transition",
+                        "block h-10 rounded-[2px] py-[9px] pl-[46px] pr-3 text-[16px] font-semibold leading-[22px] transition",
                         isActive
-                          ? "bg-[#1f5bd8] font-medium text-white"
-                          : "text-slate-300 hover:bg-white/[0.05] hover:text-white"
+                          ? "bg-[#2d5bd7] text-white"
+                          : "text-[#aeb4bf] hover:bg-white/[0.04] hover:text-white"
                       );
                       return item.href ? (
                         <Link key={item.key} href={item.href} className={className}>
@@ -227,26 +256,26 @@ export function BackendConsoleShell({
         </nav>
       </aside>
 
-      <div className="min-w-0">
-        <header className="sticky top-0 z-20 flex h-14 items-center justify-end border-b border-[#eceff5] bg-white px-6">
-          <div className="flex items-center gap-4">
+      <div className="flex h-screen min-w-0 flex-col overflow-hidden">
+        <header className="z-20 flex h-[52px] shrink-0 items-center justify-end border-b border-[#eeeeee] bg-white px-[26px]">
+          <div className="flex items-center gap-[18px]">
             <button
               type="button"
-              className="grid size-8 place-items-center rounded-[6px] text-slate-500 hover:bg-slate-100"
+              className="grid size-8 place-items-center rounded-[4px] text-[#2f6fe8] hover:bg-[#f4f7ff]"
             >
-              <Download className="size-[15px]" />
+              <Download className="size-[18px]" />
             </button>
             <div className="relative">
               <button
                 type="button"
-                className="flex items-center gap-2 rounded-[6px] px-2 py-1 transition hover:bg-slate-100"
+                className="flex items-center gap-2 rounded-[6px] py-1 pl-1 pr-0 transition hover:bg-slate-100"
                 onClick={() => setUserMenuOpen((current) => !current)}
               >
-                <span className="inline-flex size-7 items-center justify-center rounded-full bg-[#eff6ff] text-[12px] font-semibold text-[#2563eb]">
+                <span className="inline-flex size-[26px] items-center justify-center rounded-full bg-[#2b58d8] text-[12px] font-semibold text-white">
                   A
                 </span>
-                <span className="text-[13px] font-medium text-slate-700">admin</span>
-                <ChevronDown className="size-3.5 text-slate-400" />
+                <span className="text-[16px] font-medium text-[#303133]">admin</span>
+                <ChevronDown className="size-3.5 text-[#303133]" />
               </button>
               {userMenuOpen ? (
                 <div className="absolute right-0 top-[42px] w-[120px] overflow-hidden rounded-[6px] border border-[#ebeef5] bg-white py-1 shadow-[0_10px_26px_rgba(15,23,42,0.12)]">
@@ -264,7 +293,7 @@ export function BackendConsoleShell({
           </div>
         </header>
 
-        <main className="px-6 py-5">
+        <main className="min-h-0 flex-1 overflow-y-auto px-5 py-[22px]">
           {breadcrumb ? (
             <div className="mb-4 flex items-center gap-1.5 text-[14px] text-slate-500">
               {breadcrumb.map((crumb, index) => (

@@ -2,6 +2,38 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
+@font-face {
+  font-family: "D-DIN";
+  src: url("/fonts/real/D-DIN-Bold.f826f817.otf") format("opentype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "D DIN";
+  src: url("/fonts/real/D-DIN-Bold.f826f817.otf") format("opentype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Alibaba PuHuiTi";
+  src: url("/fonts/real/Alibaba-PuHuiTi-Medium.b57e5596.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Alibaba PuHuiTi";
+  src: url("/fonts/real/Alibaba-PuHuiTi-Bold.43055473.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -2175,17 +2207,22 @@
 
   .real-topnav-shell .real-topnav-wrap {
     height: 72px !important;
-    padding-left: 1.5rem !important;
-    padding-right: 1.5rem !important;
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+    column-gap: 24px !important;
   }
 
   .real-topnav-shell .real-topnav-brand {
-    font-size: 1.625rem !important;
+    font-family: -apple-system, system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif !important;
+    font-size: 18px !important;
+    font-weight: 700 !important;
+    line-height: 20.7px !important;
+    letter-spacing: 0 !important;
   }
 
   .real-topnav-shell .real-topnav-logo {
-    width: 3rem !important;
-    height: 3rem !important;
+    width: 46px !important;
+    height: 32px !important;
     border: 0 !important;
     background: transparent !important;
     box-shadow: none !important;
@@ -2197,9 +2234,14 @@
 
   .real-topnav-shell .real-topnav-item {
     min-width: unset !important;
-    padding: 0.75rem 1.75rem !important;
-    font-size: 0.95rem !important;
-    border-radius: 0.875rem !important;
+    display: flex !important;
+    height: 39px !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 16px !important;
+    font-size: 16px !important;
+    line-height: 18.4px !important;
+    border-radius: 10px !important;
   }
 
   .real-topnav-shell .real-topnav-cta {

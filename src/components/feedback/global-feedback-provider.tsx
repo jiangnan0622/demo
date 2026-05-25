@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { CheckCircle2, AlertTriangle, CircleX } from "lucide-react";
 import { ThemeProvider } from "next-themes";
 import { Toaster } from "@/components/ui/sonner";
-import { feedbackCopy } from "@/lib/feedback-copy";
+import { feedbackCopy } from "@/projects/realrwa-demo/lib/feedback-copy";
 import {
   Dialog,
   DialogContent,
