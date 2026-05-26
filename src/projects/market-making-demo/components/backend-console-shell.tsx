@@ -54,6 +54,7 @@ type BackendItemKey =
   | "rebate-record"
   | "repurchase-listing"
   | "recycle-listing"
+  | "secondary-listing"
   | "member-management"
   | "role-management"
   | "personal-information"
@@ -150,20 +151,9 @@ const NAV_GROUPS: NavGroup[] = [
   },
   {
     key: "market-making",
-    label: "做市上架",
+    label: "产品二次上架",
     icon: Landmark,
-    items: [
-      {
-        key: "repurchase-listing",
-        label: "回购上架",
-        href: "/backEnd/marketListing/repurchaseListing",
-      },
-      {
-        key: "recycle-listing",
-        label: "回收上架",
-        href: "/backEnd/marketListing/recycleListing",
-      },
-    ],
+    items: [{ key: "secondary-listing", label: "上架管理", href: "/backEnd/secondaryListing" }],
   },
   {
     key: "system",

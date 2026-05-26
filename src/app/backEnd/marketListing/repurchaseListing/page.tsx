@@ -1,14 +1,17 @@
-import { Suspense } from "react";
+import { redirect } from "next/navigation";
 
-import { BackendConsoleShell } from "@/projects/market-making-demo/components/backend-console-shell";
-import { RepurchaseListingPage } from "@/projects/market-making-demo/components/repurchase-listing-page";
+type RepurchaseListingManagementRoutePageProps = {
+  searchParams?: Promise<{
+    config?: string;
+  }>;
+};
 
-export default function RepurchaseListingManagementRoutePage() {
-  return (
-    <BackendConsoleShell activeGroup="market-making" activeItem="repurchase-listing">
-      <Suspense fallback={null}>
-        <RepurchaseListingPage />
-      </Suspense>
-    </BackendConsoleShell>
-  );
+export default async function RepurchaseListingManagementRoutePage({
+  searchParams,
+}: RepurchaseListingManagementRoutePageProps) {
+  const params = searchParams ? await searchParams : {};
+  const initialConfigOpen = params.config === "1" || params.config === "open";
+  const configQuery = initialConfigOpen ? "&config=1" : "";
+
+  redirect(`/backEnd/secondaryListing?tab=repurchase${configQuery}`);
 }
