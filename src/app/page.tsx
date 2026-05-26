@@ -1,5 +1,5 @@
-import { redirect } from "next/navigation";
+import { OfficialSitePage } from "@/projects/realrwa-demo/components/realrwa/official-site-page";
 
 export default function HomePage() {
-  redirect("/backEnd/marketMaking/repurchase");
+  return <OfficialSitePage />;
 }
