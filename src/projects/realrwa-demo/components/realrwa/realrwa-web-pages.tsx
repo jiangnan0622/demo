@@ -16,6 +16,7 @@ import {
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { BuyModal } from "@/projects/realrwa-demo/components/realrwa/modals";
+import { publicAsset } from "@/lib/public-asset";
 import {
   OPEN_CONNECT_EVENT,
   OPEN_IDENTITY_VERIFICATION_EVENT,
@@ -615,7 +616,7 @@ function RealRwaFooter() {
       <div className="pointer-events-none absolute inset-0 opacity-[0.28] [background-image:linear-gradient(28deg,transparent_43%,rgba(255,255,255,0.06)_44%,transparent_45%),linear-gradient(152deg,transparent_43%,rgba(255,255,255,0.04)_44%,transparent_45%)] [background-size:220px_120px]" />
       <div className="pointer-events-none absolute left-[8%] bottom-12 flex items-center gap-4 opacity-[0.08]">
         <Image
-          src="/realrwa/figma/real-logo-gold-cropped.png"
+          src={publicAsset("/realrwa/figma/real-logo-gold-cropped.png")}
           alt=""
           width={100}
           height={70}
@@ -631,7 +632,7 @@ function RealRwaFooter() {
             className="inline-flex h-12 items-center gap-3 rounded-[10px] border border-white/10 bg-[#1F1F1F] px-5 text-[15px] font-semibold text-white shadow-[0_8px_24px_rgba(0,0,0,0.24)]"
           >
             <Image
-              src="/realrwa/figma/real-logo-gold-cropped.png"
+              src={publicAsset("/realrwa/figma/real-logo-gold-cropped.png")}
               alt=""
               width={22}
               height={16}

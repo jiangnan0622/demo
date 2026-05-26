@@ -8,6 +8,9 @@ const nextConfig: NextConfig = {
   basePath: isGithubPages ? "/demo" : undefined,
   assetPrefix: isGithubPages ? "/demo/" : undefined,
   trailingSlash: isGithubPages,
+  env: {
+    NEXT_PUBLIC_BASE_PATH: isGithubPages ? "/demo" : "",
+  },
   images: {
     unoptimized: true,
   },

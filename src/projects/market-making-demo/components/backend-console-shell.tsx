@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import { publicAsset } from "@/lib/public-asset";
 
 type BackendGroupKey =
   | "trade"
@@ -179,7 +180,7 @@ const NAV_GROUPS: NavGroup[] = [
 function BrandLockup() {
   return (
     <Link href="/backEnd/product/list" className="flex items-center gap-[9px]">
-      <Image src="/logo-mark.svg" alt="REAL" width={46} height={32} className="h-8 w-[46px] object-contain" />
+      <Image src={publicAsset("/logo-mark.svg")} alt="REAL" width={46} height={32} className="h-8 w-[46px] object-contain" />
       <span className="text-[18px] font-semibold tracking-[-0.02em] text-white">REAL</span>
     </Link>
   );
