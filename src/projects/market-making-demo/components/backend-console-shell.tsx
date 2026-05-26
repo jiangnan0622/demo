@@ -179,7 +179,7 @@ const NAV_GROUPS: NavGroup[] = [
 function BrandLockup() {
   return (
     <Link href="/backEnd/product/list" className="flex items-center gap-[9px]">
-      <Image src="/logo-mark.svg" alt="REAL" width={24} height={24} className="size-6 object-contain" />
+      <Image src="/logo-mark.svg" alt="REAL" width={46} height={32} className="h-8 w-[46px] object-contain" />
       <span className="text-[18px] font-semibold tracking-[-0.02em] text-white">REAL</span>
     </Link>
   );

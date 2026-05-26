@@ -7,6 +7,7 @@ const nextConfig: NextConfig = {
   output: isGithubPages ? "export" : undefined,
   basePath: isGithubPages ? "/demo" : undefined,
   assetPrefix: isGithubPages ? "/demo/" : undefined,
+  trailingSlash: isGithubPages,
   images: {
     unoptimized: true,
   },

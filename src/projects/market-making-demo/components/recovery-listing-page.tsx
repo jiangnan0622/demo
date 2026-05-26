@@ -478,12 +478,14 @@ function RecoveryConfigModal({
 export function RecoveryListingPage({ initialConfigOpen = false }: { initialConfigOpen?: boolean }) {
   const searchParams = useSearchParams();
   const roleQuery = searchParams.get("role");
+  const configQuery = searchParams.get("config");
+  const shouldOpenConfig = initialConfigOpen || configQuery === "1" || configQuery === "open";
   const viewer = useMemo(() => getRecoveryCurrentViewer(roleQuery), [roleQuery]);
   const [query, setQuery] = useState<RecoveryListingQuery>(() => createDefaultRecoveryQuery(viewer));
   const [records, setRecords] = useState<RecoveryListingRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const [assets, setAssets] = useState<RecoveryAssetOption[]>([]);
-  const [configOpen, setConfigOpen] = useState(initialConfigOpen);
+  const [configOpen, setConfigOpen] = useState(() => shouldOpenConfig);
 
   useEffect(() => {
     setQuery(createDefaultRecoveryQuery(viewer));

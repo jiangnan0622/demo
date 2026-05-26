@@ -275,8 +275,10 @@ function ListingConfigModal({
 export function RepurchaseListingPage({ initialConfigOpen = false }: { initialConfigOpen?: boolean }) {
   const searchParams = useSearchParams();
   const roleQuery = searchParams.get("role");
+  const configQuery = searchParams.get("config");
+  const shouldOpenConfig = initialConfigOpen || configQuery === "1" || configQuery === "open";
   const viewer = useMemo(() => getRepurchaseCurrentViewer(roleQuery), [roleQuery]);
-  const [configOpen, setConfigOpen] = useState(initialConfigOpen);
+  const [configOpen, setConfigOpen] = useState(() => shouldOpenConfig);
 
   return (
     <div className="w-full">
