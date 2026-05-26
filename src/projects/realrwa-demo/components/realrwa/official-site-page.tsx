@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { publicAsset } from "@/lib/public-asset";
 import { useRwaAppState } from "@/projects/realrwa-demo/components/realrwa/app-state-provider";
 import { REALRWA_ROUTES } from "@/projects/realrwa-demo/lib/realrwa-routes";
 
@@ -300,7 +301,7 @@ export function OfficialSitePage() {
             className="flex items-center gap-3"
             onClick={() => router.push("/")}
           >
-            <Image src="/logo-mark.svg" alt="REAL" width={34} height={34} className="h-[34px] w-[34px]" />
+            <Image src={publicAsset("/logo-mark.svg")} alt="REAL" width={34} height={34} className="h-[34px] w-[34px]" />
             <span className="text-[22px] font-semibold tracking-[-0.02em] text-white">REAL</span>
           </button>
 
@@ -859,7 +860,7 @@ export function OfficialSitePage() {
         <div className="official-home-wrap mx-auto grid gap-10 px-6 py-12 md:grid-cols-[1.2fr_repeat(3,minmax(0,1fr))]">
           <div>
             <div className="flex items-center gap-3">
-              <Image src="/logo-mark.svg" alt="REAL" width={34} height={34} className="h-[34px] w-[34px]" />
+              <Image src={publicAsset("/logo-mark.svg")} alt="REAL" width={34} height={34} className="h-[34px] w-[34px]" />
               <span className="text-[28px] font-semibold tracking-[-0.03em] text-white">REAL</span>
             </div>
             <p className="mt-4 text-[16px] font-medium text-zinc-200">

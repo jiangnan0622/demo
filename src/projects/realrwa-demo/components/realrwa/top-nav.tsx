@@ -5,6 +5,7 @@ import { ChevronDown, Copy, Globe, LogOut, Menu, UserSquare2, WalletCards, X } f
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { publicAsset } from "@/lib/public-asset";
 import { useRwaAppState } from "@/projects/realrwa-demo/components/realrwa/app-state-provider";
 import { REALRWA_ROUTES } from "@/projects/realrwa-demo/lib/realrwa-routes";
 
@@ -140,7 +141,7 @@ export function TopNav({
           onClick={() => router.push("/")}
         >
           <Image
-            src="/realrwa/figma/real-logo-gold-cropped.png"
+            src={publicAsset("/realrwa/figma/real-logo-gold-cropped.png")}
             alt="REAL"
             width={46}
             height={32}
@@ -255,7 +256,7 @@ export function TopNav({
             className="real-brand-lockup flex items-center"
             onClick={() => router.push("/")}
           >
-            <Image src="/realrwa/figma/real-logo-gold-cropped.png" alt="REAL" width={42} height={29} className="h-[29px] w-[42px] object-contain" priority />
+            <Image src={publicAsset("/realrwa/figma/real-logo-gold-cropped.png")} alt="REAL" width={42} height={29} className="h-[29px] w-[42px] object-contain" priority />
           </button>
           <button
             className="grid size-9 place-items-center rounded-md text-zinc-300"
@@ -370,7 +371,7 @@ export function TopNav({
           <aside className="absolute left-0 top-0 h-full w-[80vw] max-w-[300px] border-r border-white/10 bg-[#090909] p-4">
             <div className="mb-4 flex items-center justify-between border-b border-white/8 pb-4">
               <div className="flex items-center gap-2.5">
-                <Image src="/logo-mark.svg" alt="REAL" width={40} height={28} className="h-[28px] w-[40px] object-contain" />
+                <Image src={publicAsset("/logo-mark.svg")} alt="REAL" width={40} height={28} className="h-[28px] w-[40px] object-contain" />
                 <span className="text-lg font-semibold text-zinc-100">REAL</span>
               </div>
               <button

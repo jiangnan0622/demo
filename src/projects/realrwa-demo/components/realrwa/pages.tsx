@@ -22,6 +22,7 @@ import {
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { publicAsset } from "@/lib/public-asset";
 import { OPEN_IDENTITY_VERIFICATION_EVENT, RealRwaShell } from "@/projects/realrwa-demo/components/realrwa/shell";
 import {
   BuyModal,
@@ -1515,7 +1516,7 @@ export function StakedPage() {
         <div className="mx-auto grid max-w-[1240px] gap-10 px-6 py-14 md:grid-cols-[1.15fr_repeat(4,minmax(0,1fr))] lg:px-8">
           <div>
             <div className="flex items-center gap-3">
-              <Image src="/logo-mark.svg" alt="REAL" width={34} height={34} className="h-[34px] w-[34px]" />
+              <Image src={publicAsset("/logo-mark.svg")} alt="REAL" width={34} height={34} className="h-[34px] w-[34px]" />
               <span className="text-[28px] font-semibold tracking-[-0.03em] text-white">REAL</span>
             </div>
           </div>

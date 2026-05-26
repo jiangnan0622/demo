@@ -21,6 +21,7 @@ import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { publicAsset } from "@/lib/public-asset";
 import { RealRwaShell, useShellActions } from "@/projects/realrwa-demo/components/realrwa/shell";
 import { useRwaAppState } from "@/projects/realrwa-demo/components/realrwa/app-state-provider";
 import { useGlobalFeedback } from "@/components/feedback/global-feedback-provider";
@@ -1388,7 +1389,7 @@ function InvitationFooter({
           <div>
             <div className="flex items-center gap-3">
               <div className="grid size-11 place-items-center rounded-lg border border-[#FACC15]/55 bg-[#16120a]">
-                <Image src="/logo-mark.svg" alt="REAL" width={22} height={22} className="size-[22px]" />
+                <Image src={publicAsset("/logo-mark.svg")} alt="REAL" width={22} height={22} className="size-[22px]" />
               </div>
               <span className="text-[34px] font-semibold tracking-tight text-white">REAL</span>
             </div>
@@ -1501,7 +1502,7 @@ function PosterModal({
                 <div className="flex items-center justify-between border-b border-white/6 px-4 py-3">
                   <div className="flex items-center gap-3">
                     <div className="grid size-7 place-items-center rounded-md border border-[#FACC15]/35 bg-[#111111]">
-                      <Image src="/logo-mark.svg" alt="REAL" width={14} height={14} className="size-[14px]" />
+                      <Image src={publicAsset("/logo-mark.svg")} alt="REAL" width={14} height={14} className="size-[14px]" />
                     </div>
                     <div className="h-3 w-3 rounded-full bg-zinc-500/50" />
                   </div>
@@ -1603,7 +1604,7 @@ function PosterCanvas({
     >
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_52%_42%,rgba(244,201,74,0.18),transparent_28%),linear-gradient(180deg,#040404_0%,#070707_100%)]" />
       <div className="absolute left-7 top-7 flex items-center gap-3 text-[#E7C56D]">
-        <Image src="/logo-mark.svg" alt="REAL" width={24} height={24} className="size-6" />
+        <Image src={publicAsset("/logo-mark.svg")} alt="REAL" width={24} height={24} className="size-6" />
         <span className="text-[22px] font-semibold">REAL</span>
       </div>
 
