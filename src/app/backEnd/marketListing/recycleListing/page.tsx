@@ -1,17 +1,17 @@
-import { redirect } from "next/navigation";
+"use client";
 
-type RecycleListingManagementRoutePageProps = {
-  searchParams?: Promise<{
-    config?: string;
-  }>;
-};
+import { useEffect } from "react";
 
-export default async function RecycleListingManagementRoutePage({
-  searchParams,
-}: RecycleListingManagementRoutePageProps) {
-  const params = searchParams ? await searchParams : {};
-  const initialConfigOpen = params.config === "1" || params.config === "open";
-  const configQuery = initialConfigOpen ? "&config=1" : "";
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
-  redirect(`/backEnd/secondaryListing?tab=recovery${configQuery}`);
+export default function RecycleListingManagementRoutePage() {
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const config = params.get("config");
+    const configQuery = config === "1" || config === "open" ? "&config=1" : "";
+
+    window.location.replace(`${basePath}/backEnd/secondaryListing?tab=recovery${configQuery}`);
+  }, []);
+
+  return null;
 }

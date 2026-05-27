@@ -214,6 +214,33 @@ function ProductLogoPreview() {
   );
 }
 
+function getInitialPageType(fallback: ListingPageType) {
+  if (typeof window === "undefined") {
+    return fallback;
+  }
+
+  const tab = new URLSearchParams(window.location.search).get("tab");
+
+  if (tab === "recovery") {
+    return "RECOVERY_LISTING";
+  }
+  if (tab === "repurchase") {
+    return "REPURCHASE_LISTING";
+  }
+
+  return fallback;
+}
+
+function getInitialConfigOpen(fallback: boolean) {
+  if (typeof window === "undefined") {
+    return fallback;
+  }
+
+  const config = new URLSearchParams(window.location.search).get("config");
+
+  return config === "1" || config === "open" || fallback;
+}
+
 function EmptyState() {
   return (
     <div className="flex h-[148px] flex-col items-center justify-center text-[#bcbec3]">
@@ -535,8 +562,8 @@ export function SecondaryListingPage({
   initialPageType?: ListingPageType;
   initialConfigOpen?: boolean;
 }) {
-  const [activePageType, setActivePageType] = useState<ListingPageType>(initialPageType);
-  const [configOpen, setConfigOpen] = useState(initialConfigOpen);
+  const [activePageType, setActivePageType] = useState<ListingPageType>(() => getInitialPageType(initialPageType));
+  const [configOpen, setConfigOpen] = useState(() => getInitialConfigOpen(initialConfigOpen));
   const rows = useMemo(
     () => (activePageType === "REPURCHASE_LISTING" ? toRepurchaseListings() : recoveryQuoteRows),
     [activePageType]
