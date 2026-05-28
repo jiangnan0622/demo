@@ -10,7 +10,11 @@ import {
   ChevronRight,
   Copy,
   Info,
+  MoreHorizontal,
+  QrCode,
   Search,
+  Send,
+  Twitter,
   X,
 } from "lucide-react";
 import Image from "next/image";
@@ -52,6 +56,7 @@ type TableStatus = "Completed" | "Failed" | "Pending" | "Settling";
 type DetailTabKey = "detail" | "buy" | "sell" | "stake" | "redeem" | "claim" | "holders";
 type DetailActionKey = Exclude<DetailTabKey, "detail" | "holders">;
 type InvitationDetailTab = "invitees" | "orders";
+type InvitationTableTab = "invitees" | "assetRewards" | "headcountRewards";
 
 const footerColumns: { title: LocaleText; items: LocaleText[] }[] = [
   {
@@ -380,18 +385,232 @@ const invitationRewardRows: {
     level: "L0",
     qualifiedInvitees: "2",
     rateCommissionUsdc: "100.00 USDC",
-    pointsCommissionReal: "2,500.00 REAL",
+    pointsCommissionReal: "2,500.00 iReal",
   },
 ];
 
-const invitationDetailStats = [
-  { label: "邀请等级:", value: invitationSummary.level },
-  { label: "返佣总金额 USDC:", value: invitationSummary.totalCommissionUsdc },
-  { label: "利率佣金总额:", value: `${invitationSummary.rateCommissionUsdc} USDC` },
-  { label: "积分佣金总额:", value: `${invitationSummary.pointsCommissionReal} REAL` },
-  { label: "人头佣金总额 USDC:", value: invitationSummary.headcountCommissionUsdc ?? "--" },
-  { label: "合格邀请人数:", value: invitationSummary.qualifiedInvitees },
-] as const;
+const invitationHeadcountRewardRows: {
+  id: string;
+  issuedAt: string;
+  level: string;
+  qualifiedInvitees: string;
+  headcountCommissionUsdc: string;
+  status: string;
+}[] = [];
+
+const invitationPageCopy = {
+  cn: {
+    heroTitle: "邀请好友，共享资产收益",
+    heroDescription: "每邀请一位合格好友完成资产申购，即可累计 USDC 返佣与 iReal 积分奖励。",
+    inviteMethod: "邀请方式",
+    inviteCode: "邀请码",
+    inviteLink: "邀请链接",
+    shareTo: "分享至",
+    share: {
+      twitter: "Twitter",
+      telegram: "Telegram",
+      qrCode: "二维码",
+      more: "更多",
+    },
+    disconnectedTitle: "放大您的财富网络",
+    disconnectedDescription: "一键生成专属推广链接与海报，即刻开启您的链上收益。",
+    disconnectedCta: "连接钱包开启",
+    bottomDisconnectedTitle: "连接钱包查看邀请奖励",
+    bottomDisconnectedCta: "连接钱包",
+    copiedCodeLabel: "已复制邀请码",
+    copyCodeLabel: "复制邀请码",
+    copiedLinkLabel: "已复制邀请链接",
+    copyLinkLabel: "复制邀请链接",
+    summary: {
+      rank: "邀请等级",
+      totalCommission: "返佣总金额",
+      rateCommission: "利率佣金总额",
+      pointsCommission: "积分佣金总额",
+      headcountCommission: "人头佣金总额",
+      totalInvites: "合格邀请人数",
+    },
+    units: {
+      people: "人",
+    },
+    tabs: {
+      invitees: "被邀请人",
+      rateRebate: "利率返佣",
+      headcountReward: "人头奖励",
+    },
+    filters: {
+      inviteeAddress: "请输入受邀人地址",
+      registerDateRange: "注册开始日期　→　注册结束日期",
+    },
+    inviteeTable: {
+      inviteeAddress: "被邀请人地址",
+      registerTime: "注册时间",
+      totalTradeVolume: "总交易额",
+      operate: "操作",
+      details: "详情",
+    },
+    rateRewardTable: {
+      rewardTime: "奖励发放时间",
+      rewardLevel: "本次奖励等级",
+      qualifiedInvitees: "合格受邀人数",
+      rateCommission: "利率佣金总额",
+      pointsCommission: "积分佣金总额",
+      operate: "操作",
+      details: "详情",
+    },
+    headcountRewardTable: {
+      rewardTime: "奖励发放时间",
+      rewardLevel: "本次奖励等级",
+      qualifiedInvitees: "合格受邀人数",
+      headcountCommission: "人头佣金总额",
+      status: "发放状态",
+    },
+    empty: "暂无数据",
+    modal: {
+      closeLabel: "关闭返佣明细",
+      title: "返佣明细",
+      stats: {
+        rank: "邀请等级:",
+        totalCommission: "返佣总金额:",
+        rateCommission: "利率佣金总额:",
+        pointsCommission: "积分佣金总额:",
+        headcountCommission: "人头佣金总额:",
+        qualifiedInvitees: "合格邀请人数:",
+      },
+      tabs: {
+        invitees: "被邀请人",
+        orders: "订单",
+      },
+      inviteeTable: {
+        inviteeAddress: "被邀请人地址",
+        dataSource: "数据来源",
+        registerTime: "注册时间",
+        validTradeVolume: "有效成交额",
+      },
+      orderTable: {
+        time: "时间",
+        pair: "币种",
+        type: "类型",
+        price: "价格",
+        volume: "成交量",
+        amount: "数量",
+        buy: "买入",
+      },
+    },
+  },
+  en: {
+    heroTitle: "Invite friends, share asset yields",
+    heroDescription:
+      "For every qualified friend invited to complete asset subscription, you can receive USDC cash rebate and exclusive staking interest rate bonus.",
+    inviteMethod: "Invite Method",
+    inviteCode: "Invite Code",
+    inviteLink: "Invite Link",
+    shareTo: "Share to",
+    share: {
+      twitter: "Twitter",
+      telegram: "Telegram",
+      qrCode: "QR Code",
+      more: "More",
+    },
+    disconnectedTitle: "Expand your wealth network",
+    disconnectedDescription:
+      "One-click generation of exclusive promotion links and posters, immediately starting your on-chain earnings.",
+    disconnectedCta: "Connect wallet to start",
+    bottomDisconnectedTitle: "Connect wallet to view referral rewards",
+    bottomDisconnectedCta: "Connect Wallet",
+    copiedCodeLabel: "Invite code copied",
+    copyCodeLabel: "Copy invite code",
+    copiedLinkLabel: "Invite link copied",
+    copyLinkLabel: "Copy invite link",
+    summary: {
+      rank: "Rank",
+      totalCommission: "Total Commission",
+      rateCommission: "Rate Commission",
+      pointsCommission: "Points Commission",
+      headcountCommission: "Headcount Commission",
+      totalInvites: "Total Invites",
+    },
+    units: {
+      people: "People",
+    },
+    tabs: {
+      invitees: "Invitees",
+      rateRebate: "Rate Rebate",
+      headcountReward: "Headcount Reward",
+    },
+    filters: {
+      inviteeAddress: "Enter invitee address",
+      registerDateRange: "Register start date　→　Register end date",
+    },
+    inviteeTable: {
+      inviteeAddress: "Invitee Address",
+      registerTime: "Register Time",
+      totalTradeVolume: "Total Trade Volume",
+      operate: "Operate",
+      details: "Details",
+    },
+    rateRewardTable: {
+      rewardTime: "Reward Time",
+      rewardLevel: "Reward Level",
+      qualifiedInvitees: "Qualified Invitees",
+      rateCommission: "Rate Commission",
+      pointsCommission: "Points Commission",
+      operate: "Operate",
+      details: "Details",
+    },
+    headcountRewardTable: {
+      rewardTime: "Reward Time",
+      rewardLevel: "Reward Level",
+      qualifiedInvitees: "Qualified Invitees",
+      headcountCommission: "Headcount Commission",
+      status: "Status",
+    },
+    empty: "No Data",
+    modal: {
+      closeLabel: "Close commission details",
+      title: "Commission Details",
+      stats: {
+        rank: "Rank:",
+        totalCommission: "Total Commission:",
+        rateCommission: "Rate Commission:",
+        pointsCommission: "Points Commission:",
+        headcountCommission: "Headcount Commission:",
+        qualifiedInvitees: "Qualified Invitees:",
+      },
+      tabs: {
+        invitees: "Invitees",
+        orders: "Orders",
+      },
+      inviteeTable: {
+        inviteeAddress: "Invitee Address",
+        dataSource: "Data Source",
+        registerTime: "Register Time",
+        validTradeVolume: "Valid Trade Volume",
+      },
+      orderTable: {
+        time: "Time",
+        pair: "Pair",
+        type: "Type",
+        price: "Price",
+        volume: "Volume",
+        amount: "Amount",
+        buy: "Buy",
+      },
+    },
+  },
+} as const;
+
+type InvitationPageCopy = (typeof invitationPageCopy)[MarketLocale];
+
+function getInvitationDetailStats(copy: InvitationPageCopy) {
+  return [
+    { label: copy.modal.stats.rank, value: invitationSummary.level },
+    { label: copy.modal.stats.totalCommission, value: `${invitationSummary.totalCommissionUsdc} USDC` },
+    { label: copy.modal.stats.rateCommission, value: `${invitationSummary.rateCommissionUsdc} USDC` },
+    { label: copy.modal.stats.pointsCommission, value: `${invitationSummary.pointsCommissionReal} iReal` },
+    { label: copy.modal.stats.headcountCommission, value: `${invitationSummary.headcountCommissionUsdc ?? "--"} USDC` },
+    { label: copy.modal.stats.qualifiedInvitees, value: invitationSummary.qualifiedInvitees },
+  ] as const;
+}
 
 const invitationDetailOrderRows = [
   {
@@ -424,7 +643,7 @@ function triggerAuthGate(walletConnected: boolean, identityBound: boolean) {
   return true;
 }
 
-function InvitationEmptyState() {
+function InvitationEmptyState({ label = invitationPageCopy.cn.empty }: { label?: string }) {
   return (
     <div className="grid min-h-[310px] place-items-center border-t border-white/8">
       <div className="text-center">
@@ -437,7 +656,7 @@ function InvitationEmptyState() {
             </div>
           </div>
         </div>
-        <p className="mt-3 text-[18px] font-medium leading-7 text-white/38">暂无数据</p>
+        <p className="mt-3 text-[18px] font-medium leading-7 text-white/38">{label}</p>
       </div>
     </div>
   );
@@ -445,10 +664,12 @@ function InvitationEmptyState() {
 
 function InvitationCommissionDetailModal({
   activeTab,
+  copy,
   onTabChange,
   onClose,
 }: {
   activeTab: InvitationDetailTab | null;
+  copy: InvitationPageCopy;
   onTabChange: (tab: InvitationDetailTab) => void;
   onClose: () => void;
 }) {
@@ -470,6 +691,11 @@ function InvitationCommissionDetailModal({
   }
 
   const showingInvitees = activeTab === "invitees";
+  const invitationDetailStats = getInvitationDetailStats(copy);
+  const detailTabs: { key: InvitationDetailTab; label: string }[] = [
+    { key: "invitees", label: copy.modal.tabs.invitees },
+    { key: "orders", label: copy.modal.tabs.orders },
+  ];
 
   return createPortal(
     <div
@@ -483,45 +709,42 @@ function InvitationCommissionDetailModal({
         }
       }}
     >
-      <div className="relative flex h-[min(720px,calc(100vh-40px))] w-[min(1120px,calc(100vw-40px))] overflow-hidden rounded-[16px] bg-[#1D1D1B] shadow-[0_28px_90px_rgba(0,0,0,0.45)]">
+      <div className="relative flex h-[min(620px,calc(100vh-40px))] w-[min(960px,calc(100vw-40px))] overflow-hidden rounded-[14px] bg-[#1D1D1B] shadow-[0_24px_76px_rgba(0,0,0,0.45)]">
         <button
           type="button"
-          aria-label="关闭返佣明细"
-          className="absolute right-5 top-5 z-[2] grid size-10 place-items-center text-white/55 transition hover:text-white"
+          aria-label={copy.modal.closeLabel}
+          className="absolute right-4 top-4 z-[2] grid size-9 place-items-center text-white/55 transition hover:text-white"
           onClick={onClose}
         >
-          <X className="size-7 stroke-[1.7]" />
+          <X className="size-6 stroke-[1.7]" />
         </button>
 
-        <div className="flex min-h-0 w-full flex-col px-8 pb-6 pt-[54px]">
-          <h2 id="invitation-detail-title" className="text-center text-[24px] font-semibold leading-8 text-white/88">
-            返佣明细
+        <div className="flex min-h-0 w-full flex-col px-6 pb-5 pt-11">
+          <h2 id="invitation-detail-title" className="text-center text-[21px] font-semibold leading-7 text-white/88">
+            {copy.modal.title}
           </h2>
 
-          <section className="mt-4 rounded-[12px] bg-[#292927] px-5 py-5">
-            <div className="grid grid-cols-1 gap-y-2 md:grid-cols-2 md:gap-x-10 md:gap-y-3">
+          <section className="mt-3 rounded-[10px] bg-[#292927] px-4 py-4">
+            <div className="grid grid-cols-1 gap-y-1.5 md:grid-cols-2 md:gap-x-8 md:gap-y-2">
               {invitationDetailStats.map((item) => (
-                <div key={item.label} className="grid grid-cols-[145px_minmax(0,1fr)] items-center md:grid-cols-[180px_minmax(0,1fr)]">
-                  <span className="text-[15px] font-semibold leading-6 text-white/58 md:text-[18px] md:leading-7">{item.label}</span>
-                  <span className="text-[15px] font-semibold leading-6 text-white/58 md:text-[18px] md:leading-7">{item.value}</span>
+                <div key={item.label} className="grid grid-cols-[132px_minmax(0,1fr)] items-center md:grid-cols-[158px_minmax(0,1fr)]">
+                  <span className="text-[14px] font-semibold leading-6 text-white/58 md:text-[15px]">{item.label}</span>
+                  <span className="text-[14px] font-semibold leading-6 text-white/58 md:text-[15px]">{item.value}</span>
                 </div>
               ))}
             </div>
           </section>
 
-          <section className="mt-6 flex h-[46px] items-center justify-between gap-6">
-            <div className="flex items-center gap-[18px]">
-              {[
-                ["invitees", "被邀请人"],
-                ["orders", "订单"],
-              ].map(([key, label]) => (
+          <section className="mt-5 flex h-10 items-center justify-between gap-5">
+            <div className="flex items-center gap-3">
+              {detailTabs.map(({ key, label }) => (
                 <button
                   key={key}
                   type="button"
-                  className={`h-[46px] rounded-full px-6 text-[19px] font-semibold leading-[46px] outline-none transition focus:outline-none focus-visible:outline-none focus-visible:ring-0 ${
+                  className={`h-10 rounded-full px-5 text-[16px] font-semibold leading-10 outline-none transition focus:outline-none focus-visible:outline-none focus-visible:ring-0 ${
                     activeTab === key ? "bg-[#30302D] text-white" : "text-white/42 hover:text-white/68"
                   }`}
-                  onClick={() => onTabChange(key as InvitationDetailTab)}
+                  onClick={() => onTabChange(key)}
                 >
                   {label}
                 </button>
@@ -530,38 +753,38 @@ function InvitationCommissionDetailModal({
 
             {showingInvitees ? (
               <div className="hidden min-w-0 flex-1 justify-end gap-3 md:flex">
-                <div className="relative h-[46px] w-[330px] max-w-[31vw]">
+                <div className="relative h-10 w-[286px] max-w-[31vw]">
                   <input
                     type="text"
-                    placeholder="请输入受邀人地址"
-                    className="h-full w-full rounded-[8px] border border-white/10 bg-[#1B1B1A] px-4 pr-12 text-[16px] font-semibold text-white/78 outline-none placeholder:text-white/24"
+                    placeholder={copy.filters.inviteeAddress}
+                    className="h-full w-full rounded-[8px] border border-white/10 bg-[#1B1B1A] px-3.5 pr-10 text-[14px] font-semibold text-white/78 outline-none placeholder:text-white/24"
                   />
-                  <Search className="absolute right-4 top-1/2 size-6 -translate-y-1/2 text-white/45" />
+                  <Search className="absolute right-3.5 top-1/2 size-5 -translate-y-1/2 text-white/45" />
                 </div>
                 <button
                   type="button"
-                  className="flex h-[46px] w-[330px] max-w-[31vw] items-center justify-between rounded-[8px] border border-white/10 bg-[#1B1B1A] px-4 text-[16px] font-semibold text-white/28"
+                  className="flex h-10 w-[286px] max-w-[31vw] items-center justify-between rounded-[8px] border border-white/10 bg-[#1B1B1A] px-3.5 text-[14px] font-semibold text-white/28"
                 >
-                  <span>注册开始日期　→　注册结束日期</span>
-                  <CalendarDays className="size-5 text-white/35" />
+                  <span>{copy.filters.registerDateRange}</span>
+                  <CalendarDays className="size-[18px] text-white/35" />
                 </button>
               </div>
             ) : null}
           </section>
 
-          <section className="relative mt-6 min-h-0 flex-1 overflow-hidden rounded-[12px] bg-[#1A1A18]">
+          <section className="relative mt-5 min-h-0 flex-1 overflow-hidden rounded-[10px] bg-[#1A1A18]">
             {showingInvitees ? (
               <>
-                <div className="grid h-[62px] grid-cols-[1fr_0.75fr_1fr_0.85fr] items-center gap-x-4 bg-[#2A2A27] pl-6 pr-[48px] text-[16px] font-semibold leading-6 text-white/58 md:gap-x-5 md:text-[20px] md:leading-7 [&>span]:min-w-0 [&>span]:truncate [&>span]:whitespace-nowrap">
-                  <span>被邀请人地址</span>
-                  <span>数据来源</span>
-                  <span>注册时间</span>
-                  <span>有效成交额</span>
+                <div className="grid h-[50px] grid-cols-[1fr_0.75fr_1fr_0.85fr] items-center gap-x-4 bg-[#2A2A27] pl-5 pr-10 text-[14px] font-semibold leading-6 text-white/58 md:gap-x-5 md:text-[16px] [&>span]:min-w-0 [&>span]:truncate [&>span]:whitespace-nowrap">
+                  <span>{copy.modal.inviteeTable.inviteeAddress}</span>
+                  <span>{copy.modal.inviteeTable.dataSource}</span>
+                  <span>{copy.modal.inviteeTable.registerTime}</span>
+                  <span>{copy.modal.inviteeTable.validTradeVolume}</span>
                 </div>
                 {invitationInviteeRows.map((row) => (
                   <div
                     key={row.address}
-                    className="grid h-[68px] grid-cols-[1fr_0.75fr_1fr_0.85fr] items-center gap-x-4 border-t border-white/8 pl-6 pr-[48px] text-[16px] font-semibold leading-6 text-white/88 md:gap-x-5 md:text-[20px] md:leading-7 [&>span]:min-w-0 [&>span]:truncate [&>span]:whitespace-nowrap"
+                    className="grid h-[56px] grid-cols-[1fr_0.75fr_1fr_0.85fr] items-center gap-x-4 border-t border-white/8 pl-5 pr-10 text-[14px] font-semibold leading-6 text-white/88 md:gap-x-5 md:text-[16px] [&>span]:min-w-0 [&>span]:truncate [&>span]:whitespace-nowrap"
                   >
                     <span>{row.address}</span>
                     <span>{row.source}</span>
@@ -572,22 +795,22 @@ function InvitationCommissionDetailModal({
               </>
             ) : (
               <>
-                <div className="grid h-[62px] grid-cols-[1.18fr_0.78fr_0.55fr_0.55fr_0.7fr_0.58fr] items-center gap-x-4 bg-[#2A2A27] pl-6 pr-[48px] text-[15px] font-semibold leading-6 text-white/58 md:gap-x-5 md:text-[20px] md:leading-7 [&>span]:min-w-0 [&>span]:truncate [&>span]:whitespace-nowrap">
-                  <span>时间</span>
-                  <span>币种</span>
-                  <span>类型</span>
-                  <span>价格</span>
-                  <span>成交量</span>
-                  <span>数量</span>
+                <div className="grid h-[50px] grid-cols-[1.18fr_0.78fr_0.55fr_0.55fr_0.7fr_0.58fr] items-center gap-x-4 bg-[#2A2A27] pl-5 pr-10 text-[13px] font-semibold leading-6 text-white/58 md:gap-x-5 md:text-[16px] [&>span]:min-w-0 [&>span]:truncate [&>span]:whitespace-nowrap">
+                  <span>{copy.modal.orderTable.time}</span>
+                  <span>{copy.modal.orderTable.pair}</span>
+                  <span>{copy.modal.orderTable.type}</span>
+                  <span>{copy.modal.orderTable.price}</span>
+                  <span>{copy.modal.orderTable.volume}</span>
+                  <span>{copy.modal.orderTable.amount}</span>
                 </div>
                 {invitationDetailOrderRows.map((row) => (
                   <div
                     key={`${row.time}-${row.pair}`}
-                    className="grid h-[68px] grid-cols-[1.18fr_0.78fr_0.55fr_0.55fr_0.7fr_0.58fr] items-center gap-x-4 border-t border-white/8 pl-6 pr-[48px] text-[15px] font-semibold leading-6 text-white/88 md:gap-x-5 md:text-[20px] md:leading-7 [&>span]:min-w-0 [&>span]:truncate [&>span]:whitespace-nowrap"
+                    className="grid h-[56px] grid-cols-[1.18fr_0.78fr_0.55fr_0.55fr_0.7fr_0.58fr] items-center gap-x-4 border-t border-white/8 pl-5 pr-10 text-[13px] font-semibold leading-6 text-white/88 md:gap-x-5 md:text-[16px] [&>span]:min-w-0 [&>span]:truncate [&>span]:whitespace-nowrap"
                   >
                     <span>{row.time}</span>
                     <span>{row.pair}</span>
-                    <span className="text-[#10C890]">{row.type}</span>
+                    <span className="text-[#10C890]">{copy.modal.orderTable.buy}</span>
                     <span>{row.price}</span>
                     <span>{row.volume}</span>
                     <span>{row.amount}</span>
@@ -596,8 +819,8 @@ function InvitationCommissionDetailModal({
               </>
             )}
 
-            <div className="pointer-events-none absolute bottom-0 right-0 top-[62px] w-[22px] bg-[#484846]">
-              <div className="mx-auto mt-3 h-0 w-0 border-x-[7px] border-b-[8px] border-x-transparent border-b-[#9B9B98]" />
+            <div className="pointer-events-none absolute bottom-0 right-0 top-[50px] w-[18px] bg-[#484846]">
+              <div className="mx-auto mt-2.5 h-0 w-0 border-x-[6px] border-b-[7px] border-x-transparent border-b-[#9B9B98]" />
             </div>
           </section>
         </div>
@@ -2197,15 +2420,35 @@ export function ReserveOrdersPageV2() {
 }
 
 export function InvitationPageV2() {
-  const { walletConnected, identityBound } = useRwaAppState();
-  const [activeTab, setActiveTab] = useState<"invitees" | "rewards">("invitees");
+  const { lang, walletConnected, identityBound } = useRwaAppState();
+  const [activeTab, setActiveTab] = useState<InvitationTableTab>("invitees");
   const [detailModalTab, setDetailModalTab] = useState<InvitationDetailTab | null>(null);
   const [keyword, setKeyword] = useState("");
   const [copiedField, setCopiedField] = useState<"code" | "link" | null>(null);
 
+  const copy = invitationPageCopy[lang];
   const inviteCode = "REAL744";
   const inviteLink = `https://www.realfinance.cc/home?inviteCode=${inviteCode}`;
   const canShowDashboard = walletConnected && identityBound;
+  const tableTabs: { key: InvitationTableTab; label: string }[] = [
+    { key: "invitees", label: copy.tabs.invitees },
+    { key: "assetRewards", label: copy.tabs.rateRebate },
+    { key: "headcountRewards", label: copy.tabs.headcountReward },
+  ];
+  const summaryItems = [
+    [copy.summary.rank, invitationSummary.level, ""],
+    [copy.summary.totalCommission, invitationSummary.totalCommissionUsdc, "USDC"],
+    [copy.summary.rateCommission, invitationSummary.rateCommissionUsdc, "USDC"],
+    [copy.summary.pointsCommission, invitationSummary.pointsCommissionReal, "iReal"],
+    [copy.summary.headcountCommission, invitationSummary.headcountCommissionUsdc ?? "--", "USDC"],
+    [copy.summary.totalInvites, invitationSummary.qualifiedInvitees, copy.units.people],
+  ] as const;
+  const shareActions = [
+    { label: copy.share.twitter, Icon: Twitter },
+    { label: copy.share.telegram, Icon: Send },
+    { label: copy.share.qrCode, Icon: QrCode },
+    { label: copy.share.more, Icon: MoreHorizontal },
+  ];
 
   const filteredInvitees = useMemo(
     () =>
@@ -2230,13 +2473,13 @@ export function InvitationPageV2() {
           <div className="max-w-[980px] py-5">
             <div>
               <h1 className="text-[34px] font-medium leading-[48px] text-white" style={invitationTitleTypography}>
-                邀请好友，共享资产收益
+                {copy.heroTitle}
               </h1>
               <p
                 className="mt-3 max-w-[980px] text-[15px] leading-6 text-white/60"
                 style={invitationBodyTypography}
               >
-                每邀请一位合格好友完成资产申购，即可累计 USDC 返佣与 REAL 积分奖励。
+                {copy.heroDescription}
               </p>
             </div>
           </div>
@@ -2248,8 +2491,11 @@ export function InvitationPageV2() {
             {canShowDashboard ? (
               <div className="relative z-[1] grid grid-cols-[minmax(0,480px)_1fr] items-start gap-[42px]">
                 <div className="space-y-4">
+                  <h2 className="text-[20px] font-semibold leading-7 text-white" style={invitationTitleTypography}>
+                    {copy.inviteMethod}
+                  </h2>
                   <div>
-                    <p className="mb-1.5 text-[13px] font-semibold leading-5 text-white/42">邀请码</p>
+                    <p className="mb-1.5 text-[13px] font-semibold leading-5 text-white/42">{copy.inviteCode}</p>
                     <div className="flex h-[48px] items-center justify-between rounded-[9px] border border-white/13 bg-[#252523]/95 px-3.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
                       <span className="font-mono text-[20px] font-semibold leading-none text-white/88">
                         {inviteCode}
@@ -2258,7 +2504,7 @@ export function InvitationPageV2() {
                         type="button"
                         className="grid size-6 place-items-center text-white/55 transition hover:text-white"
                         onClick={() => copyValue(inviteCode, "code")}
-                        aria-label={copiedField === "code" ? "已复制邀请码" : "复制邀请码"}
+                        aria-label={copiedField === "code" ? copy.copiedCodeLabel : copy.copyCodeLabel}
                       >
                         <Copy className="size-[18px]" />
                       </button>
@@ -2266,7 +2512,7 @@ export function InvitationPageV2() {
                   </div>
 
                   <div>
-                    <p className="mb-1.5 text-[13px] font-semibold leading-5 text-white/42">邀请链接</p>
+                    <p className="mb-1.5 text-[13px] font-semibold leading-5 text-white/42">{copy.inviteLink}</p>
                     <div className="flex h-[48px] items-center justify-between rounded-[9px] border border-white/13 bg-[#252523]/95 px-3.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
                       <span className="truncate pr-5 text-[17px] font-semibold leading-none text-white/88">
                         {inviteLink}
@@ -2275,7 +2521,7 @@ export function InvitationPageV2() {
                         type="button"
                         className="grid size-6 shrink-0 place-items-center text-white/55 transition hover:text-white"
                         onClick={() => copyValue(inviteLink, "link")}
-                        aria-label={copiedField === "link" ? "已复制邀请链接" : "复制邀请链接"}
+                        aria-label={copiedField === "link" ? copy.copiedLinkLabel : copy.copyLinkLabel}
                       >
                         <Copy className="size-[18px]" />
                       </button>
@@ -2284,24 +2530,24 @@ export function InvitationPageV2() {
                 </div>
 
                 <div className="flex justify-end pt-1">
-                  <div className="flex items-start gap-6">
-                    {[
-                      ["Twitter", "X"],
-                      ["Telegram", "↗"],
-                      ["二维码", "⌗"],
-                      ["更多", "⌯"],
-                    ].map(([label, mark]) => (
-                      <button
-                        key={label}
-                        type="button"
-                        className="group flex flex-col items-center gap-2.5 text-[13px] font-semibold leading-5 text-white/48 transition hover:text-white/80"
-                      >
-                        <span>{label}</span>
-                        <span className="grid size-[48px] place-items-center rounded-full border border-white/12 bg-[#171716]/75 text-[23px] font-medium leading-none text-white/85 transition group-hover:border-white/22 group-hover:bg-[#22221F]">
-                          {mark}
-                        </span>
-                      </button>
-                    ))}
+                  <div>
+                    <h2 className="mb-6 text-center text-[20px] font-semibold leading-7 text-white" style={invitationTitleTypography}>
+                      {copy.shareTo}
+                    </h2>
+                    <div className="flex items-start gap-6">
+                      {shareActions.map(({ label, Icon }) => (
+                        <button
+                          key={label}
+                          type="button"
+                          className="group flex flex-col items-center gap-2.5 text-[13px] font-semibold leading-5 text-white/48 transition hover:text-white/80"
+                        >
+                          <span>{label}</span>
+                          <span className="grid size-[48px] place-items-center rounded-full border border-white/12 bg-[#171716]/75 text-[23px] font-medium leading-none text-white/85 transition group-hover:border-white/22 group-hover:bg-[#22221F]">
+                            <Icon className="size-[23px] stroke-[1.75]" />
+                          </span>
+                        </button>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -2312,13 +2558,13 @@ export function InvitationPageV2() {
                     className="mx-auto w-fit text-[40px] font-bold leading-[60px] text-white"
                     style={invitationTitleTypography}
                   >
-                    放大您的财富网络
+                    {copy.disconnectedTitle}
                   </h2>
                   <p
                     className="mx-auto mt-[38px] w-[500px] text-[20px] font-medium leading-[30px] text-white/60"
                     style={invitationBodyTypography}
                   >
-                    一键生成专属推广链接与海报，即刻开启您的链上收益。
+                    {copy.disconnectedDescription}
                   </p>
                   <button
                     type="button"
@@ -2326,7 +2572,7 @@ export function InvitationPageV2() {
                     style={invitationButtonTypography}
                     onClick={() => triggerAuthGate(walletConnected, identityBound)}
                   >
-                    连接钱包开启
+                    {copy.disconnectedCta}
                   </button>
                 </div>
               </div>
@@ -2341,20 +2587,13 @@ export function InvitationPageV2() {
                   <div className="absolute right-[74px] top-[36px] h-[160px] w-[160px] rounded-full border border-dashed border-[#6A4B1E]/70" />
                   <div className="absolute right-[126px] top-[78px] h-[96px] w-[96px] rounded-full border border-dashed border-[#6A4B1E]/70" />
                 </div>
-                <div className="relative z-[1] grid grid-cols-6 gap-5">
-                  {[
-                    ["邀请等级", invitationSummary.level, ""],
-                    ["返佣总金额 USDC", invitationSummary.totalCommissionUsdc, ""],
-                    ["利率佣金总额", invitationSummary.rateCommissionUsdc, "USDC"],
-                    ["积分佣金总额", invitationSummary.pointsCommissionReal, "REAL"],
-                    ["人头佣金总额 USDC", invitationSummary.headcountCommissionUsdc ?? "--", ""],
-                    ["合格邀请人数", invitationSummary.qualifiedInvitees, "人"],
-                  ].map(([label, value, suffix]) => (
+                <div className="relative z-[1] grid grid-cols-[140px_158px_168px_190px_160px_116px] justify-start gap-4">
+                  {summaryItems.map(([label, value, suffix]) => (
                     <div key={label} className="min-w-0">
-                      <div className="text-[14px] font-semibold leading-5 text-white/52">{label}</div>
-                      <p className="mt-2.5 inline-flex items-baseline rounded-[4px] bg-white/[0.08] px-2 py-0.5 font-mono text-[22px] font-bold leading-none text-white">
+                      <div className="whitespace-nowrap text-[13px] font-semibold leading-5 text-white/52">{label}</div>
+                      <p className="mt-2.5 inline-flex max-w-full items-baseline rounded-[4px] bg-white/[0.08] px-2 py-0.5 font-mono text-[21px] font-bold leading-none text-white">
                         {value}
-                        {suffix ? <span className="ml-1.5 text-[18px] font-semibold text-white/60">{suffix}</span> : null}
+                        {suffix ? <span className="ml-1.5 whitespace-nowrap text-[15px] font-semibold text-white/60">{suffix}</span> : null}
                       </p>
                     </div>
                   ))}
@@ -2364,17 +2603,14 @@ export function InvitationPageV2() {
               <section className="mt-[24px]">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-5">
-                    {[
-                      ["invitees", "被邀请人"],
-                      ["rewards", "奖励明细"],
-                    ].map(([key, label]) => (
+                    {tableTabs.map(({ key, label }) => (
                       <button
                         key={key}
                         type="button"
                         className={`h-[36px] rounded-full px-5 text-[15px] font-semibold transition ${
                           activeTab === key ? "bg-[#1B1B1B] text-white" : "text-white/42 hover:text-white/68"
                         }`}
-                        onClick={() => setActiveTab(key as "invitees" | "rewards")}
+                        onClick={() => setActiveTab(key)}
                       >
                         {label}
                       </button>
@@ -2386,7 +2622,7 @@ export function InvitationPageV2() {
                       <Input
                         value={keyword}
                         onChange={(event) => setKeyword(event.target.value)}
-                        placeholder="请输入受邀人地址"
+                        placeholder={copy.filters.inviteeAddress}
                         className="h-9 rounded-[8px] border border-white/10 bg-black pl-3.5 pr-9 text-[13px] text-white placeholder:text-white/24"
                       />
                       <Search className="absolute right-3.5 top-1/2 size-[18px] -translate-y-1/2 text-white/35" />
@@ -2398,10 +2634,10 @@ export function InvitationPageV2() {
                   {activeTab === "invitees" ? (
                     <>
                       <div className="grid h-[52px] grid-cols-[1.35fr_1fr_1fr_0.65fr] items-center bg-[#1A1A1A] px-5 text-[15px] font-semibold text-white/50">
-                        <span>被邀请人地址</span>
-                        <span>注册时间</span>
-                        <span>总交易额</span>
-                        <span>操作</span>
+                        <span>{copy.inviteeTable.inviteeAddress}</span>
+                        <span>{copy.inviteeTable.registerTime}</span>
+                        <span>{copy.inviteeTable.totalTradeVolume}</span>
+                        <span>{copy.inviteeTable.operate}</span>
                       </div>
                       {filteredInvitees.length > 0 ? (
                         filteredInvitees.map((row, index) => (
@@ -2412,30 +2648,30 @@ export function InvitationPageV2() {
                             <span>{row.address}</span>
                             <span>{row.registeredAt}</span>
                             <span>{row.volume}</span>
-                            <div className="flex justify-end">
+                            <div className="flex justify-start">
                               <button
                                 type="button"
                                 className="h-8 rounded-[9px] border border-white/18 px-3.5 text-[13px] text-white transition hover:border-white/32 hover:bg-white/[0.04]"
                                 onClick={() => setDetailModalTab("invitees")}
                               >
-                                详情
+                                {copy.inviteeTable.details}
                               </button>
                             </div>
                           </div>
                         ))
                       ) : (
-                        <InvitationEmptyState />
+                        <InvitationEmptyState label={copy.empty} />
                       )}
                     </>
-                  ) : (
+                  ) : activeTab === "assetRewards" ? (
                     <>
                       <div className="grid h-[52px] grid-cols-[1.12fr_0.9fr_0.95fr_1fr_1fr_0.65fr] items-center bg-[#1A1A1A] px-5 text-[15px] font-semibold text-white/50">
-                        <span>奖励发放时间</span>
-                        <span>本次奖励等级</span>
-                        <span>合格受邀人数</span>
-                        <span>利率佣金总额</span>
-                        <span>积分佣金总额</span>
-                        <span>操作</span>
+                        <span>{copy.rateRewardTable.rewardTime}</span>
+                        <span>{copy.rateRewardTable.rewardLevel}</span>
+                        <span>{copy.rateRewardTable.qualifiedInvitees}</span>
+                        <span>{copy.rateRewardTable.rateCommission}</span>
+                        <span>{copy.rateRewardTable.pointsCommission}</span>
+                        <span>{copy.rateRewardTable.operate}</span>
                       </div>
                       {invitationRewardRows.length > 0 ? (
                         invitationRewardRows.map((row) => (
@@ -2448,19 +2684,45 @@ export function InvitationPageV2() {
                             <span>{row.qualifiedInvitees}</span>
                             <span>{row.rateCommissionUsdc}</span>
                             <span>{row.pointsCommissionReal}</span>
-                            <div className="flex justify-end">
+                            <div className="flex justify-start">
                               <button
                                 type="button"
                                 className="h-8 rounded-[9px] border border-white/18 px-3.5 text-[13px] text-white transition hover:border-white/32 hover:bg-white/[0.04]"
                                 onClick={() => setDetailModalTab("orders")}
                               >
-                                详情
+                                {copy.rateRewardTable.details}
                               </button>
                             </div>
                           </div>
                         ))
                       ) : (
-                        <InvitationEmptyState />
+                        <InvitationEmptyState label={copy.empty} />
+                      )}
+                    </>
+                  ) : (
+                    <>
+                      <div className="grid h-[52px] grid-cols-[1.12fr_0.9fr_0.95fr_1fr_1fr] items-center bg-[#1A1A1A] px-5 text-[15px] font-semibold text-white/50">
+                        <span>{copy.headcountRewardTable.rewardTime}</span>
+                        <span>{copy.headcountRewardTable.rewardLevel}</span>
+                        <span>{copy.headcountRewardTable.qualifiedInvitees}</span>
+                        <span>{copy.headcountRewardTable.headcountCommission}</span>
+                        <span>{copy.headcountRewardTable.status}</span>
+                      </div>
+                      {invitationHeadcountRewardRows.length > 0 ? (
+                        invitationHeadcountRewardRows.map((row) => (
+                          <div
+                            key={row.id}
+                            className="grid grid-cols-[1.12fr_0.9fr_0.95fr_1fr_1fr] items-center border-t border-white/8 px-5 py-4 text-[14px] text-zinc-300"
+                          >
+                            <span>{row.issuedAt}</span>
+                            <span>{row.level}</span>
+                            <span>{row.qualifiedInvitees}</span>
+                            <span>{row.headcountCommissionUsdc}</span>
+                            <span>{row.status}</span>
+                          </div>
+                        ))
+                      ) : (
+                        <InvitationEmptyState label={copy.empty} />
                       )}
                     </>
                   )}
@@ -2476,7 +2738,7 @@ export function InvitationPageV2() {
                 className="mx-auto w-fit text-center text-[40px] font-medium leading-[60px] text-white"
                 style={invitationTitleTypography}
               >
-                连接钱包查看邀请奖励
+                {copy.bottomDisconnectedTitle}
               </h2>
               <button
                 type="button"
@@ -2484,7 +2746,7 @@ export function InvitationPageV2() {
                 style={invitationButtonTypography}
                 onClick={() => triggerAuthGate(walletConnected, identityBound)}
               >
-                连接钱包
+                {copy.bottomDisconnectedCta}
               </button>
             </section>
           )}
@@ -2494,6 +2756,7 @@ export function InvitationPageV2() {
       <RealRwaFooter />
       <InvitationCommissionDetailModal
         activeTab={detailModalTab}
+        copy={copy}
         onTabChange={setDetailModalTab}
         onClose={() => setDetailModalTab(null)}
       />
