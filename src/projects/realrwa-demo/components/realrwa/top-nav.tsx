@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
-import { ChevronDown, Copy, Globe, LogOut, Menu, UserSquare2, WalletCards, X } from "lucide-react";
+import { ChevronDown, Copy, Earth, LogOut, Menu, UserSquare2, WalletCards, X } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -171,12 +171,15 @@ export function TopNav({
 
         <div className="real-topnav-right flex items-center justify-end gap-3">
           <button
-            className="hidden items-center gap-1 text-[16px] text-white/55 transition hover:text-white sm:flex"
+            className="hidden h-[38px] shrink-0 items-center gap-2 rounded-[10px] border border-white/12 bg-white/[0.045] px-2.5 text-[13px] font-medium leading-none text-white/74 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] transition hover:border-white/24 hover:bg-white/[0.085] hover:text-white sm:flex"
             onClick={toggleLang}
             type="button"
+            aria-label={lang === "cn" ? "切换到英文" : "Switch to Chinese"}
           >
-            <Globe className="size-6" />
-            {lang === "cn" ? "简体中文" : "EN"}
+            <span className="grid size-[22px] place-items-center rounded-full bg-white/[0.06] text-white/62">
+              <Earth className="size-[15px]" strokeWidth={1.8} />
+            </span>
+            <span className="whitespace-nowrap">{lang === "cn" ? "简体中文" : "English"}</span>
           </button>
 
           {rightAction ? <div className="hidden items-center sm:flex">{rightAction}</div> : null}
@@ -273,7 +276,7 @@ export function TopNav({
             onClick={toggleLang}
             type="button"
           >
-            <Globe className="size-4" />
+            <Earth className="size-4" strokeWidth={1.8} />
             {lang === "cn" ? "中" : "EN"}
           </button>
 
@@ -388,7 +391,7 @@ export function TopNav({
               onClick={toggleLang}
               type="button"
             >
-              <Globe className="size-4" />
+              <Earth className="size-4" strokeWidth={1.8} />
               EN
             </button>
 

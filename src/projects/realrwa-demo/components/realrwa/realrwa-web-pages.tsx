@@ -10,7 +10,11 @@ import {
   ChevronRight,
   Copy,
   Info,
+  MoreHorizontal,
+  QrCode,
   Search,
+  Send,
+  Twitter,
   X,
 } from "lucide-react";
 import Image from "next/image";
@@ -52,6 +56,7 @@ type TableStatus = "Completed" | "Failed" | "Pending" | "Settling";
 type DetailTabKey = "detail" | "buy" | "sell" | "stake" | "redeem" | "claim" | "holders";
 type DetailActionKey = Exclude<DetailTabKey, "detail" | "holders">;
 type InvitationDetailTab = "invitees" | "orders";
+type InvitationTableTab = "invitees" | "assetRewards" | "headcountRewards";
 
 const footerColumns: { title: LocaleText; items: LocaleText[] }[] = [
   {
@@ -380,16 +385,25 @@ const invitationRewardRows: {
     level: "L0",
     qualifiedInvitees: "2",
     rateCommissionUsdc: "100.00 USDC",
-    pointsCommissionReal: "2,500.00 REAL",
+    pointsCommissionReal: "2,500.00 iReal",
   },
 ];
 
+const invitationHeadcountRewardRows: {
+  id: string;
+  issuedAt: string;
+  level: string;
+  qualifiedInvitees: string;
+  headcountCommissionUsdc: string;
+  status: string;
+}[] = [];
+
 const invitationDetailStats = [
   { label: "邀请等级:", value: invitationSummary.level },
-  { label: "返佣总金额 USDC:", value: invitationSummary.totalCommissionUsdc },
+  { label: "返佣总金额:", value: `${invitationSummary.totalCommissionUsdc} USDC` },
   { label: "利率佣金总额:", value: `${invitationSummary.rateCommissionUsdc} USDC` },
-  { label: "积分佣金总额:", value: `${invitationSummary.pointsCommissionReal} REAL` },
-  { label: "人头佣金总额 USDC:", value: invitationSummary.headcountCommissionUsdc ?? "--" },
+  { label: "积分佣金总额:", value: `${invitationSummary.pointsCommissionReal} iReal` },
+  { label: "人头佣金总额:", value: `${invitationSummary.headcountCommissionUsdc ?? "--"} USDC` },
   { label: "合格邀请人数:", value: invitationSummary.qualifiedInvitees },
 ] as const;
 
@@ -483,34 +497,34 @@ function InvitationCommissionDetailModal({
         }
       }}
     >
-      <div className="relative flex h-[min(720px,calc(100vh-40px))] w-[min(1120px,calc(100vw-40px))] overflow-hidden rounded-[16px] bg-[#1D1D1B] shadow-[0_28px_90px_rgba(0,0,0,0.45)]">
+      <div className="relative flex h-[min(620px,calc(100vh-40px))] w-[min(960px,calc(100vw-40px))] overflow-hidden rounded-[14px] bg-[#1D1D1B] shadow-[0_24px_76px_rgba(0,0,0,0.45)]">
         <button
           type="button"
           aria-label="关闭返佣明细"
-          className="absolute right-5 top-5 z-[2] grid size-10 place-items-center text-white/55 transition hover:text-white"
+          className="absolute right-4 top-4 z-[2] grid size-9 place-items-center text-white/55 transition hover:text-white"
           onClick={onClose}
         >
-          <X className="size-7 stroke-[1.7]" />
+          <X className="size-6 stroke-[1.7]" />
         </button>
 
-        <div className="flex min-h-0 w-full flex-col px-8 pb-6 pt-[54px]">
-          <h2 id="invitation-detail-title" className="text-center text-[24px] font-semibold leading-8 text-white/88">
+        <div className="flex min-h-0 w-full flex-col px-6 pb-5 pt-11">
+          <h2 id="invitation-detail-title" className="text-center text-[21px] font-semibold leading-7 text-white/88">
             返佣明细
           </h2>
 
-          <section className="mt-4 rounded-[12px] bg-[#292927] px-5 py-5">
-            <div className="grid grid-cols-1 gap-y-2 md:grid-cols-2 md:gap-x-10 md:gap-y-3">
+          <section className="mt-3 rounded-[10px] bg-[#292927] px-4 py-4">
+            <div className="grid grid-cols-1 gap-y-1.5 md:grid-cols-2 md:gap-x-8 md:gap-y-2">
               {invitationDetailStats.map((item) => (
-                <div key={item.label} className="grid grid-cols-[145px_minmax(0,1fr)] items-center md:grid-cols-[180px_minmax(0,1fr)]">
-                  <span className="text-[15px] font-semibold leading-6 text-white/58 md:text-[18px] md:leading-7">{item.label}</span>
-                  <span className="text-[15px] font-semibold leading-6 text-white/58 md:text-[18px] md:leading-7">{item.value}</span>
+                <div key={item.label} className="grid grid-cols-[132px_minmax(0,1fr)] items-center md:grid-cols-[158px_minmax(0,1fr)]">
+                  <span className="text-[14px] font-semibold leading-6 text-white/58 md:text-[15px]">{item.label}</span>
+                  <span className="text-[14px] font-semibold leading-6 text-white/58 md:text-[15px]">{item.value}</span>
                 </div>
               ))}
             </div>
           </section>
 
-          <section className="mt-6 flex h-[46px] items-center justify-between gap-6">
-            <div className="flex items-center gap-[18px]">
+          <section className="mt-5 flex h-10 items-center justify-between gap-5">
+            <div className="flex items-center gap-3">
               {[
                 ["invitees", "被邀请人"],
                 ["orders", "订单"],
@@ -518,7 +532,7 @@ function InvitationCommissionDetailModal({
                 <button
                   key={key}
                   type="button"
-                  className={`h-[46px] rounded-full px-6 text-[19px] font-semibold leading-[46px] outline-none transition focus:outline-none focus-visible:outline-none focus-visible:ring-0 ${
+                  className={`h-10 rounded-full px-5 text-[16px] font-semibold leading-10 outline-none transition focus:outline-none focus-visible:outline-none focus-visible:ring-0 ${
                     activeTab === key ? "bg-[#30302D] text-white" : "text-white/42 hover:text-white/68"
                   }`}
                   onClick={() => onTabChange(key as InvitationDetailTab)}
@@ -530,29 +544,29 @@ function InvitationCommissionDetailModal({
 
             {showingInvitees ? (
               <div className="hidden min-w-0 flex-1 justify-end gap-3 md:flex">
-                <div className="relative h-[46px] w-[330px] max-w-[31vw]">
+                <div className="relative h-10 w-[286px] max-w-[31vw]">
                   <input
                     type="text"
                     placeholder="请输入受邀人地址"
-                    className="h-full w-full rounded-[8px] border border-white/10 bg-[#1B1B1A] px-4 pr-12 text-[16px] font-semibold text-white/78 outline-none placeholder:text-white/24"
+                    className="h-full w-full rounded-[8px] border border-white/10 bg-[#1B1B1A] px-3.5 pr-10 text-[14px] font-semibold text-white/78 outline-none placeholder:text-white/24"
                   />
-                  <Search className="absolute right-4 top-1/2 size-6 -translate-y-1/2 text-white/45" />
+                  <Search className="absolute right-3.5 top-1/2 size-5 -translate-y-1/2 text-white/45" />
                 </div>
                 <button
                   type="button"
-                  className="flex h-[46px] w-[330px] max-w-[31vw] items-center justify-between rounded-[8px] border border-white/10 bg-[#1B1B1A] px-4 text-[16px] font-semibold text-white/28"
+                  className="flex h-10 w-[286px] max-w-[31vw] items-center justify-between rounded-[8px] border border-white/10 bg-[#1B1B1A] px-3.5 text-[14px] font-semibold text-white/28"
                 >
                   <span>注册开始日期　→　注册结束日期</span>
-                  <CalendarDays className="size-5 text-white/35" />
+                  <CalendarDays className="size-[18px] text-white/35" />
                 </button>
               </div>
             ) : null}
           </section>
 
-          <section className="relative mt-6 min-h-0 flex-1 overflow-hidden rounded-[12px] bg-[#1A1A18]">
+          <section className="relative mt-5 min-h-0 flex-1 overflow-hidden rounded-[10px] bg-[#1A1A18]">
             {showingInvitees ? (
               <>
-                <div className="grid h-[62px] grid-cols-[1fr_0.75fr_1fr_0.85fr] items-center gap-x-4 bg-[#2A2A27] pl-6 pr-[48px] text-[16px] font-semibold leading-6 text-white/58 md:gap-x-5 md:text-[20px] md:leading-7 [&>span]:min-w-0 [&>span]:truncate [&>span]:whitespace-nowrap">
+                <div className="grid h-[50px] grid-cols-[1fr_0.75fr_1fr_0.85fr] items-center gap-x-4 bg-[#2A2A27] pl-5 pr-10 text-[14px] font-semibold leading-6 text-white/58 md:gap-x-5 md:text-[16px] [&>span]:min-w-0 [&>span]:truncate [&>span]:whitespace-nowrap">
                   <span>被邀请人地址</span>
                   <span>数据来源</span>
                   <span>注册时间</span>
@@ -561,7 +575,7 @@ function InvitationCommissionDetailModal({
                 {invitationInviteeRows.map((row) => (
                   <div
                     key={row.address}
-                    className="grid h-[68px] grid-cols-[1fr_0.75fr_1fr_0.85fr] items-center gap-x-4 border-t border-white/8 pl-6 pr-[48px] text-[16px] font-semibold leading-6 text-white/88 md:gap-x-5 md:text-[20px] md:leading-7 [&>span]:min-w-0 [&>span]:truncate [&>span]:whitespace-nowrap"
+                    className="grid h-[56px] grid-cols-[1fr_0.75fr_1fr_0.85fr] items-center gap-x-4 border-t border-white/8 pl-5 pr-10 text-[14px] font-semibold leading-6 text-white/88 md:gap-x-5 md:text-[16px] [&>span]:min-w-0 [&>span]:truncate [&>span]:whitespace-nowrap"
                   >
                     <span>{row.address}</span>
                     <span>{row.source}</span>
@@ -572,7 +586,7 @@ function InvitationCommissionDetailModal({
               </>
             ) : (
               <>
-                <div className="grid h-[62px] grid-cols-[1.18fr_0.78fr_0.55fr_0.55fr_0.7fr_0.58fr] items-center gap-x-4 bg-[#2A2A27] pl-6 pr-[48px] text-[15px] font-semibold leading-6 text-white/58 md:gap-x-5 md:text-[20px] md:leading-7 [&>span]:min-w-0 [&>span]:truncate [&>span]:whitespace-nowrap">
+                <div className="grid h-[50px] grid-cols-[1.18fr_0.78fr_0.55fr_0.55fr_0.7fr_0.58fr] items-center gap-x-4 bg-[#2A2A27] pl-5 pr-10 text-[13px] font-semibold leading-6 text-white/58 md:gap-x-5 md:text-[16px] [&>span]:min-w-0 [&>span]:truncate [&>span]:whitespace-nowrap">
                   <span>时间</span>
                   <span>币种</span>
                   <span>类型</span>
@@ -583,7 +597,7 @@ function InvitationCommissionDetailModal({
                 {invitationDetailOrderRows.map((row) => (
                   <div
                     key={`${row.time}-${row.pair}`}
-                    className="grid h-[68px] grid-cols-[1.18fr_0.78fr_0.55fr_0.55fr_0.7fr_0.58fr] items-center gap-x-4 border-t border-white/8 pl-6 pr-[48px] text-[15px] font-semibold leading-6 text-white/88 md:gap-x-5 md:text-[20px] md:leading-7 [&>span]:min-w-0 [&>span]:truncate [&>span]:whitespace-nowrap"
+                    className="grid h-[56px] grid-cols-[1.18fr_0.78fr_0.55fr_0.55fr_0.7fr_0.58fr] items-center gap-x-4 border-t border-white/8 pl-5 pr-10 text-[13px] font-semibold leading-6 text-white/88 md:gap-x-5 md:text-[16px] [&>span]:min-w-0 [&>span]:truncate [&>span]:whitespace-nowrap"
                   >
                     <span>{row.time}</span>
                     <span>{row.pair}</span>
@@ -596,8 +610,8 @@ function InvitationCommissionDetailModal({
               </>
             )}
 
-            <div className="pointer-events-none absolute bottom-0 right-0 top-[62px] w-[22px] bg-[#484846]">
-              <div className="mx-auto mt-3 h-0 w-0 border-x-[7px] border-b-[8px] border-x-transparent border-b-[#9B9B98]" />
+            <div className="pointer-events-none absolute bottom-0 right-0 top-[50px] w-[18px] bg-[#484846]">
+              <div className="mx-auto mt-2.5 h-0 w-0 border-x-[6px] border-b-[7px] border-x-transparent border-b-[#9B9B98]" />
             </div>
           </section>
         </div>
@@ -2198,7 +2212,7 @@ export function ReserveOrdersPageV2() {
 
 export function InvitationPageV2() {
   const { walletConnected, identityBound } = useRwaAppState();
-  const [activeTab, setActiveTab] = useState<"invitees" | "rewards">("invitees");
+  const [activeTab, setActiveTab] = useState<InvitationTableTab>("invitees");
   const [detailModalTab, setDetailModalTab] = useState<InvitationDetailTab | null>(null);
   const [keyword, setKeyword] = useState("");
   const [copiedField, setCopiedField] = useState<"code" | "link" | null>(null);
@@ -2236,7 +2250,7 @@ export function InvitationPageV2() {
                 className="mt-3 max-w-[980px] text-[15px] leading-6 text-white/60"
                 style={invitationBodyTypography}
               >
-                每邀请一位合格好友完成资产申购，即可累计 USDC 返佣与 REAL 积分奖励。
+                每邀请一位合格好友完成资产申购，即可累计 USDC 返佣与 iReal 积分奖励。
               </p>
             </div>
           </div>
@@ -2286,11 +2300,11 @@ export function InvitationPageV2() {
                 <div className="flex justify-end pt-1">
                   <div className="flex items-start gap-6">
                     {[
-                      ["Twitter", "X"],
-                      ["Telegram", "↗"],
-                      ["二维码", "⌗"],
-                      ["更多", "⌯"],
-                    ].map(([label, mark]) => (
+                      { label: "Twitter", Icon: Twitter },
+                      { label: "Telegram", Icon: Send },
+                      { label: "二维码", Icon: QrCode },
+                      { label: "更多", Icon: MoreHorizontal },
+                    ].map(({ label, Icon }) => (
                       <button
                         key={label}
                         type="button"
@@ -2298,7 +2312,7 @@ export function InvitationPageV2() {
                       >
                         <span>{label}</span>
                         <span className="grid size-[48px] place-items-center rounded-full border border-white/12 bg-[#171716]/75 text-[23px] font-medium leading-none text-white/85 transition group-hover:border-white/22 group-hover:bg-[#22221F]">
-                          {mark}
+                          <Icon className="size-[23px] stroke-[1.75]" />
                         </span>
                       </button>
                     ))}
@@ -2341,20 +2355,20 @@ export function InvitationPageV2() {
                   <div className="absolute right-[74px] top-[36px] h-[160px] w-[160px] rounded-full border border-dashed border-[#6A4B1E]/70" />
                   <div className="absolute right-[126px] top-[78px] h-[96px] w-[96px] rounded-full border border-dashed border-[#6A4B1E]/70" />
                 </div>
-                <div className="relative z-[1] grid grid-cols-6 gap-5">
+                <div className="relative z-[1] grid grid-cols-[140px_158px_168px_190px_160px_116px] justify-start gap-4">
                   {[
                     ["邀请等级", invitationSummary.level, ""],
-                    ["返佣总金额 USDC", invitationSummary.totalCommissionUsdc, ""],
+                    ["返佣总金额", invitationSummary.totalCommissionUsdc, "USDC"],
                     ["利率佣金总额", invitationSummary.rateCommissionUsdc, "USDC"],
-                    ["积分佣金总额", invitationSummary.pointsCommissionReal, "REAL"],
-                    ["人头佣金总额 USDC", invitationSummary.headcountCommissionUsdc ?? "--", ""],
+                    ["积分佣金总额", invitationSummary.pointsCommissionReal, "iReal"],
+                    ["人头佣金总额", invitationSummary.headcountCommissionUsdc ?? "--", "USDC"],
                     ["合格邀请人数", invitationSummary.qualifiedInvitees, "人"],
                   ].map(([label, value, suffix]) => (
                     <div key={label} className="min-w-0">
-                      <div className="text-[14px] font-semibold leading-5 text-white/52">{label}</div>
-                      <p className="mt-2.5 inline-flex items-baseline rounded-[4px] bg-white/[0.08] px-2 py-0.5 font-mono text-[22px] font-bold leading-none text-white">
+                      <div className="whitespace-nowrap text-[13px] font-semibold leading-5 text-white/52">{label}</div>
+                      <p className="mt-2.5 inline-flex max-w-full items-baseline rounded-[4px] bg-white/[0.08] px-2 py-0.5 font-mono text-[21px] font-bold leading-none text-white">
                         {value}
-                        {suffix ? <span className="ml-1.5 text-[18px] font-semibold text-white/60">{suffix}</span> : null}
+                        {suffix ? <span className="ml-1.5 whitespace-nowrap text-[15px] font-semibold text-white/60">{suffix}</span> : null}
                       </p>
                     </div>
                   ))}
@@ -2366,7 +2380,8 @@ export function InvitationPageV2() {
                   <div className="flex items-center gap-5">
                     {[
                       ["invitees", "被邀请人"],
-                      ["rewards", "奖励明细"],
+                      ["assetRewards", "利率返佣"],
+                      ["headcountRewards", "人头奖励"],
                     ].map(([key, label]) => (
                       <button
                         key={key}
@@ -2374,7 +2389,7 @@ export function InvitationPageV2() {
                         className={`h-[36px] rounded-full px-5 text-[15px] font-semibold transition ${
                           activeTab === key ? "bg-[#1B1B1B] text-white" : "text-white/42 hover:text-white/68"
                         }`}
-                        onClick={() => setActiveTab(key as "invitees" | "rewards")}
+                        onClick={() => setActiveTab(key as InvitationTableTab)}
                       >
                         {label}
                       </button>
@@ -2412,7 +2427,7 @@ export function InvitationPageV2() {
                             <span>{row.address}</span>
                             <span>{row.registeredAt}</span>
                             <span>{row.volume}</span>
-                            <div className="flex justify-end">
+                            <div className="flex justify-start">
                               <button
                                 type="button"
                                 className="h-8 rounded-[9px] border border-white/18 px-3.5 text-[13px] text-white transition hover:border-white/32 hover:bg-white/[0.04]"
@@ -2427,7 +2442,7 @@ export function InvitationPageV2() {
                         <InvitationEmptyState />
                       )}
                     </>
-                  ) : (
+                  ) : activeTab === "assetRewards" ? (
                     <>
                       <div className="grid h-[52px] grid-cols-[1.12fr_0.9fr_0.95fr_1fr_1fr_0.65fr] items-center bg-[#1A1A1A] px-5 text-[15px] font-semibold text-white/50">
                         <span>奖励发放时间</span>
@@ -2448,7 +2463,7 @@ export function InvitationPageV2() {
                             <span>{row.qualifiedInvitees}</span>
                             <span>{row.rateCommissionUsdc}</span>
                             <span>{row.pointsCommissionReal}</span>
-                            <div className="flex justify-end">
+                            <div className="flex justify-start">
                               <button
                                 type="button"
                                 className="h-8 rounded-[9px] border border-white/18 px-3.5 text-[13px] text-white transition hover:border-white/32 hover:bg-white/[0.04]"
@@ -2457,6 +2472,32 @@ export function InvitationPageV2() {
                                 详情
                               </button>
                             </div>
+                          </div>
+                        ))
+                      ) : (
+                        <InvitationEmptyState />
+                      )}
+                    </>
+                  ) : (
+                    <>
+                      <div className="grid h-[52px] grid-cols-[1.12fr_0.9fr_0.95fr_1fr_1fr] items-center bg-[#1A1A1A] px-5 text-[15px] font-semibold text-white/50">
+                        <span>奖励发放时间</span>
+                        <span>本次奖励等级</span>
+                        <span>合格受邀人数</span>
+                        <span>人头佣金总额</span>
+                        <span>发放状态</span>
+                      </div>
+                      {invitationHeadcountRewardRows.length > 0 ? (
+                        invitationHeadcountRewardRows.map((row) => (
+                          <div
+                            key={row.id}
+                            className="grid grid-cols-[1.12fr_0.9fr_0.95fr_1fr_1fr] items-center border-t border-white/8 px-5 py-4 text-[14px] text-zinc-300"
+                          >
+                            <span>{row.issuedAt}</span>
+                            <span>{row.level}</span>
+                            <span>{row.qualifiedInvitees}</span>
+                            <span>{row.headcountCommissionUsdc}</span>
+                            <span>{row.status}</span>
                           </div>
                         ))
                       ) : (

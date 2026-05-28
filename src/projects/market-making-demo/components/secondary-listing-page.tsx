@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { ChevronDown, X } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 
 import { useGlobalFeedback } from "@/components/feedback/global-feedback-provider";
 import { REPURCHASE_LISTING_MOCK_DATA } from "@/projects/market-making-demo/lib/mock-data";
@@ -9,6 +10,13 @@ import { REPURCHASE_LISTING_MOCK_DATA } from "@/projects/market-making-demo/lib/
 type ListingPageType = "REPURCHASE_LISTING" | "RECOVERY_LISTING";
 type ListingType = "OFFICIAL_MARKET_MAKER_CHANGE" | "SECONDARY_MERCHANT_LISTING";
 type QuoteStatus = "ONLINE" | "OFFLINE";
+type ListingFilterStatus = "" | QuoteStatus | "COMPLETE";
+
+type ListingFilters = {
+  assetName: string;
+  merchantName: string;
+  status: ListingFilterStatus;
+};
 
 type SecondaryListingQuote = {
   id: string;
@@ -35,11 +43,6 @@ const listingTabs: Array<{ value: ListingPageType; label: string; actionLabel: s
   { value: "RECOVERY_LISTING", label: "回收上架", actionLabel: "回收配置" },
 ];
 
-const listingTypeLabels: Record<ListingType, string> = {
-  OFFICIAL_MARKET_MAKER_CHANGE: "官方做市商变更",
-  SECONDARY_MERCHANT_LISTING: "二次商家上架",
-};
-
 const priceCurrencies = ["USDC", "USDT", "USD1"] as const;
 
 const baseControlClassName =
@@ -48,6 +51,8 @@ const outlineButtonClassName =
   "h-8 rounded-[4px] border border-[#dcdfe6] bg-white text-[15px] font-semibold leading-8 text-[#303133] shadow-[0_1px_2px_rgba(0,0,0,0.12)] transition hover:border-[#c6e2ff] hover:bg-white";
 const primaryButtonClassName =
   "h-8 rounded-[4px] bg-[#2b58d8] text-[15px] font-semibold leading-8 text-white shadow-[0_1px_2px_rgba(43,88,216,0.22)] transition hover:bg-[#2b58d8]";
+
+type PriceCurrency = (typeof priceCurrencies)[number];
 
 const recoveryQuoteRows: SecondaryListingQuote[] = [
   {
@@ -94,6 +99,12 @@ function formatNumber(value: number) {
   return new Intl.NumberFormat("en-US", { maximumFractionDigits: 4 }).format(value);
 }
 
+function getQuotePriceValue(quotePrice: string | undefined, currency: PriceCurrency) {
+  const match = quotePrice?.match(new RegExp(`${currency}\\s+([^\\s/]+)`));
+
+  return match?.[1] ?? "";
+}
+
 function getAssetFullName(symbol: string) {
   if (symbol === "rFUIDL") return "复星财富控股货币基金";
   if (symbol === "rXWCT") return "兴尉城投企业债券";
@@ -108,6 +119,14 @@ function getTradingSymbol(assetName: string) {
 
 function getProductType(symbol: string): SecondaryListingQuote["productType"] {
   return symbol === "rFUIDL" ? "货币基金" : "企业债券";
+}
+
+function createEmptyFilters(): ListingFilters {
+  return {
+    assetName: "",
+    merchantName: "",
+    status: "",
+  };
 }
 
 function toRepurchaseListings(): SecondaryListingQuote[] {
@@ -190,37 +209,40 @@ function TextInput({
   placeholder: string;
   disabled?: boolean;
 }) {
+  const valueProps = disabled ? { value: value ?? "", readOnly: true } : { defaultValue: value };
+
   return (
     <input
-      value={value ?? ""}
+      {...valueProps}
       disabled={disabled}
-      onChange={() => undefined}
       placeholder={placeholder}
       className={`${baseControlClassName} px-[11px] text-[#303133]`}
     />
   );
 }
 
-function ProductLogoPreview() {
+function ProductLogoPreview({ tradingSymbol }: { tradingSymbol?: string }) {
   return (
     <div className="grid size-[104px] place-items-center rounded-[7px] border border-[#dcdfe6] bg-white">
-      {/* eslint-disable-next-line @next/next/no-img-element -- 后台预览远程 token logo，保持和产品配置页一致。 */}
-      <img
-        src="https://cdn.jsdelivr.net/gh/jiangnan0622/token-assets@main/rFUIDL.png"
-        alt="rFUIDL LOGO"
-        className="size-[82px] rounded-full object-contain"
-      />
+      {tradingSymbol ? (
+        <>
+          {/* eslint-disable-next-line @next/next/no-img-element -- 后台预览远程 token logo，保持和产品配置页一致。 */}
+          <img
+            src={`https://cdn.jsdelivr.net/gh/jiangnan0622/token-assets@main/${tradingSymbol}.png`}
+            alt={`${tradingSymbol} LOGO`}
+            className="size-[82px] rounded-full object-contain"
+          />
+        </>
+      ) : null}
     </div>
   );
 }
 
-function getInitialPageType(fallback: ListingPageType) {
-  if (typeof window === "undefined") {
-    return fallback;
-  }
+function getTabValue(pageType: ListingPageType) {
+  return pageType === "RECOVERY_LISTING" ? "recovery" : "repurchase";
+}
 
-  const tab = new URLSearchParams(window.location.search).get("tab");
-
+function getPageTypeFromTab(tab: string | null, fallback: ListingPageType) {
   if (tab === "recovery") {
     return "RECOVERY_LISTING";
   }
@@ -231,14 +253,26 @@ function getInitialPageType(fallback: ListingPageType) {
   return fallback;
 }
 
-function getInitialConfigOpen(fallback: boolean) {
+function getConfigOpenFromParam(config: string | null) {
+  return config === "1" || config === "open";
+}
+
+function replaceSecondaryListingUrl(pageType: ListingPageType, nextConfigOpen: boolean) {
   if (typeof window === "undefined") {
-    return fallback;
+    return;
   }
 
-  const config = new URLSearchParams(window.location.search).get("config");
+  const params = new URLSearchParams(window.location.search);
 
-  return config === "1" || config === "open" || fallback;
+  params.set("tab", getTabValue(pageType));
+  if (nextConfigOpen) {
+    params.set("config", "1");
+  } else {
+    params.delete("config");
+  }
+
+  const query = params.toString();
+  window.history.replaceState(null, "", `${window.location.pathname}${query ? `?${query}` : ""}`);
 }
 
 function EmptyState() {
@@ -260,47 +294,59 @@ function EmptyState() {
 
 function FilterCard({
   activePageType,
+  filters,
+  assetOptions,
+  merchantOptions,
+  onFilterChange,
+  onApplyFilters,
+  onResetFilters,
 }: {
   activePageType: ListingPageType;
+  filters: ListingFilters;
+  assetOptions: { value: string; label: string }[];
+  merchantOptions: { value: string; label: string }[];
+  onFilterChange: (field: keyof ListingFilters, value: string) => void;
+  onApplyFilters: () => void;
+  onResetFilters: () => void;
 }) {
   return (
     <section className="rounded-[4px] bg-white shadow-[0_2px_12px_0_rgba(0,0,0,0.06)]">
       <div className="flex min-h-[72px] flex-wrap items-center gap-x-[24px] gap-y-3 px-5 py-4">
         <div className="flex items-center gap-4">
           <span className="whitespace-nowrap text-[15px] font-semibold text-[#303133]">资产名称</span>
-          <SelectBox placeholder="请选择" className="w-[213px]" />
+          <SelectBox
+            value={filters.assetName}
+            placeholder="请选择"
+            className="w-[213px]"
+            options={assetOptions}
+            onChange={(value) => onFilterChange("assetName", value)}
+          />
         </div>
         <div className="flex items-center gap-4">
           <span className="whitespace-nowrap text-[15px] font-semibold text-[#303133]">商家名称</span>
-          <SelectBox placeholder="请选择" className="w-[220px]" />
-        </div>
-        <div className="flex items-center gap-4">
-          <span className="whitespace-nowrap text-[15px] font-semibold text-[#303133]">上架类型</span>
           <SelectBox
+            value={filters.merchantName}
             placeholder="请选择"
             className="w-[220px]"
-            options={[
-              { value: "OFFICIAL_MARKET_MAKER_CHANGE", label: "官方做市商变更" },
-              { value: "SECONDARY_MERCHANT_LISTING", label: "二次商家上架" },
-            ]}
+            options={merchantOptions}
+            onChange={(value) => onFilterChange("merchantName", value)}
           />
         </div>
         <div className="flex items-center gap-4">
           <span className="whitespace-nowrap text-[15px] font-semibold text-[#303133]">状态</span>
           <SelectBox
+            value={filters.status}
             placeholder="请选择"
             className="w-[160px]"
-            options={[
-              { value: "ONLINE", label: activePageType === "REPURCHASE_LISTING" ? "上架中" : "回收中" },
-              { value: "OFFLINE", label: "已下架" },
-            ]}
+            options={createStatusOptions(activePageType)}
+            onChange={(value) => onFilterChange("status", value)}
           />
         </div>
         <div className="ml-auto flex items-center gap-2">
-          <button type="button" className={`${outlineButtonClassName} w-16`}>
+          <button type="button" onClick={onResetFilters} className={`${outlineButtonClassName} w-16`}>
             重 置
           </button>
-          <button type="button" className={`${primaryButtonClassName} w-16`}>
+          <button type="button" onClick={onApplyFilters} className={`${primaryButtonClassName} w-16`}>
             查 询
           </button>
         </div>
@@ -319,14 +365,61 @@ function getStatusLabel(row: SecondaryListingQuote) {
   return "已下架";
 }
 
+function isCompleteListing(row: SecondaryListingQuote) {
+  return row.remainingAmount <= 0 && row.totalAmount > 0;
+}
+
+function matchesFilterStatus(row: SecondaryListingQuote, status: ListingFilterStatus) {
+  if (!status) {
+    return true;
+  }
+  if (status === "COMPLETE") {
+    return isCompleteListing(row);
+  }
+  if (status === "OFFLINE") {
+    return row.status === "OFFLINE" && !isCompleteListing(row);
+  }
+
+  return row.status === status;
+}
+
+function filterListingRows(rows: SecondaryListingQuote[], filters: ListingFilters) {
+  return rows.filter((row) => {
+    const matchesAssetName = !filters.assetName || row.originalProductName === filters.assetName;
+    const matchesMerchantName = !filters.merchantName || row.merchantName === filters.merchantName;
+
+    return matchesAssetName && matchesMerchantName && matchesFilterStatus(row, filters.status);
+  });
+}
+
+function createUniqueOptions(values: string[]) {
+  return Array.from(new Set(values)).map((value) => ({ value, label: value }));
+}
+
+function createTradingSymbolOptions(rows: SecondaryListingQuote[]) {
+  return Array.from(new Map(rows.map((row) => [row.tradingSymbol, row.tradingSymbol])).entries()).map(
+    ([value, label]) => ({ value, label })
+  );
+}
+
+function createStatusOptions(activePageType: ListingPageType) {
+  return [
+    { value: "ONLINE", label: activePageType === "REPURCHASE_LISTING" ? "上架中" : "回收中" },
+    { value: "OFFLINE", label: "已下架" },
+    { value: "COMPLETE", label: activePageType === "REPURCHASE_LISTING" ? "已售罄" : "已回收完" },
+  ];
+}
+
 function QuoteTable({
   rows,
   activePageType,
   onOpenConfig,
+  onOpenEdit,
 }: {
   rows: SecondaryListingQuote[];
   activePageType: ListingPageType;
   onOpenConfig: () => void;
+  onOpenEdit: (row: SecondaryListingQuote) => void;
 }) {
   const amountLabels =
     activePageType === "REPURCHASE_LISTING"
@@ -337,7 +430,6 @@ function QuoteTable({
     "做市商",
     "资产名称",
     "交易符号",
-    "上架类型",
     "做市地址",
     amountLabels.available,
     amountLabels.total,
@@ -366,7 +458,7 @@ function QuoteTable({
         </div>
 
         <div className="mt-4 overflow-x-auto">
-          <table className="w-full min-w-[1800px] border-collapse text-left">
+          <table className="w-full min-w-[1680px] border-collapse text-left">
             <thead>
               <tr className="h-[47px] bg-[#fbfbfb] text-[14px] font-semibold text-[#1f2329]">
                 {columns.map((column) => (
@@ -383,7 +475,6 @@ function QuoteTable({
                     <td className="border-b border-[#ececec] px-2">{row.merchantName}</td>
                     <td className="border-b border-[#ececec] px-2 font-medium text-[#303133]">{row.originalProductName}</td>
                     <td className="border-b border-[#ececec] px-2">{row.tradingSymbol}</td>
-                    <td className="border-b border-[#ececec] px-2">{listingTypeLabels[row.listingType]}</td>
                     <td className="border-b border-[#ececec] px-2 font-mono text-[12px]">{row.marketMakerAddress}</td>
                     <td className="border-b border-[#ececec] px-2">{formatNumber(row.availableAmount)}</td>
                     <td className="border-b border-[#ececec] px-2">{formatNumber(row.totalAmount)}</td>
@@ -392,7 +483,15 @@ function QuoteTable({
                     <td className="border-b border-[#ececec] px-2">{row.quotePrice}</td>
                     <td className="border-b border-[#ececec] px-2">{getStatusLabel(row)}</td>
                     <td className="border-b border-[#ececec] px-2">{row.updatedAt}</td>
-                    <td className="border-b border-[#ececec] px-2 text-[#2b58d8]">编辑</td>
+                    <td className="border-b border-[#ececec] px-2">
+                      <button
+                        type="button"
+                        onClick={() => onOpenEdit(row)}
+                        className="font-semibold text-[#2b58d8] hover:text-[#1f4ecc]"
+                      >
+                        编辑
+                      </button>
+                    </td>
                   </tr>
                 ))
               ) : (
@@ -413,14 +512,18 @@ function QuoteTable({
 function ConfigModal({
   open,
   activePageType,
+  sourceRows,
+  editingQuote,
   onClose,
 }: {
   open: boolean;
   activePageType: ListingPageType;
+  sourceRows: SecondaryListingQuote[];
+  editingQuote?: SecondaryListingQuote | null;
   onClose: () => void;
 }) {
   const { showWarningToast } = useGlobalFeedback();
-  const [listingType, setListingType] = useState<ListingType>("OFFICIAL_MARKET_MAKER_CHANGE");
+  const [selectedTradingSymbol, setSelectedTradingSymbol] = useState(editingQuote?.tradingSymbol ?? "");
 
   if (!open) {
     return null;
@@ -431,9 +534,18 @@ function ConfigModal({
   const amountLabel = isRecovery ? "回收总量" : "上架总量";
   const priceLabel = isRecovery ? "回收价格" : "上架价格";
   const confirmLabel = "确定";
+  const tradingSymbolOptions = createTradingSymbolOptions(sourceRows);
+  const selectedQuote =
+    editingQuote ?? sourceRows.find((row) => row.tradingSymbol === selectedTradingSymbol) ?? null;
+  const productType = selectedQuote?.productType ?? "";
+  const tradingSymbol = selectedQuote?.tradingSymbol ?? selectedTradingSymbol;
+  const productFullName = selectedQuote?.productFullName ?? "";
+  const merchantName = selectedQuote?.merchantName ?? "";
+  const marketMakerAddress = selectedQuote?.marketMakerAddress ?? "";
+  const modalKey = editingQuote?.id ?? `${activePageType}-create`;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center bg-black/48 pt-[72px]">
+    <div key={modalKey} className="fixed inset-0 z-50 flex items-start justify-center bg-black/48 pt-[72px]">
       <div className="relative flex h-[690px] w-[640px] flex-col rounded-[5px] bg-white shadow-[0_20px_48px_rgba(0,0,0,0.18)]">
         <button
           type="button"
@@ -455,29 +567,32 @@ function ConfigModal({
               <div className="space-y-[8px]">
                 <FieldLabel required>产品信息</FieldLabel>
                 <SelectBox
-                  value="MONEY_MARKET"
+                  value={productType}
                   placeholder="请选择产品类型"
-                  options={[{ value: "MONEY_MARKET", label: "货币基金" }]}
+                  options={productType ? [{ value: productType, label: productType }] : []}
+                  disabled
                 />
               </div>
 
               <div className="space-y-[8px]">
                 <FieldLabel required>LOGO</FieldLabel>
-                <ProductLogoPreview />
+                <ProductLogoPreview tradingSymbol={tradingSymbol} />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-[8px]">
                   <FieldLabel required>交易符号</FieldLabel>
                   <SelectBox
-                    value="rFUIDL"
+                    value={tradingSymbol}
                     placeholder="请选择交易符号"
-                    options={[{ value: "rFUIDL", label: "rFUIDL" }]}
+                    options={tradingSymbolOptions}
+                    disabled={Boolean(editingQuote)}
+                    onChange={setSelectedTradingSymbol}
                   />
                 </div>
                 <div className="space-y-[8px]">
                   <FieldLabel required>债券全称</FieldLabel>
-                  <TextInput value="梅隆银行货币基金" placeholder="债券全称" disabled />
+                  <TextInput value={productFullName} placeholder="债券全称" disabled />
                 </div>
               </div>
             </section>
@@ -485,41 +600,32 @@ function ConfigModal({
             <div className="text-[14px] font-semibold text-[#303133]">二次上架信息</div>
 
             <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-[8px]">
-                <FieldLabel required>上架类型</FieldLabel>
+              <div className="col-span-2 space-y-[8px]">
+                <FieldLabel required>商家名称</FieldLabel>
                 <SelectBox
-                  value={listingType}
-                  placeholder="请选择上架类型"
-                  options={[
-                    { value: "OFFICIAL_MARKET_MAKER_CHANGE", label: "官方做市商变更" },
-                    { value: "SECONDARY_MERCHANT_LISTING", label: "二次商家上架" },
-                  ]}
-                  onChange={(value) => setListingType(value as ListingType)}
+                  value={merchantName}
+                  placeholder="请选择"
+                  options={merchantName ? [{ value: merchantName, label: merchantName }] : []}
+                  disabled
                 />
               </div>
-              <div className="space-y-[8px]">
-                <FieldLabel required>商家名称</FieldLabel>
-                <SelectBox placeholder="请选择" options={[{ value: "real", label: "REAL Liquidity Provider" }]} />
-              </div>
-              {listingType === "SECONDARY_MERCHANT_LISTING" ? (
-                <div className="col-span-2 rounded-[4px] border border-[#ffe7ba] bg-[#fff7e6] px-3 py-2 text-[12px] leading-5 text-[#ad6800]">
-                  该类型会在前台展示第三方商家报价提示，请确认商家信息、价格及交易条件。
-                </div>
-              ) : null}
               <div className="col-span-2 space-y-[8px]">
                 <FieldLabel required>做市地址</FieldLabel>
-                <TextInput placeholder="请输入做市地址" />
+                <TextInput value={marketMakerAddress} placeholder="请输入做市地址" disabled />
               </div>
               <div className="col-span-2 space-y-[8px]">
                 <FieldLabel required>{amountLabel}</FieldLabel>
-                <TextInput placeholder={`请输入${amountLabel}`} />
+                <TextInput value={editingQuote ? String(editingQuote.totalAmount) : undefined} placeholder={`请输入${amountLabel}`} />
               </div>
               <div className="col-span-2 space-y-[8px]">
                 <FieldLabel required>{`配置${priceLabel}`}</FieldLabel>
                 <div className="space-y-2 rounded-[4px] border border-[#ebeef5] bg-[#fbfcff] p-3">
                   {priceCurrencies.map((currency) => (
                     <div key={currency} className="grid grid-cols-[minmax(0,1fr)_56px] items-center gap-3">
-                      <TextInput placeholder={`请输入${currency}${priceLabel}`} />
+                      <TextInput
+                        value={getQuotePriceValue(editingQuote?.quotePrice, currency)}
+                        placeholder={`请输入${currency}${priceLabel}`}
+                      />
                       <span className="text-[14px] font-semibold leading-8 text-[#606266]">{currency}</span>
                     </div>
                   ))}
@@ -562,12 +668,58 @@ export function SecondaryListingPage({
   initialPageType?: ListingPageType;
   initialConfigOpen?: boolean;
 }) {
-  const [activePageType, setActivePageType] = useState<ListingPageType>(() => getInitialPageType(initialPageType));
-  const [configOpen, setConfigOpen] = useState(() => getInitialConfigOpen(initialConfigOpen));
-  const rows = useMemo(
+  const searchParams = useSearchParams();
+  const [activePageType, setActivePageType] = useState<ListingPageType>(() =>
+    getPageTypeFromTab(searchParams.get("tab"), initialPageType)
+  );
+  const [configOpen, setConfigOpen] = useState(() =>
+    getConfigOpenFromParam(searchParams.get("config")) || initialConfigOpen
+  );
+  const [editingQuote, setEditingQuote] = useState<SecondaryListingQuote | null>(null);
+  const [draftFilters, setDraftFilters] = useState<ListingFilters>(() => createEmptyFilters());
+  const [appliedFilters, setAppliedFilters] = useState<ListingFilters>(() => createEmptyFilters());
+  const sourceRows = useMemo(
     () => (activePageType === "REPURCHASE_LISTING" ? toRepurchaseListings() : recoveryQuoteRows),
     [activePageType]
   );
+  const rows = useMemo(() => filterListingRows(sourceRows, appliedFilters), [sourceRows, appliedFilters]);
+  const assetOptions = useMemo(
+    () => createUniqueOptions(sourceRows.map((row) => row.originalProductName)),
+    [sourceRows]
+  );
+  const merchantOptions = useMemo(
+    () => createUniqueOptions(sourceRows.map((row) => row.merchantName)),
+    [sourceRows]
+  );
+  const resetFilters = () => {
+    const nextFilters = createEmptyFilters();
+
+    setDraftFilters(nextFilters);
+    setAppliedFilters(nextFilters);
+  };
+  const changeActivePageType = (nextPageType: ListingPageType) => {
+    setActivePageType(nextPageType);
+    setConfigOpen(false);
+    setEditingQuote(null);
+    setDraftFilters(createEmptyFilters());
+    setAppliedFilters(createEmptyFilters());
+    replaceSecondaryListingUrl(nextPageType, false);
+  };
+  const openConfig = () => {
+    setEditingQuote(null);
+    setConfigOpen(true);
+    replaceSecondaryListingUrl(activePageType, true);
+  };
+  const openEditConfig = (row: SecondaryListingQuote) => {
+    setEditingQuote(row);
+    setConfigOpen(true);
+    replaceSecondaryListingUrl(activePageType, true);
+  };
+  const closeConfig = () => {
+    setConfigOpen(false);
+    setEditingQuote(null);
+    replaceSecondaryListingUrl(activePageType, false);
+  };
 
   return (
     <div className="w-full">
@@ -584,7 +736,7 @@ export function SecondaryListingPage({
             <button
               key={tab.value}
               type="button"
-              onClick={() => setActivePageType(tab.value)}
+              onClick={() => changeActivePageType(tab.value)}
               className={`h-9 rounded-[4px] px-5 text-[15px] font-semibold transition ${
                 active
                   ? "bg-[#2b58d8] text-white shadow-[0_1px_2px_rgba(43,88,216,0.22)]"
@@ -597,9 +749,24 @@ export function SecondaryListingPage({
         })}
       </div>
 
-      <FilterCard activePageType={activePageType} />
-      <QuoteTable rows={rows} activePageType={activePageType} onOpenConfig={() => setConfigOpen(true)} />
-      <ConfigModal open={configOpen} activePageType={activePageType} onClose={() => setConfigOpen(false)} />
+      <FilterCard
+        activePageType={activePageType}
+        filters={draftFilters}
+        assetOptions={assetOptions}
+        merchantOptions={merchantOptions}
+        onFilterChange={(field, value) => setDraftFilters((filters) => ({ ...filters, [field]: value }))}
+        onApplyFilters={() => setAppliedFilters({ ...draftFilters })}
+        onResetFilters={resetFilters}
+      />
+      <QuoteTable rows={rows} activePageType={activePageType} onOpenConfig={openConfig} onOpenEdit={openEditConfig} />
+      <ConfigModal
+        key={`${activePageType}-${editingQuote?.id ?? "create"}-${configOpen ? "open" : "closed"}`}
+        open={configOpen}
+        activePageType={activePageType}
+        sourceRows={sourceRows}
+        editingQuote={editingQuote}
+        onClose={closeConfig}
+      />
     </div>
   );
 }
