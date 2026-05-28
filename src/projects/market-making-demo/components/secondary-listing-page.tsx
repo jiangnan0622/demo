@@ -5,7 +5,6 @@ import { ChevronDown, X } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 
 import { useGlobalFeedback } from "@/components/feedback/global-feedback-provider";
-import { REPURCHASE_LISTING_MOCK_DATA } from "@/projects/market-making-demo/lib/mock-data";
 
 type ListingPageType = "REPURCHASE_LISTING" | "RECOVERY_LISTING";
 type ListingType = "OFFICIAL_MARKET_MAKER_CHANGE" | "SECONDARY_MERCHANT_LISTING";
@@ -44,6 +43,7 @@ const listingTabs: Array<{ value: ListingPageType; label: string; actionLabel: s
 ];
 
 const priceCurrencies = ["USDC", "USDT", "USD1"] as const;
+const currentMarketMakerName = "REAL Liquidity Provider";
 
 const baseControlClassName =
   "h-8 w-full rounded-[4px] border border-[#dcdfe6] bg-white text-[14px] font-normal text-[#606266] outline-none shadow-[inset_0_1px_1px_rgba(0,0,0,0.02)] transition placeholder:text-[#c0c4cc] disabled:cursor-not-allowed disabled:bg-[#f5f7fa] disabled:text-[#c0c4cc]";
@@ -57,40 +57,81 @@ type PriceCurrency = (typeof priceCurrencies)[number];
 const recoveryQuoteRows: SecondaryListingQuote[] = [
   {
     id: "rq-10001",
-    originalProductName: "rFUIDL复星财富控股",
+    originalProductName: "rFUIDL",
     productType: "货币基金",
     productFullName: "复星财富控股货币基金",
     tradingSymbol: "rFUIDL",
     listingPage: "RECOVERY_LISTING",
     listingType: "OFFICIAL_MARKET_MAKER_CHANGE",
-    merchantName: "REAL Liquidity Provider",
-    marketMakerName: "REAL Liquidity Provider",
+    merchantName: currentMarketMakerName,
+    marketMakerName: currentMarketMakerName,
     marketMakerAddress: "0x8b6F...e9C3",
-    quotePrice: "USDC 0.9986 / USDT 0.9990 / USD1 0.9978",
-    availableAmount: 72000,
-    totalAmount: 18000,
-    remainingAmount: 12000,
-    filledAmount: 6000,
+    quotePrice: "1.42 USDC / 1.43 USDT / 1.42 USD1",
+    availableAmount: 760,
+    totalAmount: 300,
+    remainingAmount: 268,
+    filledAmount: 32,
     status: "ONLINE",
     updatedAt: "2026-05-12 16:00:00",
   },
   {
     id: "rq-10002",
-    originalProductName: "rSDCT商都城投",
+    originalProductName: "rSDCT",
     productType: "企业债券",
     productFullName: "商都城投企业债券",
     tradingSymbol: "rSDCT",
     listingPage: "RECOVERY_LISTING",
     listingType: "SECONDARY_MERCHANT_LISTING",
-    merchantName: "二次商家 Beta",
-    marketMakerName: "做市商Beta",
+    merchantName: currentMarketMakerName,
+    marketMakerName: currentMarketMakerName,
     marketMakerAddress: "0x3bd2...c54e",
-    quotePrice: "USDC 0.9916 / USDT 0.9932 / USD1 0.9950",
-    availableAmount: 54000,
-    totalAmount: 12000,
-    remainingAmount: 0,
-    filledAmount: 12000,
-    status: "OFFLINE",
+    quotePrice: "1.98 USD1 / 1.98 USDC",
+    availableAmount: 83101,
+    totalAmount: 100,
+    remainingAmount: 100,
+    filledAmount: 0,
+    status: "ONLINE",
+    updatedAt: "2026-05-13 10:24:18",
+  },
+];
+
+const repurchaseQuoteRows: SecondaryListingQuote[] = [
+  {
+    id: "rp-10001",
+    originalProductName: "rFUIDL",
+    productType: "货币基金",
+    productFullName: "复星财富控股货币基金",
+    tradingSymbol: "rFUIDL",
+    listingPage: "REPURCHASE_LISTING",
+    listingType: "OFFICIAL_MARKET_MAKER_CHANGE",
+    merchantName: currentMarketMakerName,
+    marketMakerName: currentMarketMakerName,
+    marketMakerAddress: "0x8b6F...e9C3",
+    quotePrice: "1.5 USDC / 1.5 USD1",
+    availableAmount: 104,
+    totalAmount: 90,
+    remainingAmount: 86,
+    filledAmount: 4,
+    status: "ONLINE",
+    updatedAt: "2026-05-12 15:42:08",
+  },
+  {
+    id: "rp-10002",
+    originalProductName: "rSDCT",
+    productType: "企业债券",
+    productFullName: "商都城投企业债券",
+    tradingSymbol: "rSDCT",
+    listingPage: "REPURCHASE_LISTING",
+    listingType: "SECONDARY_MERCHANT_LISTING",
+    merchantName: currentMarketMakerName,
+    marketMakerName: currentMarketMakerName,
+    marketMakerAddress: "0x3bd2...c54e",
+    quotePrice: "2 USD1 / 2 USDC",
+    availableAmount: 83101,
+    totalAmount: 100,
+    remainingAmount: 100,
+    filledAmount: 0,
+    status: "ONLINE",
     updatedAt: "2026-05-13 10:24:18",
   },
 ];
@@ -100,25 +141,9 @@ function formatNumber(value: number) {
 }
 
 function getQuotePriceValue(quotePrice: string | undefined, currency: PriceCurrency) {
-  const match = quotePrice?.match(new RegExp(`${currency}\\s+([^\\s/]+)`));
+  const match = quotePrice?.match(new RegExp(`([^\\s/]+)\\s+${currency}`));
 
   return match?.[1] ?? "";
-}
-
-function getAssetFullName(symbol: string) {
-  if (symbol === "rFUIDL") return "复星财富控股货币基金";
-  if (symbol === "rXWCT") return "兴尉城投企业债券";
-  if (symbol === "rSDCT") return "商都城投企业债券";
-  return `${symbol} 原产品`;
-}
-
-function getTradingSymbol(assetName: string) {
-  const match = assetName.match(/^r[A-Z0-9]+/);
-  return match?.[0] ?? assetName;
-}
-
-function getProductType(symbol: string): SecondaryListingQuote["productType"] {
-  return symbol === "rFUIDL" ? "货币基金" : "企业债券";
 }
 
 function createEmptyFilters(): ListingFilters {
@@ -127,33 +152,6 @@ function createEmptyFilters(): ListingFilters {
     merchantName: "",
     status: "",
   };
-}
-
-function toRepurchaseListings(): SecondaryListingQuote[] {
-  return REPURCHASE_LISTING_MOCK_DATA.map((record, index) => {
-    const tradingSymbol = getTradingSymbol(record.assetName);
-    const remainingAmount = Math.max(record.listedQuantity - record.soldQuantity, 0);
-
-    return {
-      id: record.id,
-      originalProductName: record.assetName,
-      productType: getProductType(tradingSymbol),
-      productFullName: getAssetFullName(tradingSymbol),
-      tradingSymbol,
-      listingPage: "REPURCHASE_LISTING",
-      listingType: index === 0 ? "OFFICIAL_MARKET_MAKER_CHANGE" : "SECONDARY_MERCHANT_LISTING",
-      merchantName: index === 0 ? "REAL Liquidity Provider" : `二次商家 ${index + 1}`,
-      marketMakerName: record.marketMakerName,
-      marketMakerAddress: index === 0 ? "0x8b6F...e9C3" : index === 1 ? "0x3bd2...c54e" : "0x48bf...eb6f",
-      quotePrice: record.listedPrices.map((item) => `${item.stablecoin} ${item.price.toFixed(4)}`).join(" / "),
-      availableAmount: record.availableQuantity,
-      totalAmount: record.listedQuantity,
-      remainingAmount,
-      filledAmount: record.soldQuantity,
-      status: record.status,
-      updatedAt: record.updatedAt,
-    };
-  });
 }
 
 function SelectBox({
@@ -238,33 +236,18 @@ function ProductLogoPreview({ tradingSymbol }: { tradingSymbol?: string }) {
   );
 }
 
-function getTabValue(pageType: ListingPageType) {
-  return pageType === "RECOVERY_LISTING" ? "recovery" : "repurchase";
-}
-
-function getPageTypeFromTab(tab: string | null, fallback: ListingPageType) {
-  if (tab === "recovery") {
-    return "RECOVERY_LISTING";
-  }
-  if (tab === "repurchase") {
-    return "REPURCHASE_LISTING";
-  }
-
-  return fallback;
-}
-
 function getConfigOpenFromParam(config: string | null) {
   return config === "1" || config === "open";
 }
 
-function replaceSecondaryListingUrl(pageType: ListingPageType, nextConfigOpen: boolean) {
+function replaceSecondaryListingUrl(nextConfigOpen: boolean) {
   if (typeof window === "undefined") {
     return;
   }
 
   const params = new URLSearchParams(window.location.search);
 
-  params.set("tab", getTabValue(pageType));
+  params.delete("tab");
   if (nextConfigOpen) {
     params.set("config", "1");
   } else {
@@ -296,7 +279,6 @@ function FilterCard({
   activePageType,
   filters,
   assetOptions,
-  merchantOptions,
   onFilterChange,
   onApplyFilters,
   onResetFilters,
@@ -304,32 +286,31 @@ function FilterCard({
   activePageType: ListingPageType;
   filters: ListingFilters;
   assetOptions: { value: string; label: string }[];
-  merchantOptions: { value: string; label: string }[];
   onFilterChange: (field: keyof ListingFilters, value: string) => void;
   onApplyFilters: () => void;
   onResetFilters: () => void;
 }) {
   return (
     <section className="rounded-[4px] bg-white shadow-[0_2px_12px_0_rgba(0,0,0,0.06)]">
-      <div className="flex min-h-[72px] flex-wrap items-center gap-x-[24px] gap-y-3 px-5 py-4">
+      <div className="flex min-h-[72px] flex-wrap items-center gap-x-[32px] gap-y-3 px-5 py-4">
+        <div className="flex items-center gap-4">
+          <span className="whitespace-nowrap text-[15px] font-semibold text-[#303133]">做市商</span>
+          <SelectBox
+            value={currentMarketMakerName}
+            placeholder="请选择"
+            className="w-[220px]"
+            options={[{ value: currentMarketMakerName, label: currentMarketMakerName }]}
+            disabled
+          />
+        </div>
         <div className="flex items-center gap-4">
           <span className="whitespace-nowrap text-[15px] font-semibold text-[#303133]">资产名称</span>
           <SelectBox
             value={filters.assetName}
             placeholder="请选择"
-            className="w-[213px]"
+            className="w-[220px]"
             options={assetOptions}
             onChange={(value) => onFilterChange("assetName", value)}
-          />
-        </div>
-        <div className="flex items-center gap-4">
-          <span className="whitespace-nowrap text-[15px] font-semibold text-[#303133]">商家名称</span>
-          <SelectBox
-            value={filters.merchantName}
-            placeholder="请选择"
-            className="w-[220px]"
-            options={merchantOptions}
-            onChange={(value) => onFilterChange("merchantName", value)}
           />
         </div>
         <div className="flex items-center gap-4">
@@ -386,9 +367,8 @@ function matchesFilterStatus(row: SecondaryListingQuote, status: ListingFilterSt
 function filterListingRows(rows: SecondaryListingQuote[], filters: ListingFilters) {
   return rows.filter((row) => {
     const matchesAssetName = !filters.assetName || row.originalProductName === filters.assetName;
-    const matchesMerchantName = !filters.merchantName || row.merchantName === filters.merchantName;
 
-    return matchesAssetName && matchesMerchantName && matchesFilterStatus(row, filters.status);
+    return matchesAssetName && matchesFilterStatus(row, filters.status);
   });
 }
 
@@ -415,11 +395,13 @@ function QuoteTable({
   activePageType,
   onOpenConfig,
   onOpenEdit,
+  onOffline,
 }: {
   rows: SecondaryListingQuote[];
   activePageType: ListingPageType;
   onOpenConfig: () => void;
   onOpenEdit: (row: SecondaryListingQuote) => void;
+  onOffline: (row: SecondaryListingQuote) => void;
 }) {
   const amountLabels =
     activePageType === "REPURCHASE_LISTING"
@@ -429,24 +411,23 @@ function QuoteTable({
   const columns = [
     "做市商",
     "资产名称",
-    "交易符号",
-    "做市地址",
     amountLabels.available,
     amountLabels.total,
     amountLabels.remaining,
     amountLabels.filled,
     amountLabels.price,
     "状态",
-    "更新时间",
     "操作",
   ];
 
   return (
-    <section className="mt-4 min-h-[360px] rounded-[4px] bg-white shadow-[0_2px_12px_0_rgba(0,0,0,0.07)]">
-      <div className="px-5 pb-10 pt-[24px]">
-        <div className="flex items-start justify-between">
+    <section className="mt-[18px] min-h-[360px] rounded-[4px] bg-white shadow-[0_2px_12px_0_rgba(0,0,0,0.07)]">
+      <div className="px-5 pb-8 pt-[24px]">
+        <div className="flex min-h-[42px] items-start justify-between">
           <div>
-            <p className="text-[15px] font-semibold text-[#303133]">产品二次上架列表</p>
+            <p className="text-[15px] font-semibold leading-[28px] text-[#606266]">
+              当前做市商：<span className="text-[#303133]">{currentMarketMakerName}</span>
+            </p>
           </div>
           <button
             type="button"
@@ -457,12 +438,12 @@ function QuoteTable({
           </button>
         </div>
 
-        <div className="mt-4 overflow-x-auto">
-          <table className="w-full min-w-[1680px] border-collapse text-left">
+        <div className="mt-5 overflow-x-auto">
+          <table className="w-full min-w-[1120px] border-collapse text-left">
             <thead>
               <tr className="h-[47px] bg-[#fbfbfb] text-[14px] font-semibold text-[#1f2329]">
                 {columns.map((column) => (
-                  <th key={column} className="border-b border-[#ececec] px-2 font-semibold">
+                  <th key={column} className="border-b border-[#ececec] px-3 font-semibold">
                     <span className="block border-r border-[#ececec] leading-[22px] last:border-r-0">{column}</span>
                   </th>
                 ))}
@@ -471,26 +452,42 @@ function QuoteTable({
             <tbody>
               {rows.length > 0 ? (
                 rows.map((row) => (
-                  <tr key={row.id} className="h-[58px] text-[13px] text-[#606266]">
-                    <td className="border-b border-[#ececec] px-2">{row.merchantName}</td>
-                    <td className="border-b border-[#ececec] px-2 font-medium text-[#303133]">{row.originalProductName}</td>
-                    <td className="border-b border-[#ececec] px-2">{row.tradingSymbol}</td>
-                    <td className="border-b border-[#ececec] px-2 font-mono text-[12px]">{row.marketMakerAddress}</td>
-                    <td className="border-b border-[#ececec] px-2">{formatNumber(row.availableAmount)}</td>
-                    <td className="border-b border-[#ececec] px-2">{formatNumber(row.totalAmount)}</td>
-                    <td className="border-b border-[#ececec] px-2">{formatNumber(row.remainingAmount)}</td>
-                    <td className="border-b border-[#ececec] px-2">{formatNumber(row.filledAmount)}</td>
-                    <td className="border-b border-[#ececec] px-2">{row.quotePrice}</td>
-                    <td className="border-b border-[#ececec] px-2">{getStatusLabel(row)}</td>
-                    <td className="border-b border-[#ececec] px-2">{row.updatedAt}</td>
-                    <td className="border-b border-[#ececec] px-2">
-                      <button
-                        type="button"
-                        onClick={() => onOpenEdit(row)}
-                        className="font-semibold text-[#2b58d8] hover:text-[#1f4ecc]"
+                  <tr key={row.id} className="h-[58px] text-[14px] text-[#303133]">
+                    <td className="border-b border-[#ececec] px-3">{row.merchantName}</td>
+                    <td className="border-b border-[#ececec] px-3 font-medium">{row.originalProductName}</td>
+                    <td className="border-b border-[#ececec] px-3">{formatNumber(row.availableAmount)}</td>
+                    <td className="border-b border-[#ececec] px-3">{formatNumber(row.totalAmount)}</td>
+                    <td className="border-b border-[#ececec] px-3">{formatNumber(row.remainingAmount)}</td>
+                    <td className="border-b border-[#ececec] px-3">{formatNumber(row.filledAmount)}</td>
+                    <td className="border-b border-[#ececec] px-3">{row.quotePrice}</td>
+                    <td className="border-b border-[#ececec] px-3">
+                      <span
+                        className={`inline-flex h-6 items-center rounded-[4px] px-2 text-[13px] font-medium ${
+                          row.status === "ONLINE"
+                            ? "bg-[#ecfbf7] text-[#20b486]"
+                            : "bg-[#f4f4f5] text-[#909399]"
+                        }`}
                       >
-                        编辑
-                      </button>
+                        {getStatusLabel(row)}
+                      </span>
+                    </td>
+                    <td className="border-b border-[#ececec] px-3">
+                      <div className="flex items-center gap-3 whitespace-nowrap">
+                        <button
+                          type="button"
+                          onClick={() => onOpenEdit(row)}
+                          className="font-semibold text-[#2b58d8] hover:text-[#1f4ecc]"
+                        >
+                          编辑
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => onOffline(row)}
+                          className="font-semibold text-[#f56c6c] hover:text-[#d93030]"
+                        >
+                          下架
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))
@@ -503,6 +500,22 @@ function QuoteTable({
               )}
             </tbody>
           </table>
+        </div>
+        <div className="mt-4 flex items-center justify-end gap-3 text-[14px] text-[#303133]">
+          <span>共 {rows.length} 条</span>
+          <button type="button" className="text-[#c0c4cc]" aria-label="上一页">
+            &lt;
+          </button>
+          <button
+            type="button"
+            className="grid h-8 min-w-8 place-items-center rounded-[4px] border border-[#2b58d8] px-2 font-semibold text-[#2b58d8]"
+          >
+            1
+          </button>
+          <button type="button" className="text-[#c0c4cc]" aria-label="下一页">
+            &gt;
+          </button>
+          <span className="rounded-[4px] border border-[#dcdfe6] px-3 py-[5px] text-[#606266]">10 条/页</span>
         </div>
       </div>
     </section>
@@ -669,9 +682,8 @@ export function SecondaryListingPage({
   initialConfigOpen?: boolean;
 }) {
   const searchParams = useSearchParams();
-  const [activePageType, setActivePageType] = useState<ListingPageType>(() =>
-    getPageTypeFromTab(searchParams.get("tab"), initialPageType)
-  );
+  const { showWarningToast } = useGlobalFeedback();
+  const [activePageType] = useState<ListingPageType>(initialPageType);
   const [configOpen, setConfigOpen] = useState(() =>
     getConfigOpenFromParam(searchParams.get("config")) || initialConfigOpen
   );
@@ -679,16 +691,12 @@ export function SecondaryListingPage({
   const [draftFilters, setDraftFilters] = useState<ListingFilters>(() => createEmptyFilters());
   const [appliedFilters, setAppliedFilters] = useState<ListingFilters>(() => createEmptyFilters());
   const sourceRows = useMemo(
-    () => (activePageType === "REPURCHASE_LISTING" ? toRepurchaseListings() : recoveryQuoteRows),
+    () => (activePageType === "REPURCHASE_LISTING" ? repurchaseQuoteRows : recoveryQuoteRows),
     [activePageType]
   );
   const rows = useMemo(() => filterListingRows(sourceRows, appliedFilters), [sourceRows, appliedFilters]);
   const assetOptions = useMemo(
     () => createUniqueOptions(sourceRows.map((row) => row.originalProductName)),
-    [sourceRows]
-  );
-  const merchantOptions = useMemo(
-    () => createUniqueOptions(sourceRows.map((row) => row.merchantName)),
     [sourceRows]
   );
   const resetFilters = () => {
@@ -697,68 +705,45 @@ export function SecondaryListingPage({
     setDraftFilters(nextFilters);
     setAppliedFilters(nextFilters);
   };
-  const changeActivePageType = (nextPageType: ListingPageType) => {
-    setActivePageType(nextPageType);
-    setConfigOpen(false);
-    setEditingQuote(null);
-    setDraftFilters(createEmptyFilters());
-    setAppliedFilters(createEmptyFilters());
-    replaceSecondaryListingUrl(nextPageType, false);
-  };
   const openConfig = () => {
     setEditingQuote(null);
     setConfigOpen(true);
-    replaceSecondaryListingUrl(activePageType, true);
+    replaceSecondaryListingUrl(true);
   };
   const openEditConfig = (row: SecondaryListingQuote) => {
     setEditingQuote(row);
     setConfigOpen(true);
-    replaceSecondaryListingUrl(activePageType, true);
+    replaceSecondaryListingUrl(true);
   };
   const closeConfig = () => {
     setConfigOpen(false);
     setEditingQuote(null);
-    replaceSecondaryListingUrl(activePageType, false);
+    replaceSecondaryListingUrl(false);
   };
 
   return (
     <div className="w-full">
-      <div className="mb-[10px] flex items-center gap-[10px] text-[15px] font-semibold leading-[22px]">
-        <span className="text-[#909399]">产品二次上架</span>
+      <div className="mb-[26px] flex items-center gap-[10px] text-[15px] font-semibold leading-[22px]">
+        <span className="text-[#909399]">做市上架</span>
         <span className="text-[#909399]">/</span>
         <span className="text-[#303133]">{activePageType === "REPURCHASE_LISTING" ? "回购上架" : "回收上架"}</span>
-      </div>
-
-      <div className="mb-3 flex items-center gap-2">
-        {listingTabs.map((tab) => {
-          const active = tab.value === activePageType;
-          return (
-            <button
-              key={tab.value}
-              type="button"
-              onClick={() => changeActivePageType(tab.value)}
-              className={`h-9 rounded-[4px] px-5 text-[15px] font-semibold transition ${
-                active
-                  ? "bg-[#2b58d8] text-white shadow-[0_1px_2px_rgba(43,88,216,0.22)]"
-                  : "border border-[#dcdfe6] bg-white text-[#606266] hover:border-[#c6e2ff]"
-              }`}
-            >
-              {tab.label}
-            </button>
-          );
-        })}
       </div>
 
       <FilterCard
         activePageType={activePageType}
         filters={draftFilters}
         assetOptions={assetOptions}
-        merchantOptions={merchantOptions}
         onFilterChange={(field, value) => setDraftFilters((filters) => ({ ...filters, [field]: value }))}
         onApplyFilters={() => setAppliedFilters({ ...draftFilters })}
         onResetFilters={resetFilters}
       />
-      <QuoteTable rows={rows} activePageType={activePageType} onOpenConfig={openConfig} onOpenEdit={openEditConfig} />
+      <QuoteTable
+        rows={rows}
+        activePageType={activePageType}
+        onOpenConfig={openConfig}
+        onOpenEdit={openEditConfig}
+        onOffline={() => showWarningToast("当前为演示数据，暂不支持下架")}
+      />
       <ConfigModal
         key={`${activePageType}-${editingQuote?.id ?? "create"}-${configOpen ? "open" : "closed"}`}
         open={configOpen}

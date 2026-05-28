@@ -1,14 +1,22 @@
-import { Suspense } from "react";
+"use client";
 
-import { BackendConsoleShell } from "@/projects/market-making-demo/components/backend-console-shell";
-import { SecondaryListingPage } from "@/projects/market-making-demo/components/secondary-listing-page";
+import { useEffect } from "react";
+
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
 export default function SecondaryListingRoutePage() {
-  return (
-    <BackendConsoleShell activeGroup="market-making" activeItem="secondary-listing">
-      <Suspense fallback={null}>
-        <SecondaryListingPage />
-      </Suspense>
-    </BackendConsoleShell>
-  );
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const tab = params.get("tab");
+    const config = params.get("config");
+    const configQuery = config === "1" || config === "open" ? "?config=1" : "";
+    const target =
+      tab === "recovery" || tab === "recycle"
+        ? "/backEnd/secondaryListing/recycleListing"
+        : "/backEnd/secondaryListing/repurchaseListing";
+
+    window.location.replace(`${basePath}${target}${configQuery}`);
+  }, []);
+
+  return null;
 }

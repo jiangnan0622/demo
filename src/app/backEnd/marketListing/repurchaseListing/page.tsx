@@ -8,9 +8,9 @@ export default function RepurchaseListingManagementRoutePage() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const config = params.get("config");
-    const configQuery = config === "1" || config === "open" ? "&config=1" : "";
+    const configQuery = config === "1" || config === "open" ? "?config=1" : "";
 
-    window.location.replace(`${basePath}/backEnd/secondaryListing?tab=repurchase${configQuery}`);
+    window.location.replace(`${basePath}/backEnd/secondaryListing/repurchaseListing${configQuery}`);
   }, []);
 
   return null;

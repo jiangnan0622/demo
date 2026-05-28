@@ -153,7 +153,10 @@ const NAV_GROUPS: NavGroup[] = [
     key: "market-making",
     label: "产品二次上架",
     icon: Landmark,
-    items: [{ key: "secondary-listing", label: "上架管理", href: "/backEnd/secondaryListing" }],
+    items: [
+      { key: "repurchase-listing", label: "回购上架", href: "/backEnd/secondaryListing/repurchaseListing" },
+      { key: "recycle-listing", label: "回收上架", href: "/backEnd/secondaryListing/recycleListing" },
+    ],
   },
   {
     key: "system",
