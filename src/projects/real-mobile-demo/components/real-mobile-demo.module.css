@@ -164,6 +164,22 @@
   width: 36px;
 }
 
+.headerConnectButton {
+  align-items: center;
+  background: rgba(246, 200, 83, 0.12);
+  border: 1px solid rgba(246, 200, 83, 0.72);
+  border-radius: 999px;
+  color: var(--gold-soft);
+  display: inline-flex;
+  font-size: 12px;
+  font-weight: 700;
+  height: 32px;
+  justify-content: center;
+  line-height: 1;
+  padding: 0 12px;
+  white-space: nowrap;
+}
+
 .subHeader {
   align-items: center;
   background: rgba(10, 10, 10, 0.98);

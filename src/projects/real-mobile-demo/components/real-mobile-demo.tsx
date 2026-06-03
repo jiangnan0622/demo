@@ -193,7 +193,7 @@ function Header({
         ) : (
           <>
             <div className={styles.headerLeft}>
-              <Link href={toDemoPath("/trade")} aria-label="Real mobile market">
+              <Link href={toDemoPath(connected ? "/trade" : "/")} aria-label="Real mobile market">
                 <img className={styles.logo} src={publicAsset("/realrwa/figma/real-logo-gold-cropped.png")} alt="REAL" />
               </Link>
               <button className={styles.iconButton} type="button" aria-label="打开菜单" onClick={() => setDrawerOpen(true)}>
@@ -206,9 +206,15 @@ function Header({
                   <Search size={22} strokeWidth={2} />
                 </button>
               ) : null}
-              <button className={styles.userButton} type="button" aria-label={connected ? "我的" : "连接钱包"} onClick={handleUserClick}>
-                <UserCircle size={28} strokeWidth={1.9} />
-              </button>
+              {connected ? (
+                <button className={styles.userButton} type="button" aria-label="我的" onClick={handleUserClick}>
+                  <UserCircle size={28} strokeWidth={1.9} />
+                </button>
+              ) : (
+                <button className={styles.headerConnectButton} type="button" onClick={handleUserClick}>
+                  连接钱包
+                </button>
+              )}
             </div>
           </>
         )}
@@ -296,7 +302,7 @@ function AccountDrawer({ onClose }: { onClose: () => void }) {
             <strong>我的投资组合</strong>
             <ChevronRight size={24} />
           </Link>
-          <Link className={styles.accountProfileRow} href={toDemoPath("/onboarding")} onClick={onClose}>
+          <Link className={styles.accountProfileRow} href={toDemoPath("/")} onClick={onClose}>
             <span className={styles.accountCircleIcon}>
               <LogOut size={28} />
             </span>
@@ -324,7 +330,7 @@ function TradePage({ connected = true, forceEmpty = false }: { connected?: boole
         {products.length > 0 ? (
           <div className={styles.cardList}>
             {products.map((product, index) => (
-              <AssetCard product={product} defaultExpanded={index === 0} key={product.id} />
+              <AssetCard connected={connected} product={product} defaultExpanded={index === 0} key={product.id} />
             ))}
           </div>
         ) : (
@@ -380,13 +386,13 @@ function SearchBox({ value, onChange }: { value: string; onChange: (next: string
   );
 }
 
-function AssetCard({ product, defaultExpanded = false }: { product: RealMobileProduct; defaultExpanded?: boolean }) {
+function AssetCard({ product, defaultExpanded = false, connected = true }: { product: RealMobileProduct; defaultExpanded?: boolean; connected?: boolean }) {
   const [expanded, setExpanded] = useState(defaultExpanded);
   const router = useRouter();
   const progress = getProgress(product);
   const canBuy = product.status === "selling";
   const disabled = !canBuy;
-  const detailPath = toDemoPath(`/coinDetail?coin=${product.id}&tab1=detail`);
+  const detailPath = toDemoPath(connected ? `/coinDetail?coin=${product.id}&tab1=detail` : "/connect");
 
   const handleCardClick = () => {
     router.push(detailPath);
@@ -414,7 +420,7 @@ function AssetCard({ product, defaultExpanded = false }: { product: RealMobilePr
       onKeyDown={handleCardKeyDown}
       role="link"
       tabIndex={0}
-      aria-label={`查看 ${product.symbol} 详情`}
+      aria-label={connected ? `查看 ${product.symbol} 详情` : "连接钱包后操作"}
     >
       {disabled ? (
         <img className={styles.statusStamp} src={publicAsset("/real-mobile/status-sold-out.svg")} alt="已售罄" />
@@ -476,7 +482,11 @@ function AssetCard({ product, defaultExpanded = false }: { product: RealMobilePr
       </div>
 
       <div className={`${styles.actions} ${styles.singleAction}`} onClick={stopCardNavigation}>
-        {!canBuy ? (
+        {!connected ? (
+          <button className={`${styles.disabledButton} ${styles.cardPrimaryAction}`} type="button" disabled>
+            连接钱包后操作
+          </button>
+        ) : !canBuy ? (
           <button className={`${styles.disabledButton} ${styles.cardPrimaryAction}`} type="button" disabled>
             已售罄
           </button>
@@ -1271,7 +1281,7 @@ function ConnectWalletPage() {
       <TradeBanner />
       <section className={styles.contentStack}>
         <SearchBox value="" onChange={() => undefined} />
-        <AssetCard product={realMobileProducts[2]} />
+        <AssetCard connected={false} product={realMobileProducts[2]} />
       </section>
       <WalletConnectSheet />
     </>
