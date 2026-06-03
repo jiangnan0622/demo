@@ -335,6 +335,28 @@ export function RewardReleaseAuditPage() {
       "状态": statusBadge,
     },
   ];
+  const detailRows = [
+    {
+      "用户地址": "0x2a59fd...e07fe3",
+      "邮箱": "yang@realfinance.cc",
+      "资产名称": "rFUIDL",
+      "发放周期": "2026-05-01 至 2026-05-31",
+      "计息天数": "31",
+      "底层收益": "14.52 USDC",
+      "iREAL收益": "145 iREAL",
+      "状态": statusBadge,
+    },
+    {
+      "用户地址": "0xe9b3ba...02a4cc",
+      "邮箱": "--",
+      "资产名称": "rSDCT",
+      "发放周期": "2026-05-01 至 2026-05-31",
+      "计息天数": "31",
+      "底层收益": "8.20 USDC",
+      "iREAL收益": "82 iREAL",
+      "状态": statusBadge,
+    },
+  ];
 
   const handleRelease = () => {
     setReleased(true);
@@ -362,8 +384,13 @@ export function RewardReleaseAuditPage() {
       </div>
       <BackendTable
         title="发放审核"
-        columns={["发放周期", "资产名称", "发放用户数", "计息天数", "底层收益总额", "iREAL收益总额", "统计截止日", "创建时间", "状态"]}
+        columns={["资产名称", "发放周期", "发放用户数", "计息天数", "底层收益总额", "iREAL收益总额", "统计截止日", "创建时间", "状态"]}
         rows={batchRows}
+      />
+      <BackendTable
+        title="发放明细"
+        columns={["用户地址", "邮箱", "资产名称", "发放周期", "底层收益", "iREAL收益", "计息天数", "状态"]}
+        rows={detailRows}
       />
     </div>
   );
@@ -372,27 +399,49 @@ export function RewardReleaseAuditPage() {
 export function RewardReleaseRecordPage() {
   const rows = [
     {
-      "发放批次 ID": "RD2026050001",
       "发放周期": "2026-05-01 至 2026-05-31",
-      "发放时间": "2026-06-03 13:30:00",
       "资产名称": "rFUIDL",
       "发放用户数": "86",
       "发放底层收益": "1,248.32 USDC",
       "发放 iREAL": "12,480 iREAL",
+      "发放时间": "2026-06-03 13:30:00",
       "发放状态": <StatusBadge tone="green">已完成</StatusBadge>,
       "操作人": "admin",
       "交易哈希": <TextLink>{hashValue}</TextLink>,
     },
     {
-      "发放批次 ID": "RD2026040002",
       "发放周期": "2026-04-01 至 2026-04-30",
-      "发放时间": "2026-05-01 10:05:24",
       "资产名称": "rSDCT",
       "发放用户数": "42",
       "发放底层收益": "780.00 USDC",
       "发放 iREAL": "5,920 iREAL",
+      "发放时间": "2026-05-01 10:05:24",
       "发放状态": <StatusBadge tone="red">失败</StatusBadge>,
       "操作人": "yang",
+      "交易哈希": <TextLink>{hashValue}</TextLink>,
+    },
+  ];
+  const detailRows = [
+    {
+      "用户地址": "0x2a59fd...e07fe3",
+      "邮箱": "yang@realfinance.cc",
+      "资产名称": "rFUIDL",
+      "发放批次 ID": "RD2026050001",
+      "发放底层收益": "14.52 USDC",
+      "发放 iREAL": "145 iREAL",
+      "发放时间": "2026-06-03 13:30:00",
+      "状态": <StatusBadge tone="green">已完成</StatusBadge>,
+      "交易哈希": <TextLink>{hashValue}</TextLink>,
+    },
+    {
+      "用户地址": "0xe9b3ba...02a4cc",
+      "邮箱": "--",
+      "资产名称": "rSDCT",
+      "发放批次 ID": "RD2026040002",
+      "发放底层收益": "8.20 USDC",
+      "发放 iREAL": "82 iREAL",
+      "发放时间": "2026-05-01 10:05:24",
+      "状态": <StatusBadge tone="red">失败</StatusBadge>,
       "交易哈希": <TextLink>{hashValue}</TextLink>,
     },
   ];
@@ -407,16 +456,15 @@ export function RewardReleaseRecordPage() {
           { type: "select", placeholder: "发放状态", options: ["已完成", "失败"] },
         ]}
       />
-      <div className="grid grid-cols-4 gap-4">
-        <StatCard title="累计发放批次" value="12" />
-        <StatCard title="累计发放用户数" value="1,268" />
-        <StatCard title="累计发放底层收益" value="28,430.16" unit="USDC" />
-        <StatCard title="累计发放 iREAL" value="186,300" unit="iREAL" />
-      </div>
       <BackendTable
         title="发放记录"
-        columns={["发放批次 ID", "发放周期", "发放时间", "资产名称", "发放用户数", "发放底层收益", "发放 iREAL", "发放状态", "操作人", "交易哈希"]}
+        columns={["资产名称", "发放周期", "发放用户数", "发放底层收益", "发放 iREAL", "发放时间", "发放状态", "操作人", "交易哈希"]}
         rows={rows}
+      />
+      <BackendTable
+        title="发放明细"
+        columns={["用户地址", "邮箱", "资产名称", "发放批次 ID", "发放底层收益", "发放 iREAL", "发放时间", "状态", "交易哈希"]}
+        rows={detailRows}
       />
     </div>
   );
