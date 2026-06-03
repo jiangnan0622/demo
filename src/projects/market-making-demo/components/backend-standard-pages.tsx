@@ -345,7 +345,6 @@ export function RewardReleaseAuditPage() {
     <div className="space-y-4">
       <StandardFilterBar
         fields={[
-          { type: "select", placeholder: "发放月份", options: ["2026-05", "2026-04", "2026-03"] },
           { type: "select", placeholder: "资产名称", options: rwaOptions },
           { type: "input", placeholder: "用户地址" },
         ]}
@@ -406,7 +405,6 @@ export function RewardReleaseRecordPage() {
           { type: "select", placeholder: "资产名称", options: rwaOptions },
           { type: "input", placeholder: "用户地址" },
           { type: "select", placeholder: "发放状态", options: ["已完成", "失败"] },
-          { type: "date" },
         ]}
       />
       <div className="grid grid-cols-4 gap-4">
