@@ -426,7 +426,6 @@ export function RewardReleaseRecordPage() {
       "用户地址": "0x2a59fd...e07fe3",
       "邮箱": "yang@realfinance.cc",
       "资产名称": "rFUIDL",
-      "发放批次 ID": "RD2026050001",
       "发放底层收益": "14.52 USDC",
       "发放 iREAL": "145 iREAL",
       "发放时间": "2026-06-03 13:30:00",
@@ -437,7 +436,6 @@ export function RewardReleaseRecordPage() {
       "用户地址": "0xe9b3ba...02a4cc",
       "邮箱": "--",
       "资产名称": "rSDCT",
-      "发放批次 ID": "RD2026040002",
       "发放底层收益": "8.20 USDC",
       "发放 iREAL": "82 iREAL",
       "发放时间": "2026-05-01 10:05:24",
@@ -463,7 +461,7 @@ export function RewardReleaseRecordPage() {
       />
       <BackendTable
         title="发放明细"
-        columns={["用户地址", "邮箱", "资产名称", "发放批次 ID", "发放底层收益", "发放 iREAL", "发放时间", "状态", "交易哈希"]}
+        columns={["用户地址", "邮箱", "资产名称", "发放底层收益", "发放 iREAL", "发放时间", "状态", "交易哈希"]}
         rows={detailRows}
       />
     </div>
