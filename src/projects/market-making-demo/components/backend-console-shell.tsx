@@ -7,6 +7,7 @@ import type { ReactNode } from "react";
 import {
   BarChart3,
   BriefcaseBusiness,
+  BadgeDollarSign,
   ChevronDown,
   Download,
   Layers,
@@ -27,6 +28,7 @@ import { publicAsset } from "@/lib/public-asset";
 type BackendGroupKey =
   | "trade"
   | "stake"
+  | "reward-distribution"
   | "product"
   | "asset"
   | "dashboard"
@@ -43,6 +45,8 @@ type BackendItemKey =
   | "entrust-orders"
   | "stake-overview"
   | "stake-records"
+  | "reward-release-audit"
+  | "reward-release-record"
   | "product-list"
   | "address-list"
   | "sales-data"
@@ -99,6 +103,15 @@ const NAV_GROUPS: NavGroup[] = [
     items: [
       { key: "stake-overview", label: "质押情况", href: "/backEnd/stakeManagement/stakeStatus" },
       { key: "stake-records", label: "质押记录", href: "/backEnd/stakeManagement/stakeRecord" },
+    ],
+  },
+  {
+    key: "reward-distribution",
+    label: "奖励发放",
+    icon: BadgeDollarSign,
+    items: [
+      { key: "reward-release-audit", label: "发放审核", href: "/backEnd/rewardDistribution/releaseAudit" },
+      { key: "reward-release-record", label: "发放记录", href: "/backEnd/rewardDistribution/releaseRecord" },
     ],
   },
   {

@@ -42,6 +42,8 @@ type ProductRow = {
   takerFeeRate?: string;
   makerFeeRate?: string;
   changeNotes?: string;
+  revenueDistributionPeriod?: string;
+  revenueDistributionTarget?: string;
 };
 
 type StablecoinPrices = {
@@ -625,6 +627,8 @@ type ProductFormState = {
   takerFeeRate: string;
   makerFeeRate: string;
   changeNotes: string;
+  revenueDistributionPeriod: string;
+  revenueDistributionTarget: string;
 };
 
 type ProductFormTextKey = {
@@ -679,6 +683,8 @@ const emptyProductForm: ProductFormState = {
   takerFeeRate: "",
   makerFeeRate: "",
   changeNotes: "",
+  revenueDistributionPeriod: "30",
+  revenueDistributionTarget: "底层收益",
 };
 
 function getEnglishContentFromForm(form: ProductFormState): ProductLocaleContent {
@@ -835,6 +841,12 @@ const localeFormCopy = {
     baseAnnualRateLabel: "基础年化(按月分红)",
     pointAnnualRateLabel: "积分年化(iREAL)",
     commissionAnnualRateLabel: "佣金年化",
+    revenueDistributionTitle: "收益发放",
+    revenueDistributionPrefix: "每",
+    revenueDistributionUnit: "日",
+    revenueDistributionAction: "发放",
+    revenueDistributionTarget: "底层收益",
+    revenueDistributionHint: "如果是不发放收益则是记账，到日期一次性发放之前未发放的收益天数。",
     takerFeeLabel: "Taker 手续费（做市方将收取费率，币种是稳定币）",
     takerFeeHint: "用户购买手续费=稳定币实际购买额度*手续费率；用户实际获得代币=(稳定币购买额-手续费)/代币单价。",
     makerFeeLabel: "Maker 手续费（做市方将收取费率，币种是 rToken）",
@@ -881,6 +893,13 @@ const localeFormCopy = {
     baseAnnualRateLabel: "Monthly Distribution APY",
     pointAnnualRateLabel: "iREAL Points APY",
     commissionAnnualRateLabel: "Commission APY",
+    revenueDistributionTitle: "Revenue Distribution",
+    revenueDistributionPrefix: "Every",
+    revenueDistributionUnit: "Days",
+    revenueDistributionAction: "Distribute",
+    revenueDistributionTarget: "Underlying Yield",
+    revenueDistributionHint:
+      "If yield is not distributed, it is accrued and distributed once at maturity for all undistributed yield days.",
     takerFeeLabel: "Taker Fee (market maker charges this rate in stablecoin)",
     takerFeeHint:
       "User buy fee = stablecoin purchase amount * fee rate; token received = (stablecoin purchase amount - fee) / token price.",
@@ -894,6 +913,59 @@ const localeFormCopy = {
 } satisfies Record<ProductFormLocale, Record<string, string>>;
 
 const stablecoinTokens = ["USDT", "USDC", "USD1"] as const;
+const revenueDistributionPeriods = ["30", "7"] as const;
+
+function RevenueDistributionBlock({
+  title,
+  prefix,
+  unit,
+  action,
+  target,
+  hint,
+  period,
+  onPeriodChange,
+}: {
+  title: string;
+  prefix: string;
+  unit: string;
+  action: string;
+  target: string;
+  hint: string;
+  period: string;
+  onPeriodChange: (value: string) => void;
+}) {
+  return (
+    <section className="space-y-2">
+      <div className="text-[14px] font-semibold text-[#303133]">{title}</div>
+      <div className="flex flex-wrap items-center gap-3">
+        <div className="flex h-10 min-w-[420px] flex-1 items-center rounded-[4px] border border-[#dcdfe6] bg-white text-[13px] text-[#303133]">
+          <span className="w-[74px] px-3 text-[#8b9bb0]">{prefix}</span>
+          <div className="relative flex min-w-0 flex-1 items-center">
+            <select
+              value={period}
+              onChange={(event) => onPeriodChange(event.target.value)}
+              className="h-10 w-full appearance-none bg-transparent px-3 text-center outline-none"
+            >
+              {revenueDistributionPeriods.map((value) => (
+                <option key={value} value={value}>
+                  {value} {unit}
+                </option>
+              ))}
+            </select>
+            <ChevronDown className="pointer-events-none absolute right-2 top-1/2 size-4 -translate-y-1/2 text-[#bdbdbd]" />
+          </div>
+          <span className="w-[54px] text-center">{unit}</span>
+          <span className="w-[76px] text-center text-[#8b9bb0]">{action}</span>
+          <span className="grid h-10 w-[112px] place-items-center rounded-r-[4px] bg-[#2f86f6] font-semibold text-white">
+            {target}
+          </span>
+        </div>
+        <span className="text-[18px] leading-none text-[#f56c6c]">*</span>
+        <span className="min-w-[240px] flex-1 text-[12px] leading-5 text-[#ff3b30]">{hint}</span>
+      </div>
+    </section>
+  );
+}
 
 function FieldWithAction({
   label,
@@ -1306,6 +1378,17 @@ function ProductFormDialog({
                 ))}
               </section>
 
+              <RevenueDistributionBlock
+                title={localeCopy.revenueDistributionTitle}
+                prefix={localeCopy.revenueDistributionPrefix}
+                unit={localeCopy.revenueDistributionUnit}
+                action={localeCopy.revenueDistributionAction}
+                target={form.revenueDistributionTarget || localeCopy.revenueDistributionTarget}
+                hint={localeCopy.revenueDistributionHint}
+                period={form.revenueDistributionPeriod}
+                onPeriodChange={(value) => updateText("revenueDistributionPeriod", value)}
+              />
+
               <section className="space-y-4">
                 <FieldWithAction
                   label={localeCopy.takerFeeLabel}
@@ -1483,6 +1566,8 @@ export function ProductListPage() {
       takerFeeRate: row.takerFeeRate ?? "",
       makerFeeRate: row.makerFeeRate ?? "",
       changeNotes: row.changeNotes ?? "",
+      revenueDistributionPeriod: row.revenueDistributionPeriod ?? emptyProductForm.revenueDistributionPeriod,
+      revenueDistributionTarget: row.revenueDistributionTarget ?? emptyProductForm.revenueDistributionTarget,
       enProductTypeName: english?.productTypeName ?? "",
       enBondName: english?.bondName ?? "",
       enDisplayMerchant: english?.displayMerchant ?? "",
@@ -1572,6 +1657,8 @@ export function ProductListPage() {
           takerFeeRate: productForm.takerFeeRate,
           makerFeeRate: productForm.makerFeeRate,
           changeNotes: productForm.changeNotes,
+          revenueDistributionPeriod: productForm.revenueDistributionPeriod,
+          revenueDistributionTarget: productForm.revenueDistributionTarget,
         },
       ]);
       showSuccessToast("产品已添加");
@@ -1608,6 +1695,8 @@ export function ProductListPage() {
                 takerFeeRate: productForm.takerFeeRate,
                 makerFeeRate: productForm.makerFeeRate,
                 changeNotes: productForm.changeNotes,
+                revenueDistributionPeriod: productForm.revenueDistributionPeriod,
+                revenueDistributionTarget: productForm.revenueDistributionTarget,
               }
             : row
         )

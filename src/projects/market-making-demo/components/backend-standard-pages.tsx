@@ -1,6 +1,7 @@
 "use client";
 
 import { Calendar, ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
+import { useState } from "react";
 import type { ReactNode } from "react";
 
 import { useGlobalFeedback } from "@/components/feedback/global-feedback-provider";
@@ -72,20 +73,29 @@ function ActionButton({
   children,
   variant = "primary",
   onClick,
+  disabled = false,
 }: {
   children: ReactNode;
   variant?: "primary" | "secondary" | "success";
   onClick?: () => void;
+  disabled?: boolean;
 }) {
   const variantClass =
-    variant === "success"
+    disabled
+      ? "cursor-not-allowed bg-slate-200 text-slate-400"
+      : variant === "success"
       ? "bg-[#16a05d] text-white hover:bg-[#12894f]"
       : variant === "secondary"
         ? "border border-[#dcdfe6] bg-white text-slate-600 hover:bg-slate-50"
         : "bg-[#1f5bd8] text-white hover:bg-[#1a4fc1]";
 
   return (
-    <button type="button" onClick={onClick} className={`h-9 rounded-[6px] px-5 text-[13px] font-medium ${variantClass}`}>
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={disabled}
+      className={`h-9 rounded-[6px] px-5 text-[13px] font-medium ${variantClass}`}
+    >
       {children}
     </button>
   );
@@ -290,6 +300,125 @@ export function StakeRecordPage() {
       <BackendTable
         title="质押记录"
         columns={["记录 ID", "资产名称", "操作类型", "数量", "交易 HASH", "状态", "创建时间"]}
+        rows={rows}
+      />
+    </div>
+  );
+}
+
+export function RewardReleaseAuditPage() {
+  const { showSuccessToast } = useGlobalFeedback();
+  const [released, setReleased] = useState(false);
+
+  const statusBadge = released ? <StatusBadge tone="green">已发放</StatusBadge> : <StatusBadge tone="orange">待发放</StatusBadge>;
+  const batchRows = [
+    {
+      "发放周期": "2026-05-01 至 2026-05-31",
+      "资产名称": "rFUIDL",
+      "发放用户数": "86",
+      "计息天数": "31",
+      "底层收益总额": "1,248.32 USDC",
+      "iREAL收益总额": "12,480 iREAL",
+      "统计截止日": "2026-05-31",
+      "创建时间": "2026-06-03 13:20:00",
+      "状态": statusBadge,
+    },
+    {
+      "发放周期": "2026-05-01 至 2026-05-31",
+      "资产名称": "rSDCT",
+      "发放用户数": "42",
+      "计息天数": "31",
+      "底层收益总额": "860.00 USDC",
+      "iREAL收益总额": "6,240 iREAL",
+      "统计截止日": "2026-05-31",
+      "创建时间": "2026-06-03 13:20:00",
+      "状态": statusBadge,
+    },
+  ];
+
+  const handleRelease = () => {
+    setReleased(true);
+    showSuccessToast("上月用户奖励已发放");
+  };
+
+  return (
+    <div className="space-y-4">
+      <StandardFilterBar
+        fields={[
+          { type: "select", placeholder: "发放月份", options: ["2026-05", "2026-04", "2026-03"] },
+          { type: "select", placeholder: "资产名称", options: rwaOptions },
+          { type: "input", placeholder: "用户地址" },
+          { type: "select", placeholder: "发放状态", options: ["未发放", "已发放"] },
+        ]}
+        showExport={false}
+        primaryAction={
+          <ActionButton variant="success" onClick={handleRelease} disabled={released}>
+            {released ? "已发放" : "发放奖励"}
+          </ActionButton>
+        }
+      />
+      <div className="grid grid-cols-4 gap-4">
+        <StatCard title="待发放用户数" value={released ? "0" : "128"} />
+        <StatCard title="待发放底层收益" value={released ? "0" : "2,108.32"} unit="USDC" />
+        <StatCard title="待发放 iREAL" value={released ? "0" : "18,720"} unit="iREAL" />
+      </div>
+      <BackendTable
+        title="发放审核"
+        columns={["发放周期", "资产名称", "发放用户数", "计息天数", "底层收益总额", "iREAL收益总额", "统计截止日", "创建时间", "状态"]}
+        rows={batchRows}
+      />
+    </div>
+  );
+}
+
+export function RewardReleaseRecordPage() {
+  const rows = [
+    {
+      "发放批次 ID": "RD2026050001",
+      "发放周期": "2026-05-01 至 2026-05-31",
+      "发放时间": "2026-06-03 13:30:00",
+      "资产名称": "rFUIDL",
+      "发放用户数": "86",
+      "发放底层收益": "1,248.32 USDC",
+      "发放 iREAL": "12,480 iREAL",
+      "发放状态": <StatusBadge tone="green">已完成</StatusBadge>,
+      "操作人": "admin",
+      "交易哈希": <TextLink>{hashValue}</TextLink>,
+    },
+    {
+      "发放批次 ID": "RD2026040002",
+      "发放周期": "2026-04-01 至 2026-04-30",
+      "发放时间": "2026-05-01 10:05:24",
+      "资产名称": "rSDCT",
+      "发放用户数": "42",
+      "发放底层收益": "780.00 USDC",
+      "发放 iREAL": "5,920 iREAL",
+      "发放状态": <StatusBadge tone="red">失败</StatusBadge>,
+      "操作人": "yang",
+      "交易哈希": <TextLink>{hashValue}</TextLink>,
+    },
+  ];
+
+  return (
+    <div className="space-y-4">
+      <StandardFilterBar
+        fields={[
+          { type: "select", placeholder: "发放月份", options: ["2026-05", "2026-04", "2026-03"] },
+          { type: "select", placeholder: "资产名称", options: rwaOptions },
+          { type: "input", placeholder: "用户地址" },
+          { type: "select", placeholder: "发放状态", options: ["已完成", "失败"] },
+          { type: "date" },
+        ]}
+      />
+      <div className="grid grid-cols-4 gap-4">
+        <StatCard title="累计发放批次" value="12" />
+        <StatCard title="累计发放用户数" value="1,268" />
+        <StatCard title="累计发放底层收益" value="28,430.16" unit="USDC" />
+        <StatCard title="累计发放 iREAL" value="186,300" unit="iREAL" />
+      </div>
+      <BackendTable
+        title="发放记录"
+        columns={["发放批次 ID", "发放周期", "发放时间", "资产名称", "发放用户数", "发放底层收益", "发放 iREAL", "发放状态", "操作人", "交易哈希"]}
         rows={rows}
       />
     </div>
