@@ -348,7 +348,6 @@ export function RewardReleaseAuditPage() {
           { type: "select", placeholder: "发放月份", options: ["2026-05", "2026-04", "2026-03"] },
           { type: "select", placeholder: "资产名称", options: rwaOptions },
           { type: "input", placeholder: "用户地址" },
-          { type: "select", placeholder: "发放状态", options: ["未发放", "已发放"] },
         ]}
         showExport={false}
         primaryAction={
