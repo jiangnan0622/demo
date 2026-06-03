@@ -1,0 +1,2329 @@
+.shell {
+  --bg: #0a0a0a;
+  --panel: #131313;
+  --panel-soft: rgba(255, 255, 255, 0.04);
+  --line: rgba(255, 255, 255, 0.1);
+  --line-strong: rgba(255, 255, 255, 0.18);
+  --text: #ffffff;
+  --muted: rgba(255, 255, 255, 0.56);
+  --weak: rgba(255, 255, 255, 0.38);
+  --gold: #f0c456;
+  --gold-soft: #ffd65b;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  width: 100%;
+  font-family: "Alibaba PuHuiTi", "PingFang SC", Arial, Helvetica, sans-serif;
+  letter-spacing: 0;
+}
+
+.shell,
+.shell * {
+  box-sizing: border-box;
+}
+
+.phone {
+  background: var(--bg);
+  margin: 0;
+  max-width: 375px;
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+  width: 100%;
+}
+
+.page {
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-height: 100vh;
+  overflow-x: hidden;
+  padding: 0 16px 120px;
+}
+
+.noBottom {
+  padding-bottom: 32px;
+}
+
+.header {
+  align-items: center;
+  background: rgba(10, 10, 10, 0.98);
+  display: flex;
+  height: 54px;
+  justify-content: space-between;
+  margin: 0 -16px;
+  padding: 0 12px 0 13px;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+.headerLeft {
+  align-items: center;
+  display: flex;
+  gap: 14px;
+}
+
+.logo {
+  height: 36px;
+  object-fit: contain;
+  width: 52px;
+}
+
+.iconButton {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  color: rgba(255, 255, 255, 0.62);
+  display: inline-flex;
+  height: 36px;
+  justify-content: center;
+  padding: 0;
+  width: 36px;
+}
+
+.connectButton,
+.userButton,
+.goldButton,
+.outlineButton,
+.disabledButton,
+.fullGoldButton {
+  align-items: center;
+  border-radius: 6px;
+  display: inline-flex;
+  font-size: 12px;
+  font-weight: 500;
+  justify-content: center;
+  line-height: 1;
+  text-decoration: none;
+}
+
+.connectButton {
+  background: var(--gold);
+  color: #111111;
+  font-size: 16px;
+  height: 52px;
+  min-width: 91px;
+  padding: 0 20px;
+}
+
+.userButton {
+  background: transparent;
+  border: 0;
+  color: rgba(255, 255, 255, 0.78);
+  height: 36px;
+  padding: 0;
+  width: 36px;
+}
+
+.subHeader {
+  align-items: center;
+  background: rgba(10, 10, 10, 0.98);
+  display: grid;
+  grid-template-columns: 44px 1fr 44px;
+  height: 56px;
+  margin: 0 -16px;
+  padding: 0 10px;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+.subHeaderTitle {
+  font-size: 17px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.subHeaderRight {
+  align-items: center;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.drawerScrim {
+  background: rgba(0, 0, 0, 0.58);
+  border: 0;
+  inset: 0;
+  position: fixed;
+  z-index: 40;
+}
+
+.drawer {
+  background: #20201d;
+  bottom: auto;
+  border-radius: 22px 22px 0 0;
+  height: min(456px, 100dvh);
+  left: 50%;
+  max-width: 375px;
+  overflow: hidden;
+  padding: 28px 27px 20px;
+  position: fixed;
+  top: max(0px, calc(100dvh - 456px));
+  transform: translateX(-50%);
+  width: 100%;
+  z-index: 45;
+}
+
+.drawerHead {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+
+.drawerTitle {
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.moreMenuList {
+  display: grid;
+  gap: 0;
+  margin-top: 26px;
+}
+
+.moreMenuItem {
+  align-items: center;
+  color: #ffffff;
+  display: flex;
+  font-size: 17px;
+  font-weight: 500;
+  height: 54px;
+  justify-content: space-between;
+  padding: 0 8px 0 27px;
+  text-decoration: none;
+}
+
+.moreMenuItem svg {
+  color: rgba(255, 255, 255, 0.42);
+}
+
+.languageSwitch {
+  align-items: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  gap: 28px;
+  height: 54px;
+  margin-top: 10px;
+  padding-left: 27px;
+}
+
+.languageSwitch button {
+  background: transparent;
+  border: 0;
+  color: rgba(255, 255, 255, 0.42);
+  font-size: 17px;
+  padding: 0;
+}
+
+.languageSwitch .languageActive {
+  color: #ffffff;
+}
+
+.accountDrawer {
+  background: #20201d;
+  border-radius: 16px 16px 0 0;
+  bottom: auto;
+  color: #ffffff;
+  height: min(420px, 100dvh);
+  left: 50%;
+  max-width: 375px;
+  overflow: hidden;
+  padding: 28px 27px 24px;
+  position: fixed;
+  top: max(0px, calc(100dvh - 420px));
+  transform: translateX(-50%);
+  width: 100%;
+  z-index: 45;
+}
+
+.accountProfileList {
+  display: grid;
+  gap: 20px;
+  margin-top: 28px;
+}
+
+.accountProfileRow {
+  align-items: center;
+  color: #ffffff;
+  display: grid;
+  gap: 16px;
+  grid-template-columns: 54px minmax(0, 1fr) auto;
+  min-height: 54px;
+  text-decoration: none;
+}
+
+.accountCircleIcon {
+  align-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 50%;
+  color: #ffffff;
+  display: flex;
+  height: 54px;
+  justify-content: center;
+  width: 54px;
+}
+
+.accountProfileRow strong {
+  font-size: 16px;
+  font-weight: 700;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.accountProfileRow em {
+  background: rgba(28, 100, 64, 0.46);
+  border-radius: 5px;
+  color: #1ed194;
+  font-size: 14px;
+  font-style: normal;
+  padding: 7px 10px;
+  white-space: nowrap;
+}
+
+.accountProfileRow button {
+  background: transparent;
+  border: 0;
+  color: rgba(255, 255, 255, 0.6);
+  padding: 0;
+}
+
+.contentStack,
+.cardList {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.cardList {
+  gap: 12px;
+}
+
+.tradeBanner {
+  border-radius: 0;
+  height: 132px;
+  margin: 0 -16px;
+  overflow: hidden;
+  position: relative;
+}
+
+.tradeBannerImage {
+  height: 100%;
+  left: 0;
+  object-fit: cover;
+  opacity: 0.62;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+
+.tradeBannerOverlay {
+  background: linear-gradient(180deg, rgba(10, 10, 10, 0.22), rgba(10, 10, 10, 0.42));
+  inset: 0;
+  position: absolute;
+}
+
+.tradeBannerContent {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: center;
+  padding: 0 16px;
+  position: relative;
+  text-align: center;
+  z-index: 1;
+}
+
+.tradeBannerContent h1 {
+  color: rgba(255, 255, 255, 0.84);
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.tradeBannerContent p {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 13px;
+  line-height: 1.5;
+  margin: 14px 0 0;
+}
+
+.searchBox {
+  align-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 11px;
+  display: flex;
+  height: 38px;
+  padding: 0 12px;
+}
+
+.searchBox input {
+  background: transparent;
+  border: 0;
+  color: #ffffff;
+  flex: 1;
+  font-size: 14px;
+  min-width: 0;
+  outline: none;
+}
+
+.searchBox input::placeholder {
+  color: rgba(255, 255, 255, 0.34);
+}
+
+.searchBox svg {
+  color: rgba(255, 255, 255, 0.42);
+}
+
+.assetCard,
+.surface,
+.formPanel,
+.orderCard,
+.positionCard,
+.marketRow,
+.tableWrap,
+.userSheet,
+.accountSheet {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+
+.assetCard {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow: hidden;
+  padding: 12px;
+  position: relative;
+}
+
+.cardWatermark {
+  border-radius: 50%;
+  height: 160px;
+  object-fit: cover;
+  opacity: 0.2;
+  pointer-events: none;
+  position: absolute;
+  right: -34px;
+  top: -45px;
+  width: 160px;
+}
+
+.statusStamp {
+  height: 100px;
+  pointer-events: none;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 100px;
+  z-index: 2;
+}
+
+.assetHeader,
+.detailToken,
+.marketToken,
+.orderHead {
+  align-items: center;
+  display: flex;
+}
+
+.assetHeader {
+  gap: 12px;
+  min-height: 48px;
+  position: relative;
+  z-index: 1;
+}
+
+.tokenIcon {
+  border-radius: 50%;
+  height: 48px;
+  object-fit: cover;
+  width: 48px;
+}
+
+.tokenText {
+  min-width: 0;
+}
+
+.tokenText h2 {
+  color: #ffffff;
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.tokenText p {
+  color: #858585;
+  font-size: 12px;
+  line-height: 1.66;
+  margin: 0;
+}
+
+.priceGrid {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: minmax(176px, 1fr) minmax(0, 124px);
+  position: relative;
+  z-index: 1;
+}
+
+.fieldCaption {
+  color: rgba(255, 255, 255, 0.66);
+  display: block;
+  font-size: 12px;
+  margin-bottom: 6px;
+}
+
+.valuePill {
+  align-items: center;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  display: inline-flex;
+  height: 20px;
+  max-width: 100%;
+  padding: 0 4px;
+  white-space: nowrap;
+}
+
+.valuePill strong {
+  color: #ffffff;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.valuePill span {
+  color: rgba(255, 255, 255, 0.66);
+  font-size: 11px;
+  margin-left: 3px;
+}
+
+.currencySign {
+  font-size: 14px;
+  margin-left: 0;
+  margin-right: 2px;
+}
+
+.tagRow {
+  display: flex;
+  gap: 8px;
+  min-width: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.tag {
+  border: 1px solid var(--line-strong);
+  border-radius: 5px;
+  color: rgba(255, 255, 255, 0.66);
+  font-size: 12px;
+  line-height: 1;
+  overflow: hidden;
+  padding: 6px 8px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.progressPanel {
+  background: var(--panel-soft);
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  position: relative;
+  z-index: 1;
+}
+
+.progressTrack {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  height: 6px;
+  overflow: hidden;
+}
+
+.progressFill,
+.progressFull {
+  background: var(--gold-soft);
+  border-radius: inherit;
+  display: block;
+  height: 100%;
+}
+
+.progressFull {
+  background: rgba(255, 255, 255, 0.36);
+}
+
+.poolRow {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  color: inherit;
+  display: grid;
+  grid-template-columns: 1fr auto 20px;
+  gap: 8px;
+  padding: 0;
+  text-align: left;
+}
+
+.poolRow span {
+  color: var(--weak);
+  font-size: 12px;
+}
+
+.poolRow strong {
+  font-size: 12px;
+}
+
+.activePool {
+  color: var(--gold-soft);
+}
+
+.fullPool {
+  color: rgba(255, 255, 255, 0.58);
+}
+
+.chevronUp {
+  transform: rotate(180deg);
+}
+
+.expandedDetail {
+  display: grid;
+  gap: 7px;
+}
+
+.infoLine {
+  align-items: flex-start;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  min-height: 20px;
+}
+
+.infoLine span {
+  color: rgba(255, 255, 255, 0.48);
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.infoLine strong {
+  color: rgba(255, 255, 255, 0.84);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.55;
+  text-align: right;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+.outlineButton,
+.goldButton,
+.disabledButton {
+  flex: 1;
+  height: 32px;
+  padding: 0 16px;
+}
+
+.outlineButton {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: #ffffff;
+}
+
+.goldButton,
+.fullGoldButton {
+  background: var(--gold);
+  border: 1px solid var(--gold);
+  color: #111111;
+}
+
+.disabledButton {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid transparent;
+  color: rgba(255, 255, 255, 0.36);
+}
+
+.fullGoldButton {
+  border-radius: 8px;
+  font-size: 16px;
+  height: 48px;
+  width: 100%;
+}
+
+.sectionTitle h2 {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.35;
+  margin: 0;
+}
+
+.sectionTitle p,
+.copy {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.65;
+  margin: 8px 0 0;
+}
+
+.portfolioPage {
+  display: grid;
+  gap: 18px;
+}
+
+.portfolioBackRow {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  color: #ffffff;
+  display: inline-flex;
+  gap: 12px;
+  justify-content: flex-start;
+  margin-top: -4px;
+  padding: 0;
+}
+
+.portfolioBackRow span {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.portfolioSectionTitle {
+  color: #ffffff;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.portfolioOverviewCard {
+  background: linear-gradient(180deg, #1a1730, #1a1830);
+  border: 1px solid rgba(103, 104, 188, 0.38);
+  border-radius: 16px;
+  min-height: 168px;
+  overflow: hidden;
+  padding: 18px 18px 16px;
+  position: relative;
+}
+
+.portfolioOverviewDecor {
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
+}
+
+.portfolioOverviewDecor span {
+  border-radius: 50%;
+  position: absolute;
+}
+
+.portfolioDecorCircleLarge {
+  border: 2px solid rgba(82, 103, 255, 0.65);
+  height: 216px;
+  right: -60px;
+  top: 10px;
+  width: 216px;
+}
+
+.portfolioDecorCircleOne,
+.portfolioDecorCircleTwo,
+.portfolioDecorCircleThree,
+.portfolioDecorCircleFour {
+  border: 1px dashed rgba(183, 134, 68, 0.28);
+}
+
+.portfolioDecorCircleOne {
+  bottom: -44px;
+  height: 150px;
+  right: 18px;
+  width: 150px;
+}
+
+.portfolioDecorCircleTwo {
+  bottom: -14px;
+  height: 112px;
+  right: 72px;
+  width: 112px;
+}
+
+.portfolioDecorCircleThree {
+  bottom: -2px;
+  height: 82px;
+  right: 124px;
+  width: 82px;
+}
+
+.portfolioDecorCircleFour {
+  bottom: -24px;
+  height: 54px;
+  right: 162px;
+  width: 54px;
+}
+
+.portfolioOverviewGrid {
+  display: grid;
+  gap: 14px 16px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  position: relative;
+  z-index: 1;
+}
+
+.portfolioOverviewStat {
+  display: grid;
+  gap: 8px;
+}
+
+.portfolioOverviewLabel {
+  align-items: center;
+  color: rgba(255, 255, 255, 0.72);
+  display: inline-flex;
+  font-size: 12px;
+  gap: 5px;
+  line-height: 1.2;
+}
+
+.portfolioOverviewLabel svg {
+  color: rgba(255, 255, 255, 0.44);
+}
+
+.portfolioOverviewPill {
+  align-items: center;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 7px;
+  display: inline-flex;
+  gap: 6px;
+  height: 30px;
+  justify-content: flex-start;
+  padding: 0 8px;
+  width: fit-content;
+}
+
+.portfolioOverviewPill em,
+.portfolioOverviewPill b {
+  color: rgba(255, 255, 255, 0.68);
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.portfolioOverviewPill strong {
+  color: #ffffff;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.portfolioOverviewStat p {
+  color: rgba(255, 255, 255, 0.54);
+  font-size: 11px;
+  line-height: 1.3;
+  margin: 0;
+}
+
+.portfolioHoldingList {
+  display: grid;
+  gap: 12px;
+}
+
+.portfolioHoldingPanel {
+  border-radius: 14px;
+}
+
+.portfolioHoldingPanelOpen {
+  background: #151515;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 12px;
+}
+
+.portfolioHoldingCard {
+  align-items: center;
+  background: #151515;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  color: #ffffff;
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 48px minmax(0, 1fr) auto 18px;
+  min-height: 98px;
+  padding: 14px 14px 14px 16px;
+  text-align: left;
+  width: 100%;
+}
+
+.portfolioHoldingPanelOpen .portfolioHoldingCard {
+  background: transparent;
+  border: 0;
+  border-radius: 8px;
+  min-height: 54px;
+  padding: 0;
+}
+
+.portfolioHoldingCardOpen {
+  margin-bottom: 12px;
+}
+
+.portfolioHoldingIcon {
+  border-radius: 50%;
+  height: 48px;
+  object-fit: cover;
+  width: 48px;
+}
+
+.portfolioHoldingText {
+  min-width: 0;
+}
+
+.portfolioHoldingText strong {
+  display: block;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.portfolioHoldingText span {
+  color: rgba(255, 255, 255, 0.42);
+  display: block;
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+.portfolioHoldingValue {
+  min-width: 0;
+  text-align: right;
+}
+
+.portfolioHoldingValue strong {
+  color: var(--gold-soft);
+  display: block;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.portfolioHoldingValue span {
+  color: rgba(255, 255, 255, 0.4);
+  display: block;
+  font-size: 11px;
+  line-height: 1.35;
+  margin-top: 6px;
+  white-space: nowrap;
+}
+
+.portfolioHoldingCard svg {
+  color: rgba(255, 255, 255, 0.42);
+}
+
+.portfolioHoldingChevronOpen {
+  transform: rotate(180deg);
+}
+
+.portfolioHoldingDetail {
+  background: #20201e;
+  border-radius: 10px;
+  display: grid;
+  gap: 15px;
+  padding: 16px 14px 14px;
+}
+
+.portfolioDetailRow {
+  align-items: flex-start;
+  display: grid;
+  gap: 10px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+}
+
+.portfolioDetailRow span {
+  color: rgba(255, 255, 255, 0.36);
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.portfolioDetailRow div {
+  min-width: 0;
+  text-align: right;
+}
+
+.portfolioDetailRow strong {
+  color: rgba(255, 255, 255, 0.92);
+  display: block;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.25;
+}
+
+.portfolioDetailRow em {
+  color: rgba(255, 255, 255, 0.34);
+  display: block;
+  font-size: 11px;
+  font-style: normal;
+  line-height: 1.25;
+  margin-top: 6px;
+  white-space: nowrap;
+}
+
+.portfolioHoldingActions {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(3, 1fr);
+  margin-top: 6px;
+}
+
+.portfolioOutlineAction,
+.portfolioGoldAction {
+  align-items: center;
+  border-radius: 8px;
+  display: inline-flex;
+  font-size: 14px;
+  font-weight: 600;
+  height: 40px;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.portfolioOutlineAction {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.46);
+  color: #ffffff;
+}
+
+.portfolioGoldAction {
+  background: var(--gold);
+  border: 1px solid var(--gold);
+  color: #111111;
+}
+
+.emptyState {
+  align-items: center;
+  color: var(--muted);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  justify-content: center;
+  min-height: 137px;
+}
+
+.emptyState svg {
+  color: rgba(255, 255, 255, 0.18);
+}
+
+.marketRow {
+  display: grid;
+  gap: 12px;
+  padding: 12px;
+}
+
+.marketToken {
+  gap: 10px;
+}
+
+.marketToken img,
+.detailToken img {
+  border-radius: 50%;
+  height: 44px;
+  object-fit: cover;
+  width: 44px;
+}
+
+.marketToken strong,
+.orderHead strong,
+.positionCard strong {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.marketToken span {
+  color: var(--muted);
+  display: block;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.marketMetrics,
+.surface,
+.formPanel,
+.positionCard,
+.tableWrap,
+.userSheet,
+.accountSheet {
+  display: grid;
+  gap: 12px;
+}
+
+.surface,
+.formPanel,
+.positionCard,
+.tableWrap,
+.userSheet,
+.accountSheet {
+  padding: 12px;
+}
+
+.detailHero {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  display: grid;
+  gap: 16px;
+  padding: 14px 12px;
+}
+
+.detailToken {
+  gap: 12px;
+}
+
+.detailToken h1 {
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.detailToken p {
+  color: var(--muted);
+  font-size: 13px;
+  margin: 6px 0 0;
+}
+
+.metricGrid {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: 1fr 1fr;
+}
+
+.metricCard {
+  background: var(--panel-soft);
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.metricCard span {
+  color: var(--weak);
+  font-size: 12px;
+}
+
+.metricCard strong {
+  color: #ffffff;
+  display: block;
+  font-size: 22px;
+  font-weight: 700;
+  margin-top: 8px;
+}
+
+.segmented {
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 4px;
+}
+
+.segmented button,
+.segmentedItem {
+  background: transparent;
+  border: 0;
+  border-radius: 6px;
+  color: rgba(255, 255, 255, 0.58);
+  flex: 1;
+  font-size: 13px;
+  min-width: 68px;
+  padding: 10px 8px;
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.segmented .segmentedActive,
+.segmentedActive {
+  background: #000000;
+  color: #ffffff;
+}
+
+.recordsTabs {
+  gap: 4px;
+  height: 38px;
+  min-height: 38px;
+  padding: 4px;
+}
+
+.recordsTabs button {
+  align-items: center;
+  display: inline-flex;
+  justify-content: center;
+  padding: 0 8px;
+}
+
+.yieldBars {
+  align-items: end;
+  display: grid;
+  gap: 24px;
+  grid-template-columns: repeat(2, 1fr);
+  height: 140px;
+  padding: 8px 22px 0;
+}
+
+.yieldBars div {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: flex-end;
+}
+
+.yieldBars span {
+  background: linear-gradient(180deg, var(--gold-soft), #80692c);
+  border-radius: 999px 999px 4px 4px;
+  display: block;
+  min-height: 18px;
+  width: 32px;
+}
+
+.yieldBars b {
+  font-size: 14px;
+  margin-top: 8px;
+}
+
+.yieldBars em {
+  color: var(--weak);
+  font-size: 11px;
+  font-style: normal;
+  margin-top: 4px;
+}
+
+.amountField,
+.textField {
+  display: grid;
+  gap: 8px;
+}
+
+.amountField > span,
+.textField > span {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.amountField div,
+.textField div {
+  align-items: center;
+  background: #0f0f0f;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  display: flex;
+  min-height: 50px;
+  padding: 0 12px;
+}
+
+.amountField input,
+.textField input {
+  background: transparent;
+  border: 0;
+  color: #ffffff;
+  flex: 1;
+  font-size: 18px;
+  min-width: 0;
+  outline: none;
+}
+
+.textField input {
+  font-size: 14px;
+}
+
+.amountField em,
+.textField button {
+  color: var(--muted);
+  font-size: 13px;
+  font-style: normal;
+}
+
+.textField button {
+  background: transparent;
+  border: 0;
+  color: var(--gold-soft);
+}
+
+.timeline {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: grid;
+  gap: 8px;
+  padding-top: 12px;
+}
+
+.featureBanner,
+.inviteHero,
+.welcomeBanner,
+.resultPanel,
+.connectingState {
+  background: linear-gradient(180deg, #171717, #101010);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 18px 14px;
+}
+
+.featureBanner p,
+.inviteHero p {
+  color: var(--gold-soft);
+  font-size: 12px;
+  margin: 0 0 10px;
+}
+
+.featureBanner h1,
+.inviteHero h1,
+.welcomeBanner h1,
+.resultPanel h1,
+.connectingState h1 {
+  font-size: 26px;
+  font-weight: 600;
+  line-height: 1.18;
+  margin: 0;
+}
+
+.orderCard {
+  color: #ffffff;
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+  text-decoration: none;
+}
+
+.orderListPage {
+  display: grid;
+  gap: 12px;
+}
+
+.orderListPage h1 {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1;
+  margin: 0;
+}
+
+.orderFilters {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 112px minmax(0, 1fr);
+}
+
+.orderSelect,
+.dateRange {
+  align-items: center;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.82);
+  display: flex;
+  font-size: 14px;
+  height: 34px;
+  justify-content: space-between;
+  min-width: 0;
+  padding: 0 10px;
+}
+
+.dateRange {
+  color: rgba(255, 255, 255, 0.36);
+  gap: 7px;
+}
+
+.dateRange span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.orderListCard {
+  background: #080808;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 10px;
+  color: #ffffff;
+  display: grid;
+  gap: 16px;
+  min-height: 82px;
+  padding: 14px 24px;
+  text-decoration: none;
+}
+
+.orderCardTop,
+.orderCardBottom {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+
+.orderCardTop strong {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1;
+  min-width: 92px;
+}
+
+.orderAmountBuy,
+.orderAmountSell {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.orderAmountBuy {
+  color: #16c78f;
+}
+
+.orderAmountSell {
+  color: #ff6274;
+}
+
+.orderAmountBuy em,
+.orderAmountSell em {
+  color: rgba(255, 255, 255, 0.56);
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  margin-left: 5px;
+}
+
+.orderCardBottom time {
+  color: rgba(255, 255, 255, 0.56);
+  font-size: 14px;
+}
+
+.orderSuccess {
+  align-items: center;
+  background: rgba(30, 95, 28, 0.46);
+  border-radius: 6px;
+  color: #20d997;
+  display: inline-flex;
+  font-size: 13px;
+  gap: 5px;
+  height: 28px;
+  padding: 0 9px;
+  white-space: nowrap;
+}
+
+.orderPagination {
+  align-items: center;
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin: 6px 0 0;
+}
+
+.orderPagination button {
+  align-items: center;
+  background: #151515;
+  border: 0;
+  border-radius: 6px;
+  color: rgba(255, 255, 255, 0.42);
+  display: flex;
+  font-size: 15px;
+  height: 34px;
+  justify-content: center;
+  width: 34px;
+}
+
+.orderPagination .orderPageActive {
+  background: #d5bd5b;
+  color: #111111;
+}
+
+.orderPagination .orderPageArrow {
+  background: transparent;
+  width: 24px;
+}
+
+.orderHead {
+  justify-content: space-between;
+}
+
+.statusChip {
+  border-radius: 999px;
+  color: #111111;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 5px 8px;
+}
+
+.statusDone {
+  background: #8ee2a4;
+}
+
+.statusPending {
+  background: var(--gold-soft);
+}
+
+.positionCard {
+  color: #ffffff;
+}
+
+.positionCard a,
+.inlineLink {
+  align-items: center;
+  color: var(--gold-soft);
+  display: inline-flex;
+  font-size: 12px;
+  gap: 4px;
+  text-decoration: none;
+}
+
+.tableWrap {
+  overflow-x: auto;
+}
+
+.tableGrid {
+  display: grid;
+  min-width: 343px;
+}
+
+.tableHead,
+.tableCell {
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  font-size: 12px;
+  min-height: 54px;
+  padding: 0 10px;
+}
+
+.tableHead {
+  color: rgba(255, 255, 255, 0.46);
+}
+
+.tableCell {
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.tableHeadRight,
+.tableCellRight {
+  justify-content: flex-end;
+  text-align: right;
+}
+
+.pagination {
+  align-items: center;
+  align-self: center;
+  display: inline-flex;
+  gap: 12px;
+  height: 32px;
+  justify-content: center;
+}
+
+.pagination button {
+  align-items: center;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  color: rgba(255, 255, 255, 0.82);
+  display: flex;
+  font-size: 18px;
+  height: 32px;
+  justify-content: center;
+  width: 32px;
+}
+
+.pagination span {
+  color: rgba(255, 255, 255, 0.56);
+  font-size: 12px;
+}
+
+.notice {
+  background: rgba(240, 196, 86, 0.1);
+  border: 1px solid rgba(240, 196, 86, 0.24);
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 13px;
+  line-height: 1.55;
+  padding: 12px;
+}
+
+.checkLine {
+  align-items: center;
+  color: rgba(255, 255, 255, 0.76);
+  display: flex;
+  font-size: 12px;
+  gap: 8px;
+}
+
+.menuRow,
+.walletChoice,
+.choiceCard,
+.copyRow,
+.sheetMenuRow,
+.connectOption {
+  align-items: center;
+  color: #ffffff;
+  display: flex;
+  min-height: 60px;
+  text-decoration: none;
+}
+
+.menuRow {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  gap: 10px;
+}
+
+.menuRow span {
+  flex: 1;
+}
+
+.menuRow strong {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.accountSheet {
+  gap: 0;
+  margin-top: -8px;
+  min-height: 348px;
+  overflow: hidden;
+  padding: 0;
+}
+
+.sheetMenuRow {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  gap: 10px;
+  min-height: 72px;
+  padding: 0 16px;
+}
+
+.sheetMenuRowTall {
+  min-height: 80px;
+}
+
+.sheetMenuRow:last-child {
+  border-bottom: 0;
+}
+
+.sheetMenuRow span {
+  flex: 1;
+  font-size: 15px;
+}
+
+.sheetMenuRow strong {
+  color: rgba(255, 255, 255, 0.48);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.sheetMenuRow .sheetStatusActive {
+  color: var(--gold-soft);
+}
+
+.kycNotice,
+.connectInfo {
+  background: rgba(240, 196, 86, 0.1);
+  border: 1px solid rgba(240, 196, 86, 0.24);
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.78);
+  display: grid;
+  font-size: 12px;
+  gap: 4px;
+  line-height: 1.45;
+  margin-top: -8px;
+  padding: 10px 12px;
+}
+
+.kycNotice {
+  min-height: 64px;
+}
+
+.kycNotice span {
+  color: rgba(255, 255, 255, 0.42);
+}
+
+.kycNotice strong {
+  font-weight: 500;
+}
+
+.kycForm {
+  display: grid;
+  gap: 0;
+  min-height: 540px;
+}
+
+.kycField {
+  display: grid;
+  gap: 10px;
+  min-height: 92px;
+}
+
+.kycFieldTall {
+  min-height: 112px;
+}
+
+.kycField > span {
+  color: rgba(255, 255, 255, 0.66);
+  font-size: 13px;
+  line-height: 20px;
+}
+
+.kycField div {
+  align-items: center;
+  background: #0f0f0f;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  display: flex;
+  height: 46px;
+  padding: 0 12px;
+}
+
+.kycField input {
+  background: transparent;
+  border: 0;
+  color: #ffffff;
+  flex: 1;
+  font-size: 14px;
+  min-width: 0;
+  outline: none;
+}
+
+.kycField input::placeholder {
+  color: rgba(255, 255, 255, 0.34);
+}
+
+.kycField button {
+  background: transparent;
+  border: 0;
+  color: var(--gold-soft);
+  font-size: 13px;
+  padding: 0;
+}
+
+.kycActions {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: 1fr 1fr;
+  height: 48px;
+  margin-top: 8px;
+}
+
+.kycActions .outlineButton,
+.kycActions .goldButton {
+  height: 48px;
+}
+
+.kycAgreement {
+  align-items: center;
+  align-self: end;
+  color: rgba(255, 255, 255, 0.76);
+  display: flex;
+  font-size: 12px;
+  gap: 8px;
+  min-height: 20px;
+  padding-bottom: 4px;
+}
+
+.connectInfo {
+  align-content: center;
+  min-height: 42px;
+}
+
+.connectPanel {
+  display: grid;
+  gap: 12px;
+}
+
+.connectGroup {
+  display: grid;
+  gap: 12px;
+}
+
+.connectGroup h2 {
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 20px;
+  margin: 0;
+}
+
+.connectOption {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  gap: 10px;
+  height: 46px;
+  min-height: 46px;
+  padding: 0 12px;
+}
+
+.connectOptionIcon {
+  align-items: center;
+  color: var(--gold-soft);
+  display: flex;
+  height: 24px;
+  justify-content: center;
+  width: 24px;
+}
+
+.connectOption strong {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.connectTerms {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 12px;
+  line-height: 20px;
+  margin: 0;
+}
+
+.walletBackdrop {
+  backdrop-filter: blur(8px);
+  background: rgba(0, 0, 0, 0.72);
+  inset: 0;
+  position: fixed;
+  z-index: 42;
+}
+
+.walletDrawer {
+  background: #202020;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 30px 30px 0 0;
+  bottom: auto;
+  box-shadow: 0 -20px 70px rgba(0, 0, 0, 0.5);
+  color: #ffffff;
+  left: 50%;
+  max-width: 375px;
+  min-height: 368px;
+  overflow: hidden;
+  padding: 28px 27px 22px;
+  position: fixed;
+  top: max(0px, calc(100dvh - 368px));
+  transform: translateX(-50%);
+  width: 100%;
+  z-index: 46;
+}
+
+.walletDrawerHead {
+  align-items: center;
+  display: grid;
+  grid-template-columns: 28px 1fr 28px;
+  min-height: 28px;
+}
+
+.walletDrawerHead h1 {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1;
+  margin: 0;
+  text-align: center;
+}
+
+.walletDrawerHead a,
+.walletDrawerHead svg {
+  color: #ffffff;
+}
+
+.walletRows {
+  display: grid;
+  gap: 16px;
+  margin-top: 32px;
+}
+
+.walletConnectRow {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  color: #ffffff;
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 40px minmax(0, 1fr) auto 20px;
+  height: 44px;
+  padding: 0;
+  text-align: left;
+}
+
+.walletConnectRow strong {
+  font-size: 16px;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.walletConnectRow em {
+  background: rgba(28, 100, 64, 0.52);
+  border-radius: 5px;
+  color: #20bd7c;
+  font-size: 12px;
+  font-style: normal;
+  line-height: 1;
+  padding: 5px 6px;
+  text-transform: uppercase;
+}
+
+.walletConnectRow svg {
+  color: rgba(255, 255, 255, 0.62);
+}
+
+.walletLogo {
+  align-items: center;
+  border-radius: 9px;
+  display: flex;
+  height: 40px;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+  width: 40px;
+}
+
+.walletLogoMetamask {
+  background: linear-gradient(135deg, #ff6f21 0%, #ff8d2d 50%, #d94b22 100%);
+}
+
+.walletLogoMetamask::before,
+.walletLogoMetamask::after {
+  border-bottom: 13px solid #f7d0aa;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  content: "";
+  position: absolute;
+  top: 12px;
+}
+
+.walletLogoMetamask::before {
+  left: 5px;
+  transform: rotate(32deg);
+}
+
+.walletLogoMetamask::after {
+  right: 5px;
+  transform: rotate(-32deg);
+}
+
+.walletLogoOkx {
+  background: #000000;
+}
+
+.walletLogoOkx::before {
+  background:
+    linear-gradient(#ffffff 0 0) 0 0 / 10px 10px no-repeat,
+    linear-gradient(#ffffff 0 0) 15px 0 / 10px 10px no-repeat,
+    linear-gradient(#ffffff 0 0) 0 15px / 10px 10px no-repeat,
+    linear-gradient(#ffffff 0 0) 15px 15px / 10px 10px no-repeat;
+  content: "";
+  height: 25px;
+  width: 25px;
+}
+
+.walletLogoBrowser {
+  background: #34343b;
+}
+
+.walletLogoBrowser::before {
+  color: #ffffff;
+  content: "▣";
+  font-size: 24px;
+  line-height: 1;
+}
+
+.walletLogoSearch {
+  background: #2c2c2c;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.walletPowered {
+  align-items: center;
+  color: rgba(255, 255, 255, 0.42);
+  display: flex;
+  font-size: 12px;
+  gap: 6px;
+  justify-content: center;
+  margin-top: 28px;
+}
+
+.walletPowered b,
+.walletPowered strong {
+  align-items: center;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  color: #ffffff;
+  display: inline-flex;
+  font-size: 12px;
+  font-weight: 500;
+  height: 26px;
+  justify-content: center;
+  min-width: 26px;
+  padding: 0 8px;
+}
+
+.walletProgress {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  min-height: 318px;
+  padding-top: 28px;
+  text-align: center;
+}
+
+.walletProgress .walletLogo {
+  border-radius: 14px;
+  height: 64px;
+  width: 64px;
+}
+
+.walletProgress h1 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 24px 0 0;
+}
+
+.walletProgress p {
+  color: rgba(255, 255, 255, 0.58);
+  font-size: 13px;
+  line-height: 1.6;
+  margin: 12px 0 0;
+  max-width: 250px;
+}
+
+.connectSpinner {
+  animation: spin 1s linear infinite;
+  border: 2px solid rgba(255, 255, 255, 0.12);
+  border-radius: 50%;
+  border-top-color: var(--gold-soft);
+  height: 34px;
+  margin-top: 30px;
+  width: 34px;
+}
+
+.successOrb {
+  align-items: center;
+  background: rgba(32, 217, 151, 0.12);
+  border-radius: 50%;
+  color: #20d997;
+  display: flex;
+  height: 76px;
+  justify-content: center;
+  width: 76px;
+}
+
+.walletProgress .fullGoldButton {
+  margin-top: 34px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.walletList {
+  display: grid;
+  gap: 12px;
+}
+
+.walletChoice,
+.choiceCard {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  gap: 12px;
+  padding: 12px;
+}
+
+.walletChoice div,
+.choiceCard div {
+  flex: 1;
+}
+
+.walletChoice strong,
+.choiceCard strong,
+.copyRow strong {
+  display: block;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.walletChoice span,
+.choiceCard span,
+.copyRow span {
+  color: var(--muted);
+  display: block;
+  font-size: 12px;
+  line-height: 1.55;
+  margin-top: 4px;
+}
+
+.connectingState,
+.resultPanel {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  text-align: center;
+}
+
+.connectingState p,
+.resultPanel p {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.walletOrb {
+  align-items: center;
+  background: rgba(240, 196, 86, 0.12);
+  border-radius: 50%;
+  color: var(--gold-soft);
+  display: flex;
+  height: 88px;
+  justify-content: center;
+  width: 88px;
+}
+
+.welcomeBanner {
+  align-items: center;
+  background: linear-gradient(180deg, #171717, #0d0d0d);
+  display: flex;
+  height: 196px;
+  justify-content: center;
+  margin-top: -6px;
+  text-align: center;
+}
+
+.onboardingPanel {
+  background: transparent;
+  border: 0;
+  gap: 20px;
+  min-height: 262px;
+  padding: 0;
+}
+
+.onboardingPanel .copy {
+  line-height: 22px;
+  margin: 0;
+}
+
+.onboardingChoices {
+  display: grid;
+  gap: 20px;
+}
+
+.onboardingPrimaryChoice {
+  min-height: 108px;
+}
+
+.onboardingSecondaryChoice {
+  min-height: 92px;
+}
+
+.onboardingButton {
+  margin-top: auto;
+}
+
+.onRampContent {
+  display: grid;
+  gap: 20px;
+  margin-top: -6px;
+}
+
+.onRampProvider {
+  align-items: center;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  color: #ffffff;
+  display: flex;
+  height: 74px;
+  justify-content: space-between;
+  padding: 0 12px;
+  text-decoration: none;
+}
+
+.onRampProvider span,
+.onRampField > span {
+  color: rgba(255, 255, 255, 0.52);
+  display: block;
+  font-size: 12px;
+}
+
+.onRampProvider strong {
+  display: block;
+  font-size: 15px;
+  font-weight: 600;
+  margin-top: 7px;
+}
+
+.onRampSwap {
+  display: grid;
+  gap: 0;
+}
+
+.onRampField {
+  display: grid;
+  gap: 10px;
+  min-height: 94px;
+}
+
+.onRampField div {
+  align-items: center;
+  background: #0f0f0f;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  display: flex;
+  height: 54px;
+  padding: 0 12px;
+}
+
+.onRampField input {
+  background: transparent;
+  border: 0;
+  color: #ffffff;
+  flex: 1;
+  font-size: 20px;
+  font-weight: 600;
+  min-width: 0;
+  outline: none;
+}
+
+.onRampField em {
+  color: rgba(255, 255, 255, 0.56);
+  font-size: 13px;
+  font-style: normal;
+}
+
+.swapDivider {
+  align-items: center;
+  color: var(--gold-soft);
+  display: flex;
+  height: 40px;
+  justify-content: center;
+}
+
+.inviteHero {
+  display: grid;
+  gap: 14px;
+}
+
+.posterGrid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 1fr 1fr;
+}
+
+.posterGrid img {
+  border-radius: 10px;
+  height: 210px;
+  object-fit: cover;
+  width: 100%;
+}
+
+.stepList {
+  display: grid;
+  gap: 14px;
+}
+
+.stepItem {
+  align-items: flex-start;
+  display: flex;
+  gap: 12px;
+}
+
+.stepItem > span {
+  align-items: center;
+  background: var(--gold);
+  border-radius: 50%;
+  color: #111111;
+  display: flex;
+  flex: 0 0 auto;
+  font-size: 12px;
+  font-weight: 700;
+  height: 24px;
+  justify-content: center;
+  width: 24px;
+}
+
+.stepItem strong {
+  display: block;
+  font-size: 14px;
+}
+
+.stepItem p {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.6;
+  margin: 5px 0 0;
+}
+
+.copyRow {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  justify-content: space-between;
+}
+
+.copyRow button {
+  align-items: center;
+  background: rgba(255, 255, 255, 0.08);
+  border: 0;
+  border-radius: 8px;
+  color: var(--gold-soft);
+  display: flex;
+  height: 36px;
+  justify-content: center;
+  width: 36px;
+}
+
+.resultPanel svg {
+  color: #8ee2a4;
+}
+
+.bottomTab {
+  align-items: center;
+  background: rgba(28, 27, 24, 0.98);
+  border-top: 1px solid var(--line);
+  bottom: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  height: 70px;
+  left: 0;
+  max-width: 375px;
+  position: fixed;
+  transform: none;
+  width: 100%;
+  z-index: 30;
+}
+
+.bottomItem {
+  align-items: center;
+  color: rgba(255, 255, 255, 0.46);
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+  gap: 3px;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.bottomActive {
+  color: var(--gold-soft);
+}
+
+@media (min-width: 640px) {
+  .shell {
+    background: #050505;
+    padding: 24px 0;
+  }
+
+  .phone {
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 30px;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+    margin: 0 auto;
+    min-height: calc(100vh - 48px);
+  }
+
+  .bottomTab {
+    border-radius: 0 0 30px 30px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
