@@ -306,6 +306,40 @@ export function StakeRecordPage() {
   );
 }
 
+export function UserListPage() {
+  const rows = Array.from({ length: 8 }, (_, index) => ({
+    "序列ID": `U${String(index + 1).padStart(6, "0")}`,
+    "地址": <TextLink>0x{index % 2 === 0 ? "2a59fd...e07fe3" : "e9b3ba...02a4cc"}</TextLink>,
+    "邮箱": index % 3 === 0 ? "--" : index % 2 === 0 ? "yang@realfinance.cc" : "admin@realfinance.cc",
+    "姓名": index % 3 === 0 ? "--" : index % 2 === 0 ? "杨志文" : "Admin",
+    "最后连接钱包时间": index % 3 === 0 ? "--" : "2026-06-05 11:42:18",
+    "绑定时间": index % 3 === 0 ? "--" : "2026-05-26 16:18:06",
+  }));
+
+  return (
+    <div className="space-y-4">
+      <StandardFilterBar
+        fields={[
+          { type: "input", placeholder: "邮箱查询" },
+          { type: "input", placeholder: "地址查询" },
+          { type: "date" },
+        ]}
+        primaryAction={<ActionButton>添加用户</ActionButton>}
+      />
+      <div className="grid grid-cols-3 gap-4">
+        <StatCard title="总地址数（绑定未绑定）" value="1,000" />
+        <StatCard title="绑定地址数" value="1,000,000,000" />
+        <StatCard title="未绑定地址数" value="1,000,000,000" />
+      </div>
+      <BackendTable
+        title="用户列表"
+        columns={["序列ID", "地址", "邮箱", "姓名", "最后连接钱包时间", "绑定时间"]}
+        rows={rows}
+      />
+    </div>
+  );
+}
+
 export function RewardReleaseAuditPage() {
   const { showSuccessToast } = useGlobalFeedback();
   const [released, setReleased] = useState(false);

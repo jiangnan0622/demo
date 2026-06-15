@@ -28,6 +28,7 @@ import { publicAsset } from "@/lib/public-asset";
 type BackendGroupKey =
   | "trade"
   | "stake"
+  | "user-management"
   | "reward-distribution"
   | "product"
   | "asset"
@@ -45,6 +46,7 @@ type BackendItemKey =
   | "entrust-orders"
   | "stake-overview"
   | "stake-records"
+  | "user-list"
   | "reward-release-audit"
   | "reward-release-record"
   | "product-list"
@@ -104,6 +106,12 @@ const NAV_GROUPS: NavGroup[] = [
       { key: "stake-overview", label: "质押情况", href: "/backEnd/stakeManagement/stakeStatus" },
       { key: "stake-records", label: "质押记录", href: "/backEnd/stakeManagement/stakeRecord" },
     ],
+  },
+  {
+    key: "user-management",
+    label: "用户管理",
+    icon: UsersRound,
+    items: [{ key: "user-list", label: "用户列表", href: "/backEnd/userManagement/userList" }],
   },
   {
     key: "reward-distribution",
