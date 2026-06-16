@@ -324,11 +324,10 @@ export function UserListPage() {
           { type: "input", placeholder: "地址查询" },
           { type: "date" },
         ]}
-        primaryAction={<ActionButton>添加用户</ActionButton>}
       />
       <div className="grid grid-cols-3 gap-4">
         <StatCard title="总地址数" value="1,000" />
-        <StatCard title="绑定地址数" value="1,000,000,000" />
+        <StatCard title="已绑定邮箱地址数量" value="1,000,000,000" />
         <StatCard title="未绑定地址数" value="1,000,000,000" />
       </div>
       <BackendTable
