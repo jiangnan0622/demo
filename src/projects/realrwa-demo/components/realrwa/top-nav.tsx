@@ -34,22 +34,22 @@ const chainOptions = [
     id: "bsc",
     label: "BSC",
     fullName: "BSC",
-    iconClass: "bg-[#F0B90B] text-white",
-    iconText: "B",
+    logoSrc: "/tokens/bsc-circle.svg",
+    logoAlt: "BSC",
   },
   {
     id: "eth",
     label: "ETH",
     fullName: "ETH",
-    iconClass: "bg-[#627EEA] text-white",
-    iconText: "E",
+    logoSrc: "/tokens/eth-circle.svg",
+    logoAlt: "Ethereum",
   },
   {
     id: "tron",
     label: "TRON",
     fullName: "TRON",
-    iconClass: "bg-[#EF0027] text-white",
-    iconText: "T",
+    logoSrc: "/tokens/trx-circle.svg",
+    logoAlt: "TRON",
   },
 ] as const;
 
@@ -223,8 +223,14 @@ export function TopNav({
                 setChainOpen((prev) => !prev);
               }}
             >
-              <span className={`grid size-[22px] shrink-0 place-items-center rounded-full text-[11px] font-black leading-none ring-1 ring-white/15 ${activeChain.iconClass}`}>
-                {activeChain.iconText}
+              <span className="grid size-[22px] shrink-0 place-items-center rounded-full ring-1 ring-white/15">
+                <Image
+                  src={publicAsset(activeChain.logoSrc)}
+                  alt={activeChain.logoAlt}
+                  width={22}
+                  height={22}
+                  className="size-[22px] rounded-full object-contain"
+                />
               </span>
               <span className="text-[14px] font-semibold leading-none text-white/92">{activeChain.label}</span>
               <ChevronDown className={`size-[18px] shrink-0 text-white/42 transition group-hover:text-white/70 ${chainOpen ? "rotate-180" : ""}`} strokeWidth={2.4} />
@@ -246,8 +252,14 @@ export function TopNav({
                       setChainOpen(false);
                     }}
                   >
-                    <span className={`grid size-[22px] shrink-0 place-items-center rounded-full text-[11px] font-black leading-none ring-1 ring-white/15 ${chain.iconClass}`}>
-                      {chain.iconText}
+                    <span className="grid size-[22px] shrink-0 place-items-center rounded-full ring-1 ring-white/15">
+                      <Image
+                        src={publicAsset(chain.logoSrc)}
+                        alt={chain.logoAlt}
+                        width={22}
+                        height={22}
+                        className="size-[22px] rounded-full object-contain"
+                      />
                     </span>
                     <span className="text-[13px] font-semibold leading-none">{chain.label}</span>
                     {chain.id === activeChain.id ? (
