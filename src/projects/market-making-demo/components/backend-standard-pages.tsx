@@ -327,8 +327,8 @@ export function UserListPage() {
       />
       <div className="grid grid-cols-3 gap-4">
         <StatCard title="总地址数" value="1,000" />
-        <StatCard title="已绑定邮箱地址数量" value="1,000,000,000" />
-        <StatCard title="未绑定地址数" value="1,000,000,000" />
+        <StatCard title="已绑定邮箱地址数" value="1,000,000,000" />
+        <StatCard title="未绑定邮箱地址数" value="1,000,000,000" />
       </div>
       <BackendTable
         title="用户列表"
