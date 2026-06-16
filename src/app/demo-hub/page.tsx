@@ -12,18 +12,6 @@ const productEntries = [
     path: "/real-mobile",
   },
   {
-    name: "Real mobile v2",
-    description: "保留方案 A 改造前的当前迭代版，便于对比和回退",
-    href: "https://jiangnan0622.github.io/demo/real-mobile-v2",
-    path: "/real-mobile-v2",
-  },
-  {
-    name: "Real mobile v1",
-    description: "保留改造前第一版移动端 demo，便于随时对比和回退",
-    href: "https://jiangnan0622.github.io/demo/real-mobile-v1",
-    path: "/real-mobile-v1",
-  },
-  {
     name: "Admin Console",
     description: "邀请后台管理与做市上架后台管理",
     href: "https://jiangnan0622.github.io/demo/backEnd/rebateConfig",
