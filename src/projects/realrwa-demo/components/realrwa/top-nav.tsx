@@ -29,6 +29,30 @@ const routeMap = [
 
 const desktopNavItems = 7;
 
+const chainOptions = [
+  {
+    id: "bsc",
+    label: "BSC",
+    fullName: "BSC",
+    iconClass: "bg-[#F0B90B] text-white",
+    iconText: "B",
+  },
+  {
+    id: "eth",
+    label: "ETH",
+    fullName: "ETH",
+    iconClass: "bg-[#627EEA] text-white",
+    iconText: "E",
+  },
+  {
+    id: "tron",
+    label: "TRON",
+    fullName: "TRON",
+    iconClass: "bg-[#EF0027] text-white",
+    iconText: "T",
+  },
+] as const;
+
 const topNavAlignmentCss = `
   .real-topnav-shell .real-topnav-wrap {
     width: 100% !important;
@@ -103,6 +127,8 @@ export function TopNav({
   } = useRwaAppState();
   const [menuOpen, setMenuOpen] = useState(defaultWalletMenuOpen);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [chainOpen, setChainOpen] = useState(false);
+  const [activeChain, setActiveChain] = useState<(typeof chainOptions)[number]>(chainOptions[0]);
 
   const statusLabel = identityBound
     ? lang === "en"
@@ -123,6 +149,7 @@ export function TopNav({
     if (targetRoute) {
       setMenuOpen(false);
       setMobileOpen(false);
+      setChainOpen(false);
       router.push(targetRoute);
     }
   };
@@ -172,7 +199,10 @@ export function TopNav({
         <div className="real-topnav-right flex items-center justify-end gap-3">
           <button
             className="hidden h-[38px] shrink-0 items-center gap-2 rounded-[10px] border border-white/12 bg-white/[0.045] px-2.5 text-[13px] font-medium leading-none text-white/74 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] transition hover:border-white/24 hover:bg-white/[0.085] hover:text-white sm:flex"
-            onClick={toggleLang}
+            onClick={() => {
+              setChainOpen(false);
+              toggleLang();
+            }}
             type="button"
             aria-label={lang === "cn" ? "切换到英文" : "Switch to Chinese"}
           >
@@ -182,13 +212,63 @@ export function TopNav({
             <span className="whitespace-nowrap">{lang === "cn" ? "简体中文" : "English"}</span>
           </button>
 
+          <div className="relative hidden sm:block">
+            <button
+              className="group flex h-[38px] min-w-[92px] items-center gap-2 rounded-[8px] border border-white/15 bg-[#111111] px-2.5 text-left text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_10px_30px_rgba(0,0,0,0.22)] transition hover:border-white/28 hover:bg-[#171717]"
+              type="button"
+              aria-label={lang === "cn" ? `当前公链 ${activeChain.fullName}` : `Current chain ${activeChain.fullName}`}
+              aria-expanded={chainOpen}
+              onClick={() => {
+                setMenuOpen(false);
+                setChainOpen((prev) => !prev);
+              }}
+            >
+              <span className={`grid size-[22px] shrink-0 place-items-center rounded-full text-[11px] font-black leading-none ring-1 ring-white/15 ${activeChain.iconClass}`}>
+                {activeChain.iconText}
+              </span>
+              <span className="text-[14px] font-semibold leading-none text-white/92">{activeChain.label}</span>
+              <ChevronDown className={`size-[18px] shrink-0 text-white/42 transition group-hover:text-white/70 ${chainOpen ? "rotate-180" : ""}`} strokeWidth={2.4} />
+            </button>
+
+            {chainOpen ? (
+              <div className="absolute right-0 top-[44px] w-[144px] overflow-hidden rounded-[10px] border border-white/12 bg-[#121212] p-1.5 text-white shadow-[0_22px_70px_rgba(0,0,0,0.46)]">
+                {chainOptions.map((chain) => (
+                  <button
+                    key={chain.id}
+                    className={`flex h-10 w-full items-center gap-2.5 rounded-[8px] px-2.5 text-left transition ${
+                      chain.id === activeChain.id
+                        ? "bg-white/[0.09] text-white"
+                        : "text-white/72 hover:bg-white/[0.06] hover:text-white"
+                    }`}
+                    type="button"
+                    onClick={() => {
+                      setActiveChain(chain);
+                      setChainOpen(false);
+                    }}
+                  >
+                    <span className={`grid size-[22px] shrink-0 place-items-center rounded-full text-[11px] font-black leading-none ring-1 ring-white/15 ${chain.iconClass}`}>
+                      {chain.iconText}
+                    </span>
+                    <span className="text-[13px] font-semibold leading-none">{chain.label}</span>
+                    {chain.id === activeChain.id ? (
+                      <span className="ml-auto size-1.5 rounded-full bg-[#14D596] shadow-[0_0_10px_rgba(20,213,150,0.55)]" />
+                    ) : null}
+                  </button>
+                ))}
+              </div>
+            ) : null}
+          </div>
+
           {rightAction ? <div className="hidden items-center sm:flex">{rightAction}</div> : null}
 
           {walletConnected ? (
             <div className="relative">
               <button
                 className="flex h-[38px] w-[210px] items-center gap-1 rounded-[8px] border border-white/25 bg-transparent p-2"
-                onClick={() => setMenuOpen((prev) => !prev)}
+                onClick={() => {
+                  setChainOpen(false);
+                  setMenuOpen((prev) => !prev);
+                }}
                 type="button"
               >
                 <span className="min-w-0 flex-1 truncate text-left text-[14px] leading-[22px] text-white/90">
