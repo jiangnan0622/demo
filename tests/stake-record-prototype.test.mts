@@ -1,5 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 
 import { stakeRecordColumns, stakeRecordRows, stakeRecordSummary } from "../src/projects/market-making-demo/data/stake-record-prototype.ts";
 
@@ -15,4 +16,12 @@ test("质押记录原型使用截图中的摘要与字段", () => {
     hash: "0xccca...287afa",
     stakedAt: "2026-07-06 23:13:45",
   });
+});
+
+test("质押记录页面显示筛选文案、统计卡与总条数", () => {
+  const pageSource = readFileSync("src/projects/market-making-demo/components/backend-standard-pages.tsx", "utf8");
+
+  for (const label of ["RWA资产", "开始时间", "结束时间", "邮箱", "展开", "Staking总额", "Staking地址数", "共 119 条"]) {
+    assert.match(pageSource, new RegExp(label));
+  }
 });

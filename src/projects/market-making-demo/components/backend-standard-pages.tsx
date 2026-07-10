@@ -5,6 +5,7 @@ import { useState } from "react";
 import type { ReactNode } from "react";
 
 import { useGlobalFeedback } from "@/components/feedback/global-feedback-provider";
+import { stakeRecordColumns, stakeRecordRows, stakeRecordSummary } from "@/projects/market-making-demo/data/stake-record-prototype";
 
 type TableRow = Record<string, ReactNode>;
 type FilterField =
@@ -284,24 +285,107 @@ export function StakeOverviewPage() {
 }
 
 export function StakeRecordPage() {
-  const rows = Array.from({ length: 8 }, (_, index) => ({
-    "记录 ID": `SR${String(index + 1).padStart(8, "0")}`,
-    "资产名称": "rFUIDL",
-    "操作类型": index % 2 === 0 ? "质押" : "赎回",
-    "数量": "1,000.01",
-    "交易 HASH": hashValue,
-    "状态": "已完成",
-    "创建时间": "2026-05-06 18:18:32",
-  }));
-
   return (
     <div className="space-y-4">
-      <FilterBar />
-      <BackendTable
-        title="质押记录"
-        columns={["记录 ID", "资产名称", "操作类型", "数量", "交易 HASH", "状态", "创建时间"]}
-        rows={rows}
-      />
+      <section className="rounded-[8px] border border-[#eceff5] bg-white px-5 py-4 shadow-[0_1px_2px_rgba(15,23,42,0.03)]">
+        <div className="flex flex-wrap items-center gap-x-8 gap-y-3">
+          <label className="flex items-center gap-4 text-[14px] font-medium text-slate-700">
+            <span>RWA资产</span>
+            <select
+              defaultValue=""
+              className="h-9 w-[268px] rounded-[6px] border border-[#dcdfe6] bg-white px-3 text-[13px] font-normal text-slate-500 outline-none"
+            >
+              <option value="" disabled>
+                请选择
+              </option>
+              {rwaOptions.map((option) => (
+                <option key={option}>{option}</option>
+              ))}
+            </select>
+          </label>
+          <label className="flex items-center gap-4 text-[14px] font-medium text-slate-700">
+            <span>时间</span>
+            <span className="flex h-9 w-[300px] items-center gap-3 rounded-[6px] border border-[#dcdfe6] px-3 text-[13px] font-normal text-slate-400">
+              <span>开始时间</span>
+              <span>→</span>
+              <span>结束时间</span>
+              <Calendar className="ml-auto size-3.5" />
+            </span>
+          </label>
+          <label className="flex items-center gap-4 text-[14px] font-medium text-slate-700">
+            <span>邮箱</span>
+            <input
+              className="h-9 w-[278px] rounded-[6px] border border-[#dcdfe6] px-3 text-[13px] font-normal outline-none focus:border-[#1f5bd8]"
+              placeholder="请输入"
+            />
+          </label>
+          <div className="ml-auto flex items-center gap-2">
+            <button type="button" className="inline-flex h-9 items-center gap-1 px-2 text-[13px] font-medium text-[#1f5bd8] hover:text-[#1a4fc1]">
+              展开
+              <ChevronDown className="size-3.5" />
+            </button>
+            <ActionButton variant="secondary">重 置</ActionButton>
+            <ActionButton>查 询</ActionButton>
+          </div>
+        </div>
+      </section>
+
+      <section className="grid grid-cols-1 gap-4 rounded-[8px] border border-[#e1ebfa] bg-[#f1f6ff] p-5 md:grid-cols-2">
+        <StatCard title="Staking总额" value={stakeRecordSummary.total} unit={stakeRecordSummary.unit} />
+        <StatCard title="Staking地址数" value={stakeRecordSummary.addressCount} />
+      </section>
+
+      <section className="rounded-[8px] border border-[#eceff5] bg-white p-5">
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[900px] border-collapse text-[13px]">
+            <thead className="bg-[#fafbfd] text-left text-slate-700">
+              <tr>
+                {stakeRecordColumns.map((column) => (
+                  <th key={column} className="h-12 px-2 font-semibold first:px-3">
+                    {column}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {stakeRecordRows.map((row) => (
+                <tr key={row.hash} className="border-b border-[#edf0f5] text-slate-700 last:border-b-0">
+                  <td className="px-3 py-3.5"><TextLink>{row.address}</TextLink></td>
+                  <td className="px-2 py-3.5">{row.email}</td>
+                  <td className="px-2 py-3.5">{row.token}</td>
+                  <td className="px-2 py-3.5">{row.amount}</td>
+                  <td className="px-2 py-3.5"><TextLink>{row.hash}</TextLink></td>
+                  <td className="px-2 py-3.5">{row.stakedAt}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <div className="mt-4 flex flex-wrap items-center justify-end gap-2 text-[13px] text-slate-600">
+          <span className="mr-2">共 119 条</span>
+          <button type="button" aria-label="上一页" className="grid size-7 place-items-center rounded-[4px] text-slate-400 hover:bg-slate-100">
+            <ChevronLeft className="size-3.5" />
+          </button>
+          <span className="grid size-7 place-items-center rounded-[4px] border border-[#1f5bd8] text-[#1f5bd8]">1</span>
+          {[2, 3, 4, 5].map((page) => (
+            <button key={page} type="button" className="grid size-7 place-items-center rounded-[4px] hover:bg-slate-100">
+              {page}
+            </button>
+          ))}
+          <span className="px-1">…</span>
+          <button type="button" className="grid size-7 place-items-center rounded-[4px] hover:bg-slate-100">12</button>
+          <button type="button" aria-label="下一页" className="grid size-7 place-items-center rounded-[4px] hover:bg-slate-100">
+            <ChevronRight className="size-3.5" />
+          </button>
+          <button type="button" className="ml-1 flex h-7 items-center gap-1 rounded-[4px] border border-[#dcdfe6] bg-white px-2 hover:bg-slate-50">
+            10 条/页
+            <ChevronDown className="size-3" />
+          </button>
+          <span className="ml-1">跳至</span>
+          <input aria-label="跳转页码" className="h-7 w-12 rounded-[4px] border border-[#dcdfe6] px-2 outline-none focus:border-[#1f5bd8]" />
+          <span>页</span>
+        </div>
+      </section>
     </div>
   );
 }
