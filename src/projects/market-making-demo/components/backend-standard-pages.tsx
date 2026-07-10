@@ -356,6 +356,8 @@ export function StakeRecordPage() {
                   <td className="px-2 py-3.5">{row.amount}</td>
                   <td className="px-2 py-3.5"><TextLink>{row.hash}</TextLink></td>
                   <td className="px-2 py-3.5">{row.stakedAt}</td>
+                  <td className="px-2 py-3.5">{row.redeemedAt}</td>
+                  <td className="px-2 py-3.5">{row.stakingDuration}</td>
                 </tr>
               ))}
             </tbody>
