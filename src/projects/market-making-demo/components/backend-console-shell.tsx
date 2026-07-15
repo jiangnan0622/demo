@@ -51,6 +51,7 @@ type BackendItemKey =
   | "reward-release-record"
   | "product-list"
   | "address-list"
+  | "price-parameter"
   | "sales-data"
   | "merchant-holding"
   | "merchant-settlement"
@@ -132,7 +133,10 @@ const NAV_GROUPS: NavGroup[] = [
     key: "asset",
     label: "资产管理",
     icon: WalletCards,
-    items: [{ key: "address-list", label: "地址表", href: "/backEnd/assetManagement/addressList" }],
+    items: [
+      { key: "address-list", label: "地址表", href: "/backEnd/assetManagement/addressList" },
+      { key: "price-parameter", label: "价格参数", href: "/backEnd/assetManagement/priceParameter" },
+    ],
   },
   {
     key: "dashboard",
