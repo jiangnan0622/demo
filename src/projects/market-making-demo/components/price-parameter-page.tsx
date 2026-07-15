@@ -12,7 +12,6 @@ import {
 const inputClassName = "h-9 rounded-[6px] border border-[#dcdfe6] bg-white px-3 text-[13px] text-slate-700 outline-none focus:border-[#1f5bd8]";
 
 export function PriceParameterPage() {
-  const [currency, setCurrency] = useState("全部币种");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [assetSymbol, setAssetSymbol] = useState("rFUIDL");
@@ -20,20 +19,18 @@ export function PriceParameterPage() {
   const filteredRecords = useMemo(
     () =>
       priceParameterRecords.filter((record) => {
-        const matchedCurrency = currency === "全部币种" || record.currency === currency;
         const matchedStart = !startDate || record.priceDate >= startDate;
         const matchedEnd = !endDate || record.priceDate <= endDate;
         const matchedAsset = record.assetSymbol === assetSymbol;
 
-        return matchedCurrency && matchedStart && matchedEnd && matchedAsset;
+        return matchedStart && matchedEnd && matchedAsset;
       }),
-    [assetSymbol, currency, endDate, startDate]
+    [assetSymbol, endDate, startDate]
   );
 
   const latestRecord = filteredRecords[0] ?? priceParameterSummary;
 
   const resetFilters = () => {
-    setCurrency("全部币种");
     setStartDate("");
     setEndDate("");
     setAssetSymbol("rFUIDL");
@@ -44,10 +41,9 @@ export function PriceParameterPage() {
       <section className="rounded-[8px] border border-[#eceff5] bg-white px-5 py-4 shadow-[0_1px_2px_rgba(15,23,42,0.03)]">
         <div className="flex flex-wrap items-end gap-x-6 gap-y-3">
           <label className="flex flex-col gap-2 text-[13px] font-medium text-slate-700">
-            <span>计价币种</span>
-            <select value={currency} onChange={(event) => setCurrency(event.target.value)} className={`${inputClassName} w-[180px]`}>
-              <option>全部币种</option>
-              <option>USD</option>
+            <span>币种</span>
+            <select value={assetSymbol} onChange={(event) => setAssetSymbol(event.target.value)} className={`${inputClassName} w-[180px]`}>
+              <option>rFUIDL</option>
             </select>
           </label>
           <label className="flex flex-col gap-2 text-[13px] font-medium text-slate-700">
@@ -58,12 +54,6 @@ export function PriceParameterPage() {
               <input type="date" value={endDate} onChange={(event) => setEndDate(event.target.value)} className={`${inputClassName} w-[160px]`} />
               <Calendar className="size-4 text-slate-400" />
             </span>
-          </label>
-          <label className="flex flex-col gap-2 text-[13px] font-medium text-slate-700">
-            <span>RWA币种</span>
-            <select value={assetSymbol} onChange={(event) => setAssetSymbol(event.target.value)} className={`${inputClassName} w-[180px]`}>
-              <option>rFUIDL</option>
-            </select>
           </label>
           <div className="ml-auto flex items-center gap-2">
             <button type="button" onClick={resetFilters} className="h-9 rounded-[6px] border border-[#dcdfe6] bg-white px-5 text-[13px] text-slate-600 hover:bg-slate-50">
@@ -103,6 +93,7 @@ export function PriceParameterPage() {
               {filteredRecords.map((record) => (
                 <tr key={`${record.assetSymbol}-${record.priceDate}-${record.currency}`} className="border-b border-[#edf0f5] text-slate-700 last:border-b-0">
                   <td className="px-4 py-3.5">{record.priceDate}</td>
+                  <td className="px-4 py-3.5">{record.assetSymbol}</td>
                   <td className="px-4 py-3.5 font-medium text-[#1f5bd8]">{record.price}</td>
                   <td className="px-4 py-3.5">{record.currency}</td>
                   <td className="px-4 py-3.5">{record.latestPriceUpdateTime}</td>

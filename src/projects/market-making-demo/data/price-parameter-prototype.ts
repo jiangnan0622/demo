@@ -6,7 +6,7 @@ export type PriceParameterRecord = {
   latestPriceUpdateTime: string;
 };
 
-export const priceParameterColumns = ["价格日期", "价格", "币种", "最新价格更新时间"] as const;
+export const priceParameterColumns = ["价格日期", "币种", "价格", "计价币种", "最新价格更新时间"] as const;
 
 export const priceParameterSummary = {
   latestPrice: "1.0000000000",

@@ -5,7 +5,7 @@ import { readFileSync } from "node:fs";
 import { priceParameterColumns, priceParameterRecords, priceParameterSummary } from "../src/projects/market-making-demo/data/price-parameter-prototype.ts";
 
 test("价格参数原型保留接口返回的价格记录与汇总", () => {
-  assert.deepEqual(priceParameterColumns, ["价格日期", "价格", "币种", "最新价格更新时间"]);
+  assert.deepEqual(priceParameterColumns, ["价格日期", "币种", "价格", "计价币种", "最新价格更新时间"]);
   assert.deepEqual(priceParameterSummary, {
     latestPrice: "1.0000000000",
     currency: "USD",
@@ -26,13 +26,15 @@ test("价格参数页面和后台导航均已就绪", () => {
   const pageSource = readFileSync("src/projects/market-making-demo/components/price-parameter-page.tsx", "utf8");
   const shellSource = readFileSync("src/projects/market-making-demo/components/backend-console-shell.tsx", "utf8");
 
-  for (const label of ["价格参数", "RWA币种", "rFUIDL", "价格日期", "最新价格更新时间", "共 {priceParameterSummary.total} 条"]) {
+  for (const label of ["价格参数", "rFUIDL", "价格日期", "最新价格更新时间", "共 {priceParameterSummary.total} 条"]) {
     assert.match(pageSource, new RegExp(label));
   }
   assert.doesNotMatch(pageSource, /上报价格/);
   assert.doesNotMatch(pageSource, /接口待接入/);
   assert.doesNotMatch(pageSource, /补报/);
   assert.doesNotMatch(pageSource, /每日价格数据用于记录 RWA 参考价格的历史变动/);
+  assert.doesNotMatch(pageSource, /RWA币种/);
+  assert.match(pageSource, /<span>币种<\/span>/);
   assert.match(shellSource, /price-parameter/);
   assert.match(shellSource, /\/backEnd\/assetManagement\/priceParameter/);
 });
