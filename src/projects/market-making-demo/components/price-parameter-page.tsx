@@ -86,7 +86,6 @@ export function PriceParameterPage() {
         <div className="mb-4 flex items-center justify-between">
           <div>
             <h2 className="text-[16px] font-semibold text-slate-800">价格参数记录</h2>
-            <p className="mt-1 text-[12px] text-slate-400">每日价格数据用于记录 RWA 参考价格的历史变动。</p>
           </div>
         </div>
         <div className="overflow-x-auto">

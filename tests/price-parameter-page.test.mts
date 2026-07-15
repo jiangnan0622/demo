@@ -32,6 +32,7 @@ test("价格参数页面和后台导航均已就绪", () => {
   assert.doesNotMatch(pageSource, /上报价格/);
   assert.doesNotMatch(pageSource, /接口待接入/);
   assert.doesNotMatch(pageSource, /补报/);
+  assert.doesNotMatch(pageSource, /每日价格数据用于记录 RWA 参考价格的历史变动/);
   assert.match(shellSource, /price-parameter/);
   assert.match(shellSource, /\/backEnd\/assetManagement\/priceParameter/);
 });
