@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>REAL 管理后台 - 价格参数</title>
+  <style>
+    :root { color-scheme: light; font-family: Inter, "PingFang SC", "Microsoft YaHei", Arial, sans-serif; color: #303133; background: #f5f5f5; }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-width: 1120px; background: #f5f5f5; }
+    button, select, input { font: inherit; }
+    .app { display: grid; grid-template-columns: 208px minmax(0, 1fr); height: 100vh; overflow: hidden; }
+    .sidebar { display: flex; min-height: 0; flex-direction: column; overflow: auto; background: #1f2329; color: #b8bec9; }
+    .brand { display: flex; height: 52px; flex: none; align-items: center; justify-content: center; gap: 9px; border-bottom: 1px solid rgba(255,255,255,.08); color: #fff; font-size: 18px; font-weight: 600; }
+    .brand-mark { width: 32px; height: 28px; display: inline-grid; place-items: center; color: #f2ae3d; font-size: 31px; line-height: 1; transform: rotate(-8deg); }
+    .nav { padding: 16px 8px 24px; }
+    .nav-group { margin-bottom: 5px; }
+    .nav-title, .nav-item { display: flex; align-items: center; min-height: 38px; border-radius: 3px; color: inherit; text-decoration: none; }
+    .nav-title { gap: 13px; padding: 0 18px; color: #d2d6de; font-size: 15px; font-weight: 600; }
+    .nav-title .icon { color: #9ba3b0; }
+    .nav-item { margin: 1px 0; padding: 0 0 0 48px; font-size: 14px; }
+    .nav-item.active { background: #1f5bd8; color: #fff; font-weight: 600; }
+    .nav-title:hover, .nav-item:hover { background: rgba(255,255,255,.06); }
+    .nav-item.active:hover { background: #1f5bd8; }
+    .icon { display: inline-block; width: 15px; text-align: center; font-size: 16px; font-weight: 400; }
+    .main { min-width: 0; overflow: auto; }
+    .topbar { display: flex; height: 52px; align-items: center; justify-content: flex-end; gap: 23px; padding: 0 28px; background: #fff; border-bottom: 1px solid #eff1f5; }
+    .download { color: #1f5bd8; font-size: 19px; }
+    .user { display: flex; align-items: center; gap: 9px; font-size: 14px; color: #303133; }
+    .avatar { display: grid; width: 25px; height: 25px; place-items: center; border-radius: 50%; background: #1f5bd8; color: #fff; font-size: 12px; font-weight: 600; }
+    .caret { color: #606266; font-size: 12px; }
+    .content { padding: 22px 20px 40px; }
+    .breadcrumb { margin: 0 0 17px; color: #909399; font-size: 14px; }
+    .breadcrumb strong { color: #606266; font-weight: 600; }
+    .panel { border: 1px solid #eceff5; border-radius: 8px; background: #fff; box-shadow: 0 1px 2px rgba(15,23,42,.03); }
+    .filters { display: flex; flex-wrap: wrap; align-items: end; gap: 12px 24px; padding: 16px 19px; }
+    .field { display: flex; flex-direction: column; gap: 8px; color: #303133; font-size: 13px; font-weight: 600; }
+    .control, .date-control { height: 36px; border: 1px solid #dcdfe6; border-radius: 6px; background: #fff; color: #606266; outline: none; }
+    .control { width: 174px; padding: 0 12px; }
+    .control:focus, .date-control:focus { border-color: #1f5bd8; }
+    .date-range { display: flex; align-items: center; gap: 8px; }
+    .date-control { width: 156px; padding: 0 11px; }
+    .range-separator { color: #a8abb2; }
+    .calendar { color: #9aa3b0; font-size: 18px; }
+    .filter-actions { display: flex; gap: 8px; margin-left: auto; }
+    .button { height: 36px; padding: 0 19px; border: 1px solid #dcdfe6; border-radius: 6px; background: #fff; color: #606266; cursor: pointer; font-size: 13px; font-weight: 600; }
+    .button:hover { background: #f8fafc; }
+    .button.primary { border-color: #1f5bd8; background: #1f5bd8; color: #fff; }
+    .button.primary:hover { background: #1a4fc1; }
+    .summary { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 16px; }
+    .summary-card { min-height: 96px; padding: 18px 23px; border: 1px solid #dde7ff; border-radius: 8px; background: #f1f6ff; }
+    .summary-card p { margin: 0; }
+    .summary-label { color: #606266; font-size: 13px; }
+    .summary-value { display: flex; align-items: baseline; gap: 7px; margin-top: 11px !important; color: #1f5bd8; font-size: 25px; font-weight: 650; line-height: 1; }
+    .summary-unit { font-size: 13px; font-weight: 400; opacity: .78; }
+    .records { margin-top: 16px; padding: 20px; }
+    .records h2 { margin: 0 0 16px; color: #303133; font-size: 16px; }
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; min-width: 800px; border-collapse: collapse; table-layout: fixed; font-size: 13px; }
+    th { height: 46px; padding: 0 15px; background: #fafbfd; color: #303133; text-align: left; font-weight: 600; }
+    td { padding: 14px 15px; color: #4b5563; border-bottom: 1px solid #edf0f5; }
+    tbody tr:last-child td { border-bottom: none; }
+    td.price { color: #1f5bd8; font-weight: 600; }
+    .empty { height: 104px; text-align: center; color: #a8abb2; }
+    .pagination { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 6px; margin-top: 16px; color: #606266; font-size: 13px; }
+    .total { margin-right: 10px; }
+    .page { display: grid; width: 27px; height: 27px; place-items: center; border: 0; border-radius: 4px; background: transparent; color: inherit; cursor: pointer; }
+    .page:hover { background: #f3f4f6; }
+    .page.current { border: 1px solid #1f5bd8; background: #fff; color: #1f5bd8; }
+    .page-size { height: 28px; margin-left: 5px; padding: 0 9px; border: 1px solid #dcdfe6; border-radius: 4px; background: #fff; color: #606266; }
+    @media (max-width: 1200px) { .summary { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar" aria-label="管理后台导航">
+      <div class="brand"><span class="brand-mark">◇</span><span>REAL</span></div>
+      <nav class="nav">
+        <div class="nav-group"><a class="nav-title" href="#"><span class="icon">▣</span>交易管理</a><a class="nav-item" href="#">成交订单</a><a class="nav-item" href="#">委托订单</a></div>
+        <div class="nav-group"><a class="nav-title" href="#"><span class="icon">▱</span>质押管理</a><a class="nav-item" href="#">质押情况</a><a class="nav-item" href="#">质押记录</a></div>
+        <div class="nav-group"><a class="nav-title" href="#"><span class="icon">♧</span>用户管理</a><a class="nav-item" href="#">用户列表</a></div>
+        <div class="nav-group"><a class="nav-title" href="#"><span class="icon">◉</span>奖励发放</a><a class="nav-item" href="#">发放审核</a><a class="nav-item" href="#">发放记录</a></div>
+        <div class="nav-group"><a class="nav-title" href="#"><span class="icon">▰</span>产品配置</a><a class="nav-item" href="#">产品列表</a></div>
+        <div class="nav-group"><a class="nav-title" href="#"><span class="icon">▣</span>资产管理</a><a class="nav-item" href="#">地址表</a><a class="nav-item active" href="#price-parameter" aria-current="page">价格参数</a></div>
+        <div class="nav-group"><a class="nav-title" href="#"><span class="icon">▥</span>数据看板</a><a class="nav-item" href="#">销售数据</a></div>
+        <div class="nav-group"><a class="nav-title" href="#"><span class="icon">▣</span>商户服务</a><a class="nav-item" href="#">商户持仓</a><a class="nav-item" href="#">商户结算</a></div>
+        <div class="nav-group"><a class="nav-title" href="#"><span class="icon">▱</span>返佣配置</a></div>
+        <div class="nav-group"><a class="nav-title" href="#"><span class="icon">▣</span>返佣审核</a><a class="nav-item" href="#">待我审核</a><a class="nav-item" href="#">我已审核</a></div>
+        <div class="nav-group"><a class="nav-title" href="#"><span class="icon">▱</span>返佣记录</a></div>
+      </nav>
+    </aside>
+
+    <main class="main">
+      <header class="topbar"><span class="download" title="下载">⇩</span><div class="user"><span class="avatar">A</span><span>admin</span><span class="caret">⌄</span></div></header>
+      <div class="content" id="price-parameter">
+        <p class="breadcrumb">资产管理&nbsp; / &nbsp;<strong>价格参数</strong></p>
+        <section class="panel filters" aria-label="价格参数筛选">
+          <label class="field">币种
+            <select class="control" id="asset-symbol"><option value="rFUIDL">rFUIDL</option></select>
+          </label>
+          <label class="field">价格日期
+            <span class="date-range"><input class="date-control" id="start-date" type="date" /><span class="range-separator">→</span><input class="date-control" id="end-date" type="date" /><span class="calendar">▣</span></span>
+          </label>
+          <div class="filter-actions"><button class="button" id="reset-button" type="button">重置</button><button class="button primary" id="search-button" type="button">查询</button></div>
+        </section>
+
+        <section class="summary" aria-label="价格汇总">
+          <div class="summary-card"><p class="summary-label">最新价格</p><p class="summary-value"><span id="latest-price">1.0000000000</span><span class="summary-unit" id="latest-currency">USD</span></p></div>
+          <div class="summary-card"><p class="summary-label">最新价格日期</p><p class="summary-value" id="latest-date">2026-07-14</p></div>
+          <div class="summary-card"><p class="summary-label">最新价格更新时间</p><p class="summary-value" id="latest-update">2026-07-15 09:01:12</p></div>
+        </section>
+
+        <section class="panel records">
+          <h2>价格参数记录</h2>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>价格日期</th><th>币种</th><th>价格</th><th>计价币种</th><th>最新价格更新时间</th></tr></thead>
+              <tbody id="record-body"></tbody>
+            </table>
+          </div>
+          <div class="pagination"><span class="total">共 65 条</span><button class="page" type="button" aria-label="上一页">‹</button><button class="page current" type="button">1</button><button class="page" type="button">2</button><span class="page">…</span><button class="page" type="button">22</button><button class="page" type="button" aria-label="下一页">›</button><select class="page-size" aria-label="每页条数"><option>10 条/页</option></select></div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const records = [
+      { assetSymbol: "rFUIDL", priceDate: "2026-07-14", price: "1.0000000000", currency: "USD", latestPriceUpdateTime: "2026-07-15 09:01:12" },
+      { assetSymbol: "rFUIDL", priceDate: "2026-07-13", price: "1.0000000000", currency: "USD", latestPriceUpdateTime: "2026-07-14 09:01:12" },
+      { assetSymbol: "rFUIDL", priceDate: "2026-07-10", price: "1.0000000000", currency: "USD", latestPriceUpdateTime: "2026-07-11 09:01:12" }
+    ];
+
+    const startDate = document.querySelector("#start-date");
+    const endDate = document.querySelector("#end-date");
+    const assetSymbol = document.querySelector("#asset-symbol");
+    const recordBody = document.querySelector("#record-body");
+
+    function render(recordsToRender) {
+      const latest = recordsToRender[0] || records[0];
+      document.querySelector("#latest-price").textContent = latest.price;
+      document.querySelector("#latest-currency").textContent = latest.currency;
+      document.querySelector("#latest-date").textContent = latest.priceDate;
+      document.querySelector("#latest-update").textContent = latest.latestPriceUpdateTime;
+
+      if (!recordsToRender.length) {
+        recordBody.innerHTML = '<tr><td class="empty" colspan="5">暂无数据</td></tr>';
+        return;
+      }
+      recordBody.innerHTML = recordsToRender.map((record) => `
+        <tr>
+          <td>${record.priceDate}</td><td>${record.assetSymbol}</td><td class="price">${record.price}</td><td>${record.currency}</td><td>${record.latestPriceUpdateTime}</td>
+        </tr>`).join("");
+    }
+
+    function queryRecords() {
+      render(records.filter((record) =>
+        record.assetSymbol === assetSymbol.value &&
+        (!startDate.value || record.priceDate >= startDate.value) &&
+        (!endDate.value || record.priceDate <= endDate.value)
+      ));
+    }
+
+    document.querySelector("#search-button").addEventListener("click", queryRecords);
+    document.querySelector("#reset-button").addEventListener("click", () => {
+      assetSymbol.value = "rFUIDL";
+      startDate.value = "";
+      endDate.value = "";
+      render(records);
+    });
+    render(records);
+  </script>
+</body>
+</html>
